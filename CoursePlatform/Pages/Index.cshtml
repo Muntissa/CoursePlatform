@@ -1,0 +1,22 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about building Web apps with ASP.NET Core.</p>
+
+    <h2>Users</h2>
+    <ul>
+        @foreach (var user in Model.Profiles)
+        {
+            <li>@user.Name - @user.Surname</li>
+        }
+    </ul>
+</div>
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
