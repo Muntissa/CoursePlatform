@@ -10,11 +10,11 @@ namespace CoursePlatform.Common.Entities
     {
         public DateTime EnrollmentDate { get; set; }
 
-        public virtual User Student { get; set; }
-        public virtual Course Course { get; set; }
+        public User Student { get; set; }
+        public Course Course { get; set; }
         public long? ProgressId { get; set; }
-        public virtual Progress Progress { get; set; }
+        public Progress Progress { get; set; }
 
-        public virtual Certificate? Certificate { get; set; }
+        public Certificate? Certificate { get; set; }
     }
 }

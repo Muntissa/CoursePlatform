@@ -1,4 +1,5 @@
 ﻿@page
+@using CoursePlatform.Common.Additional
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -10,9 +11,9 @@
 
     <h2>Users</h2>
     <ul>
-        @foreach (var user in Model.Profiles)
+        @foreach (var user in Model.Users)
         {
-            <li>@user.Name - @user.Surname</li>
+            <li>@user.Role.GetValueOrDefault().GetDescription() - @user.Username - @user.Password - @user.Profile.Surname</li>
         }
     </ul>
 </div>

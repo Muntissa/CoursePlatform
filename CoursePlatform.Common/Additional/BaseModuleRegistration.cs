@@ -22,14 +22,7 @@ namespace CoursePlatform.Common.Additional
             {
                 try
                 {
-                    if (typesToReg == typeof(IDataContext))
-                    {
-                        services.AddTransient(typeof(IDataContext), type);
-                        continue;
-                    }
-
                     services.AddSingleton(interfacetype, type);
-                    
                 }
                 catch (Exception value)
                 {

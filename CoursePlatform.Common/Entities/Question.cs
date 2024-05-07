@@ -8,6 +8,6 @@ namespace CoursePlatform.Common.Entities
         public QuestionType QuestionType { get; set; }
         public string? ImagePath { get; set; }
 
-        public virtual Test Test { get; set; }
+        public Test Test { get; set; }
     }
 }

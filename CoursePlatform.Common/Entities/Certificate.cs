@@ -12,6 +12,6 @@ namespace CoursePlatform.Common.Entities
         public string? Path { get; set; }
 
         public long? CourseEnrollmentId { get; set; }
-        public virtual CourseEnrollment CourseEnrollment { get; set; }
+        public CourseEnrollment CourseEnrollment { get; set; }
     }
 }

@@ -21,9 +21,7 @@ namespace CoursePlatform.Common
     {
         public static void AddPlatform(this IServiceCollection services)
         {
-            services.AddTransient(typeof(IDataContext), typeof(CoursePlatformContext));
             services.AddSingleton<IModuleRegistration>(new PlatformModule(services));
-            services.AddSingleton(typeof(IContextHelper), typeof(ContextHelper));
         }
     }
 }

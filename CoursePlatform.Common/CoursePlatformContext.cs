@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace CoursePlatform.Common
 {
-    public class CoursePlatformContext : DbContext, IDataContext
+    public class CoursePlatformContext : DbContext
     {
+
         protected IServiceProvider _services;
         public CoursePlatformContext(IServiceProvider services) 
         { 
@@ -19,7 +20,7 @@ namespace CoursePlatform.Common
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseLazyLoadingProxies().UseNpgsql("Host=localhost;Database=CoursePlatform;Username=postgres;Password=admin");
+            optionsBuilder.UseNpgsql("Host=localhost;Database=CoursePlatform;Username=postgres;Password=admin");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

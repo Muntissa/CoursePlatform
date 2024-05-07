@@ -13,7 +13,7 @@ namespace CoursePlatform.Common.Entities
         public int? Score { get; set; } = 0;
         public int? Total { get; set; }
         
-        public virtual Lecture Lecture { get; set; }
-        public virtual CourseEnrollment Enrollment { get; set; } 
+        public Lecture Lecture { get; set; }
+        public CourseEnrollment Enrollment { get; set; } 
     }
 }

@@ -13,13 +13,13 @@ namespace CoursePlatform.Common.Entities
         public int OrderInCourse { get; set; }
 
         public long? CourseId { get; set; }
-        public virtual Course Course { get; set; }
+        public Course Course { get; set; }
         public long? ProgressId { get; set; }
-        public virtual Progress? Progress { get; set; }
+        public Progress? Progress { get; set; }
 
-        public virtual List<Test>? Tests { get; set; }
-        public virtual List<Video>? Videos { get; set; }
-        public virtual List<AdditionalFile>? AdditionalFiles { get; set; }
-        public virtual List<LectureMaterial>? LectureMaterials { get; set; }
+        public List<Test>? Tests { get; set; }
+        public List<Video>? Videos { get; set; }
+        public List<AdditionalFile>? AdditionalFiles { get; set; }
+        public List<LectureMaterial>? LectureMaterials { get; set; }
     }
 }

@@ -3,9 +3,9 @@
     public class Test : BaseEntity
     {
         public long? CourseId { get; set; }
-        public virtual Course? Course { get; set; }
+        public Course? Course { get; set; }
 
-        public virtual Lecture? Lecture { get; set; } 
-        public virtual List<Question> Questions { get; set; } = new();
+        public Lecture? Lecture { get; set; } 
+        public List<Question> Questions { get; set; } = new();
     }
 }

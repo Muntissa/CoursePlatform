@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace CoursePlatform.Common.Enums
 {

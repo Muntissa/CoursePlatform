@@ -8,6 +8,6 @@ namespace CoursePlatform.Common.Entities
 {
     public abstract class BaseAdditionEntity : BaseEntity
     {
-        public virtual Lecture Lecture { get; set; }
+        public Lecture Lecture { get; set; }
     }
 }
