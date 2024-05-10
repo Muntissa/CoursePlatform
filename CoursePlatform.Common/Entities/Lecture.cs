@@ -17,7 +17,7 @@ namespace CoursePlatform.Common.Entities
         public long? ProgressId { get; set; }
         public Progress? Progress { get; set; }
 
-        public List<Test>? Tests { get; set; }
+        public Test? Tests { get; set; }
         public List<Video>? Videos { get; set; }
         public List<AdditionalFile>? AdditionalFiles { get; set; }
         public List<LectureMaterial>? LectureMaterials { get; set; }

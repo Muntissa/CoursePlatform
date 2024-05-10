@@ -3,6 +3,7 @@ using System;
 using CoursePlatform.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoursePlatform.Common.Migrations
 {
     [DbContext(typeof(CoursePlatformContext))]
-    partial class CoursePlatformContextModelSnapshot : ModelSnapshot
+    [Migration("20240507150839_TestCascade")]
+    partial class TestCascade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -476,7 +479,8 @@ namespace CoursePlatform.Common.Migrations
                 {
                     b.HasOne("CoursePlatform.Common.Entities.User", "User")
                         .WithOne("Profile")
-                        .HasForeignKey("CoursePlatform.Common.Entities.Profile", "UserId");
+                        .HasForeignKey("CoursePlatform.Common.Entities.Profile", "UserId")
+                        .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.Navigation("User");
                 });

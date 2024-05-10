@@ -3,6 +3,7 @@ using System;
 using CoursePlatform.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoursePlatform.Common.Migrations
 {
     [DbContext(typeof(CoursePlatformContext))]
-    partial class CoursePlatformContextModelSnapshot : ModelSnapshot
+    [Migration("20240507131516_EditTest")]
+    partial class EditTest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace CoursePlatform.Common.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("CategoryCourse", b =>
-                {
-                    b.Property<long>("CourseCategoriesId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("CoursesId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("CourseCategoriesId", "CoursesId");
-
-                    b.HasIndex("CoursesId");
-
-                    b.ToTable("CategoryCourse");
-                });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.AdditionalFile", b =>
                 {
@@ -70,11 +58,16 @@ namespace CoursePlatform.Common.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<long?>("CourseId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
 
                     b.ToTable("Category");
                 });
@@ -377,21 +370,6 @@ namespace CoursePlatform.Common.Migrations
                     b.ToTable("Video");
                 });
 
-            modelBuilder.Entity("CategoryCourse", b =>
-                {
-                    b.HasOne("CoursePlatform.Common.Entities.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CourseCategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CoursePlatform.Common.Entities.Course", null)
-                        .WithMany()
-                        .HasForeignKey("CoursesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("CoursePlatform.Common.Entities.AdditionalFile", b =>
                 {
                     b.HasOne("CoursePlatform.Common.Entities.Lecture", "Lecture")
@@ -401,6 +379,13 @@ namespace CoursePlatform.Common.Migrations
                         .IsRequired();
 
                     b.Navigation("Lecture");
+                });
+
+            modelBuilder.Entity("CoursePlatform.Common.Entities.Category", b =>
+                {
+                    b.HasOne("CoursePlatform.Common.Entities.Course", null)
+                        .WithMany("CourseCategories")
+                        .HasForeignKey("CourseId");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Certificate", b =>
@@ -520,6 +505,8 @@ namespace CoursePlatform.Common.Migrations
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Course", b =>
                 {
+                    b.Navigation("CourseCategories");
+
                     b.Navigation("CourseEnrollments");
 
                     b.Navigation("FinalTest");

@@ -1,4 +1,5 @@
-﻿using CoursePlatform.Common.Interfaces;
+﻿using CoursePlatform.Common.Entities;
+using CoursePlatform.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -11,10 +12,10 @@ namespace CoursePlatform.Common
 {
     public class CoursePlatformContext : DbContext
     {
-
         protected IServiceProvider _services;
-        public CoursePlatformContext(IServiceProvider services) 
-        { 
+
+        public CoursePlatformContext(IServiceProvider services)
+        {
             _services = services;
         }
 

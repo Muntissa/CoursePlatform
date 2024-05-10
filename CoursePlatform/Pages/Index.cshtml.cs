@@ -1,7 +1,6 @@
 ﻿using CoursePlatform.Common;
-using CoursePlatform.Common.Additional;
 using CoursePlatform.Common.Entities;
-using CoursePlatform.Common.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -17,45 +16,57 @@ namespace CoursePlatform.Pages
             _context = context;
         }
 
-        public IList<Profile> Profiles { get; set; }
-        public IList<User> Users { get; set; }
         public IList<Course> Courses { get; set; }
-        public string Role { get; set; }
+        public IList<User> Users { get; set; }
 
-        public async Task OnGetAsync()
+        public void OnGet()
         {
-            LoadProfilesAsync();
-
-            /*var user = new User() { Role = Common.Enums.Role.Student, Username = "Muntissa", Password = "admin" };
-
-            _context.Add(user);
-
-            _context.SaveChangesAsync();
-
-            LoadProfilesAsync();*/
+            LoadEntity();
         }
 
-        /*        public async Task<IActionResult> OnPostAsync()
-                {
-                    if (!ModelState.IsValid)
-                    {
-                        return Page();
-                    }
-
-                    await _serviceProvider.GetRequiredService<IContextHelper>().InContext<CoursePlatformContext>(async (context) =>
-                    {
-                        var user = new User(_serviceProvider) { Role = Common.Enums.Role.Student, Username = "Muntissa", Password = "admin" };
-
-                        await context.SaveChangesAsync();
-                    });
-
-                    return RedirectToPage();
-                }*/
-
-        private void LoadProfilesAsync()
+        public IActionResult OnPost(string handler)
         {
-            Profiles = _context.Set<Profile>().ToList();
-            Users = _context.Set<User>().ToList();
+            if(handler == "Create")
+            {
+                var course = new Course() { CourseTitle = "Титл курса", CourseDecription = "Описание курса" };
+                var course2 = new Course() { CourseTitle = "Титл 2 курса", CourseDecription = "Описание 2 курса" };
+
+                var user = new User() { Username = "User1", Password = "Password1" };
+
+                user.Courses.Add(course);
+                user.Courses.Add(course2);
+
+                _context.Set<User>().Add(user);
+
+                _context.SaveChanges(); // Перенаправление на ту же страницу после выполнения POST запроса
+
+                var userToTest = _context.Set<User>().FirstOrDefault();
+            }
+
+            if(handler == "Delete")
+            {
+                var user = _context.Set<User>().FirstOrDefault();
+
+                var userProfile = _context.Set<Profile>().FirstOrDefault(u => u.UserId == user.Id);
+
+                _context.Set<Profile>().Remove(userProfile);
+
+                var courses = _context.Set<Course>().Where(c => c.UserId == user.Id).ToList();
+
+                _context.RemoveRange(courses);
+
+                _context.Set<User>().Remove(user);
+
+                _context.SaveChanges();
+            }
+
+            return RedirectToPage();
+        }
+
+        private void LoadEntity()
+        {
+            Users = _context.Set<User>().Include(c => c.Courses).ToList();
+            Courses = _context.Set<Course>().Include(c => c.CourseCategories).ToList();
         }
     }
 }

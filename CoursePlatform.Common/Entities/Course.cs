@@ -12,11 +12,11 @@ namespace CoursePlatform.Common.Entities
         public string CourseDecription { get; set; }
         
         public long? UserId { get; set; }
-        public User Teacher { get; set; }
+        public User? Teacher { get; set; }
         public Test? FinalTest { get; set; }
             
-        public List<Category> CourseCategories { get; set; } = new();
-        public List<CourseEnrollment> CourseEnrollments { get; set; } = new();
+        public List<Category>? CourseCategories { get; set; } = new();
+        public List<CourseEnrollment>? CourseEnrollments { get; set; } = new();
         public List<Lecture> Lectures { get; set; } = new();
     }
 }

@@ -12,12 +12,34 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">CoursePlatform</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <div class="nav_logo">
+                    <img class="nav_rectangle" src="/image/nav_rectangle.svg" alt="Logo" />
+                    <h5 class="nav_logotext">SKUFSES</h5>
+                </div>
+
+                <div class="nav_main">
+                    <div class="nav_main_threeitems">
+                        <h2>Все курсы</h2>
+                        <h2>Мои курсы</h2>
+                        <h2>Создать свой курс</h2>
+                    </div>
+                    <div class="nav_main_lineimg">
+                        <img src ="/image/nav_main_lineimg.svg"/>
+                    </div>
+                    <div class="nav_accburger">
+                        <div class="nav_main_accburger_text">
+                            <h3>Аккаунт</h3>
+                        </div>
+                        <div class="nav_main_accburger_img">
+                            <img src="/image/nav_main_accburger_img.svg"/>
+                        </div>
+                    </div>
+                </div>
+@*                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                </button> *@
+@*                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
@@ -26,7 +48,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
                     </ul>
-                </div>
+                </div> *@
             </div>
         </nav>
     </header>
@@ -36,11 +58,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - CoursePlatform - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
+
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

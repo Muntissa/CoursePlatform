@@ -5,19 +5,93 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+<div class="container">
+    <h1 class="course_maintitle">Платформа для онлайн-курсов</h1>
+    <div class="course_tabbar">
+        <div class="course_tabbar_tab tab_active">
+            <h5>Все курсы</h5>
+        </div>
+        <div class="course_tabbar_tab">
+            <h5>В процессе</h5>
+        </div>
+        <div class="course_tabbar_tab">
+            <h5>Пройденные</h5>
+        </div>
+    </div>
+</div>
+<section class="course">
+    <div class="container">
+        <div class="course-wrapper">
+            @foreach (var course in Model.Courses)
+            {
+                <div class="course-card card">
+                    <div class="card-wrapper">
+                        <div class="card-top">
+                            <h3 class="card-teacher">Вступительный курс</h3>
+                            <div class="card-star">
+                                <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                <img src="/image/emtpystar.svg" alt="" class="card-star--icon">
+                                <img src="/image/emtpystar.svg" alt="" class="card-star--icon">
+                            </div>
+                        </div>
+                        <div class="card-middle">
+                            <h3 class="card-title">@course.CourseTitle</h3>
+                            <p class="card-lessons">@course.Lectures.Count() лекций</p>
+                            <div class="card-category category">
+                                @foreach (var category in course.CourseCategories)
+                                {
+                                    <div class="category-block category-block--prog">
+                                        <p class="category-name category-name--prog">@category.Name</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="#" class="card-button--link">Подробнее</a>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>
+
+
+@*     <h1 class="display-4">Welcome</h1>
     <p>Learn about building Web apps with ASP.NET Core.</p>
+
+    <h2>Courses</h2>
+    <ul>
+        @foreach (var item in Model.Courses)
+        {
+            <li>@item.CourseTitle - @item.CourseDecription</li>
+        }
+    </ul>
 
     <h2>Users</h2>
     <ul>
-        @foreach (var user in Model.Users)
+        @foreach (var item in Model.Users)
         {
-            <li>@user.Role.GetValueOrDefault().GetDescription() - @user.Username - @user.Password - @user.Profile.Surname</li>
+            <li>@item.Username - @item.Password:
+            @foreach(var course in item.Courses)
+                {
+                    @course.CourseTitle <br />
+                }
+            </li>
         }
     </ul>
+
+    <form method="post">
+        <!-- Кнопка для отправки POST запроса -->
+        <button type="submit" name="handler" value="Create">Добавить новую сущность</button>
+    </form>
+    <form method="post">
+        <!-- Кнопка для отправки POST запроса -->
+        <button type="submit" name="handler" value="Delete">Добавить новую сущность</button>
+    </form>
+
+    <h2>Courses - @Model.Courses.Count() </h2>
+    <h2>Users - @Model.Users.Count() </h2> *@
 </div>
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
