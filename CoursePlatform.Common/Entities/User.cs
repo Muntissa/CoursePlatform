@@ -18,7 +18,6 @@ namespace CoursePlatform.Common.Entities
         
         public string Username { get; set; }
         public string Password { get; set; }
-        public Role? Role { get; set; }
 
         public Profile Profile { get; set; }
         public List<CourseEnrollment>? CourseEnrollments { get; set; } = new();

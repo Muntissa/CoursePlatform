@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoursePlatform.Common.Entities
+namespace CoursePlatform.Common.Enums
 {
-    public class Video : BaseAdditionEntity
+    public enum Complexity
     {
-        public string VideoURL { get; set; }
+        Light = 1,
+        Medium = 2,
+        Hard = 3,
     }
 }

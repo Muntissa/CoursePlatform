@@ -1,0 +1,130 @@
+﻿@page
+@using CoursePlatform.Common.Additional
+@model CourseDetailed
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="container">
+    <h1 class="course_maintitle">Платформа для онлайн-курсов</h1>
+    <div class="course_tabbar">
+        <div class="course_tabbar_tab tab_active">
+            <h5>Все курсы</h5>
+        </div>
+        <div class="course_tabbar_tab">
+            <h5>В процессе</h5>
+        </div>
+        <div class="course_tabbar_tab">
+            <h5>Пройденные</h5>
+        </div>
+    </div>
+</div>
+<section class="course-details">
+    <div class="container">
+        <div class="course-details--wrapper details">
+            <div class="detail-back">
+                <div class="detail-back-wrapper">
+                    <a asp-page="/Index" class="detail-back--link">
+                        <img src="./image/back-arrow.svg" alt="" class="detail-back--icon">
+                    </a>
+                </div>
+            </div>
+            <div class="details-top">
+                <p class="details-for details-grey">
+                    @if (Model.course.Teacher is not null && !String.IsNullOrEmpty(Model.course.Teacher.Profile.Name))
+                    {
+                        Model.course.Teacher.Profile.GetFullName();
+                    }
+                    else
+                    {
+                        <span>Неизвестный преподаватель</span>
+                    }
+                </p>
+                <div class="details-name">
+                    <h3 class="details-name--title">@Model.course.CourseTitle</h3>
+                    <div class="details-name--star star">
+                        @if (Model.course.Complexity == Common.Enums.Complexity.Light)
+                        {
+                            <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                            <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                            <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                        }
+                        else if (Model.course.Complexity == Common.Enums.Complexity.Medium)
+                        {
+                            <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                            <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                            <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                        }
+                        else
+                        {
+                            <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                            <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                            <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                        }
+                    </div>
+                </div>
+                <p class="details-description details-grey">Описание</p>
+                <p class="details-description-text">
+                    @Model.course.CourseDecription
+                </p>
+                <form method="post">
+                    <div class="details-btn">
+                        <button type="submit" name="course" value="@Model.course.Id" class="details-btn--link">Записаться</button>
+                    </div>
+                </form>
+            </div>
+            <div class="details-lesson lesson">
+                @foreach(var stage in Model.course.Lectures.OrderBy(l => l.OrderInCourse))
+                {
+                    <div class="lesson-item">
+                        <div class="lesson-top">
+                            <p class="lesson-number">Урок @stage.OrderInCourse</p>
+                            @* <p class="lesson-status lesson-passed">Пройден</p> *@
+                        </div>
+                        <div class="lesson-middle">
+                            <h3 class="lesson-name">@stage.Title</h3>
+                            <p class="lesson-time">2 часа</p>
+                        </div>
+                        <p class="lesson-description details-grey">
+                            @stage.Summary
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+@* <div class="lesson-item">
+    <div class="lesson-top">
+        <p class="lesson-number">Урок 1</p>
+        <p class="lesson-status lesson-passed">Пройден</p>
+    </div>
+    <div class="lesson-middle">
+        <h3 class="lesson-name">Введение в скуфоводство</h3>
+        <p class="lesson-time">2 часа</p>
+    </div>
+    <p class="lesson-description details-grey">
+        Альтушка — это девушка с необычной внешностью.
+        Какие фильмы и сериалы она смотрит,
+        какую музыку слушает, чем увлекается и с кем дружит, уже не имеет значения.
+    </p>
+</div>
+<div class="lesson-item">
+    <div class="lesson-top">
+        <p class="lesson-number">Урок 1</p>
+        <p class="lesson-status">Не пройден</p>
+    </div>
+    <div class="lesson-middle">
+        <h3 class="lesson-name">Введение в скуфоводство</h3>
+        <p class="lesson-time">2 часа</p>
+    </div>
+    <p class="lesson-description details-grey">
+        Альтушка — это девушка с необычной внешностью.
+        Какие фильмы и сериалы она смотрит,
+        какую музыку слушает, чем увлекается и с кем дружит, уже не имеет значения.
+    </p>
+</div> *@

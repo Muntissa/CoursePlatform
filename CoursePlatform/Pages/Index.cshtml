@@ -7,31 +7,64 @@
 
 <div class="container">
     <h1 class="course_maintitle">Платформа для онлайн-курсов</h1>
-    <div class="course_tabbar">
-        <div class="course_tabbar_tab tab_active">
-            <h5>Все курсы</h5>
+@*     <video width="640" height="360" controls>
+        <source src="@Model.VideoUrl" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <iframe width="640" height="360" src="@Model.VideoUrl" frameborder="0" allowfullscreen></iframe> *@
+    <form method="get">
+        <div class="course_tabbar">
+            <div class="course_tabbar_tab @if(Request.Query["FilterType"] == "All") { <text>tab_active</text> }">
+                <a href="?FilterType=All"><h5>Все курсы</h5></a>
+            </div>
+            <div class="course_tabbar_tab @if(Request.Query["FilterType"] == "InProgress") { <text>tab_active</text> }">
+                <a href="?FilterType=InProgress"><h5>В процессе</h5></a>
+            </div>
+            <div class="course_tabbar_tab @if(Request.Query["FilterType"] == "Complete") { <text>tab_active</text> }">
+                <a href="?FilterType=Complete"><h5>Пройденные</h5></a>
+            </div>
         </div>
-        <div class="course_tabbar_tab">
-            <h5>В процессе</h5>
-        </div>
-        <div class="course_tabbar_tab">
-            <h5>Пройденные</h5>
-        </div>
-    </div>
+    </form>
 </div>
 <section class="course">
     <div class="container">
         <div class="course-wrapper">
+           
             @foreach (var course in Model.Courses)
             {
                 <div class="course-card card">
                     <div class="card-wrapper">
                         <div class="card-top">
-                            <h3 class="card-teacher">Вступительный курс</h3>
+                            <h3 class="card-teacher">
+                                    @if(course.Teacher is not null && !String.IsNullOrEmpty(course.Teacher.Profile.Name))
+                                    {
+                                        @course.Teacher.Profile.GetShoryName();
+                                    }
+                                    else
+                                    {
+                                        <span>Неизвестный преподаватель</span>
+                                    }
+                            </h3>
                             <div class="card-star">
-                                <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                <img src="/image/emtpystar.svg" alt="" class="card-star--icon">
-                                <img src="/image/emtpystar.svg" alt="" class="card-star--icon">
+                                @if(course.Complexity == Common.Enums.Complexity.Light)
+                                {
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                                }
+                                else if (course.Complexity == Common.Enums.Complexity.Medium)
+                                {
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                                }
+                                else
+                                {
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                }
+
                             </div>
                         </div>
                         <div class="card-middle">
@@ -48,7 +81,7 @@
                         </div>
                     </div>
                     <div class="card-bottom">
-                        <a href="#" class="card-button--link">Подробнее</a>
+                        <a href="./CourseDetailed?id=@course.Id" class="card-button--link">Подробнее</a>
                     </div>
                 </div>
             }
@@ -94,4 +127,6 @@
     <h2>Courses - @Model.Courses.Count() </h2>
     <h2>Users - @Model.Users.Count() </h2> *@
 </div>
+
+
 

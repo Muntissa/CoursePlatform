@@ -21,7 +21,7 @@ namespace CoursePlatform
             builder.Services.AddDbContext<CoursePlatformContext>();
 
             var app = builder.Build();
-          
+            
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
