@@ -13,13 +13,13 @@ namespace CoursePlatform
             
             // Add services to the container.
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
-            
+
             builder.Services.AddPlatform();
 
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             builder.Services.AddDbContext<CoursePlatformContext>();
-
+            
             var app = builder.Build();
             
             // Configure the HTTP request pipeline.

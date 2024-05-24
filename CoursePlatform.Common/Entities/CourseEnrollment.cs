@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CoursePlatform.Common.Additional;
 
 namespace CoursePlatform.Common.Entities
 {
@@ -12,9 +8,7 @@ namespace CoursePlatform.Common.Entities
 
         public User Student { get; set; }
         public Course Course { get; set; }
-        public long? ProgressId { get; set; }
-        public Progress Progress { get; set; }
-
+        public List<Progress> Progreses { get; set; }
         public Certificate? Certificate { get; set; }
     }
 }

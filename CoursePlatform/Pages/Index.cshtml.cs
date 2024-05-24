@@ -41,6 +41,10 @@ namespace CoursePlatform.Pages
                     .Select(ce => ce.Course)
                     .Distinct()
                     .ToList();
+
+                var userSession = new UserSession(_context).GetUserSession();
+
+                /*var CoursesInProgress = */
                     
             }
             else if (FilterType == "Complete")

@@ -10,10 +10,10 @@ namespace CoursePlatform.Common.Entities
     public class Progress : BaseEntity
     {
         public Status? CompletionStatus { get; set; }
-        public int? Score { get; set; } = 0;
-        public int? Total { get; set; }
         
         public Lecture Lecture { get; set; }
+
+        public long CourseEnrollmentId { get; set; }
         public CourseEnrollment Enrollment { get; set; } 
     }
 }
