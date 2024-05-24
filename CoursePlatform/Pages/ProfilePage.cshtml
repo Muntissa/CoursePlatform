@@ -1,0 +1,70 @@
+﻿@page
+@using CoursePlatform.Common.Additional
+@model ProfilePage
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="container">
+    <h2 class="profile-title title">Аккаунт</h2>
+</div>
+<section class="profile">
+    <div class="container">
+    <div class="profile-wrapper">
+            <div class="profile-top">
+                <div class="profile-user user">
+                    <div class="user-top">
+                        <p class="user-name">June and Sarvis</p>
+                        <div class="user-type">
+                            <p class="user-type--text">Студент</p>
+                        </div>
+                    </div>
+                    <div class="user-bottom">
+                        <p class="user-finish user-course">
+                            <span>8</span>
+                            курсов пройдено
+                        </p>
+                        <p class="user-process user-course">
+                            <span>8</span>
+                            курсов в процессе
+                        </p>
+                    </div>
+                </div>
+                <div class="profile-btn">
+                    <button class="profile-btn--edit">Редактировать</button>
+                    <button class="profile-btn--save  btn-save--close">Сохранить</button>
+                </div>
+            </div>
+
+            <div class="profile-info info">
+                <div class="info-wrapper data">
+                    <h3 class="data-title info-title">Личные данные</h3>
+                    <form action="#" class="form-info">
+                        <div class="form-wrapper">
+                            <label class="info-label form-label">Фамииля</label>
+                            <input type="text" class="info-input form-input">
+                            <label class="info-label form-label">Имя</label>
+                            <input type="text" class="info-input form-input">
+                            <label class="info-label form-label">Отчество</label>
+                            <input type="text" class="info-input form-input">
+                            <label class="info-label form-label">Дата</label>
+                            <input type="date" class="info-input form-input">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="info-wrapper account">
+                    <h3 class="account-title info-title">Логин и пароль</h3>
+                    <form action="#" class="form-info">
+                        <div class="form-wrapper">
+                            <label class="info-label form-label">Никнейм</label>
+                            <input type="text" class="info-input form-input">
+                            <label class="info-label form-label">Пароль</label>
+                            <input type="password" class="info-input form-input">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</div>
+</section>
