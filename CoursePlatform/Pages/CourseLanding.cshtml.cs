@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.WebRequestMethods;
 
 namespace CoursePlatform.Pages
 {
@@ -12,15 +13,19 @@ namespace CoursePlatform.Pages
     {
         private readonly CoursePlatformContext _context;
 
+        public string VideoUrl { get; set; }
+
         public CourseLanding(CoursePlatformContext context)
         {
             _context = context;
+            VideoUrl = "https://www.youtube.com/embed/watch?v=_l5UvqVN6k0";
         }
 
         public Course course;
 
         public void OnGet(int? id)
         {
+            VideoUrl = "https://www.youtube.com/embed/watch?v=_l5UvqVN6k0";
             if (id is null)
                 return;
 
