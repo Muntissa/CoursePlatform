@@ -36,7 +36,10 @@
                                     @if(User.Identity.IsAuthenticated)
                                     {
                                         <a class="dropdown-item" asp-page="/ProfilePage">Профиль</a>
-                                        <a class="dropdown-item" href="#">Выйти</a>
+                                        <form method="post" asp-page="/Authentication" asp-page-handler="Logout">
+                                            <button type ="submit"></button>
+                                        </form>
+                                        <a class="dropdown-item" asp-page="/Authentication" asp-page-handler="Logout">Выйти</a>
                                     }
                                     else
                                     {
@@ -58,7 +61,7 @@
     
     <div class="popup-reg-bg">
         <div class="popup">
-            <form method="post" asp-page="/Register" class="popup-form">
+            <form method="post" asp-page="/Authentication" asp-page-handler="Registration" class="popup-form">
                     <h3 class="popup-title">Регистрация</h3>
                     <div class="popup-input-wrap input">
                         <label class="input-name form-label">Никнейм</label>
