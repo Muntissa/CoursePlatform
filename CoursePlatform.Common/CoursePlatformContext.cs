@@ -1,10 +1,12 @@
-﻿using CoursePlatform.Common.Interfaces;
+﻿using CoursePlatform.Common.Entities;
+using CoursePlatform.Common.Interfaces;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoursePlatform.Common
 {
-    public class CoursePlatformContext : DbContext
+    public class CoursePlatformContext : IdentityDbContext<User, Role, long>
     {
         protected IServiceProvider _services;
 

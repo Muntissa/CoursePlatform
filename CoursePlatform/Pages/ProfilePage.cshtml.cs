@@ -1,54 +1,34 @@
-﻿using CoursePlatform.Common;
-using CoursePlatform.Common.Additional;
-using CoursePlatform.Common.Entities;
+﻿using CoursePlatform.Common.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace CoursePlatform.Pages
 {
-    public class ProfilePage : PageModel
+    public class ProfilePageModel : PageModel
     {
-        private readonly CoursePlatformContext _context;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
 
-        public ProfilePage(CoursePlatformContext context)
+        public ProfilePageModel(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
-            _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
-        public Course course;
+        public User CurrentUser { get; set; }
+        public string Role { get; set; }
 
-        public void OnGet(int? id)
+        public async Task OnGet()
         {
-            if (id is null)
-                return;
+            if(User.Identity.IsAuthenticated)
+            {
+                CurrentUser = await _userManager.GetUserAsync(User);
+                var role = _userManager.GetRolesAsync(CurrentUser).Result.FirstOrDefault();
 
-            course = _context.Set<Course>().Where(c => c.Id == id)
-                .Include(c => c.Lectures)
-                .Include(c => c.Teacher)
-                .ThenInclude(t => t.Profile)
-                .FirstOrDefault();
-        }
-
-        public IActionResult OnPost(int course)
-        {
-            _context.Set<Course>()
-                .Include(c => c.CourseEnrollments)
-                .FirstOrDefault(c => c.Id == course)
-                .CourseEnrollments.Add(new CourseEnrollment() { EnrollmentDate = DateTime.Now, Student = new UserSession(_context).GetUserSession() });
-
-            _context.SaveChanges();
-            
-            var testcourse = _context.Set<Course>()
-                .Include(c => c.CourseEnrollments)
-                .FirstOrDefault(c => c.Id == course);
-
-            var user = _context.Set<User>()
-                .Include(c => c.CourseEnrollments)
-                .FirstOrDefault(u => u.Id == testcourse.CourseEnrollments.Select(c => c.Student).FirstOrDefault().Id);
-
-            return RedirectToPage("Index");
+                Role = _roleManager.FindByNameAsync(role).Result.NormalizedName;
+            }
+                
         }
     }
 }

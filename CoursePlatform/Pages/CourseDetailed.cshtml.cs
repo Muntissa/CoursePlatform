@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoursePlatform.Pages
 {
-    public class CourseDetailed : PageModel
+    public class CourseDetailedModel : PageModel
     {
         private readonly CoursePlatformContext _context;
 
-        public CourseDetailed(CoursePlatformContext context)
+        public CourseDetailedModel(CoursePlatformContext context)
         {
             _context = context;
         }

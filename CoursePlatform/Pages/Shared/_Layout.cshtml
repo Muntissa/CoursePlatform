@@ -29,83 +29,42 @@
                         <img src ="/image/nav_main_lineimg.svg"/>
                     </div>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-							<ul class="navbar-nav ml-auto py-4 py-md-0">
-								<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-									<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Аккаунт</a>
-									<div class="dropdown-menu">
-										<a class="dropdown-item" href="#">Авторизация</a>
-										<a class="dropdown-item popup-reg" href="#">Регистрация</a>
-										<a class="dropdown-item" href="#">Профиль</a>
-										<a class="dropdown-item" href="#">Выйти</a>
-									</div>
-								</li>
-							</ul>
-						</div>
-                    <!-- <button class="btn-dropdown">
-                        <span>Аккаунт</span>
-                        <img src="/image/nav_main_accburger_img.svg"/>
-                        <div class="dropdown">
-                            <ul class="dropdown-list">
-                                <li class="dropdown-item">
-                                    <a href="#" class="dropdown-link">Авторизация</a>
-                                </li>
-                                <li class="dropdown-item">
-                                    <a href="#" class="dropdown-link">Регистрация</a>
-                                </li>
-                                <li class="dropdown-item">
-                                    <a href="#" class="dropdown-link">Профиль</a>
-                                </li>
-                                <li class="dropdown-item">
-                                    <a href="#" class="dropdown-link">Выйти</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </button> -->
-                    <!-- <div class="nav_accburger">
-                        <div class="nav_main_accburger_text">
-                            <a asp-page="/Authorization">
-                                <h3>Аккаунт</h3>
-                            </a>
-                        </div>
-                        <div class="nav_main_accburger_img">
-                            <img src="/image/nav_main_accburger_img.svg"/>
-                        </div>
-                    </div> -->
+						<ul class="navbar-nav ml-auto py-4 py-md-0">
+							<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+								<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Аккаунт</a>
+								<div class="dropdown-menu">
+                                    @if(User.Identity.IsAuthenticated)
+                                    {
+                                        <a class="dropdown-item" asp-page="/ProfilePage">Профиль</a>
+                                        <a class="dropdown-item" href="#">Выйти</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="dropdown-item" href="#">Авторизация</a>
+                                        <a class="dropdown-item popup-reg" href="#">Регистрация</a>
+                                    }
+								</div>
+							</li>
+						</ul>
+					</div>
                 </div>
-@*                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button> *@
-@*                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div> *@
             </div>
         </nav>
     </header>
     
-
     <main role="main" class="pb-3">
         @RenderBody()
     </main>
     
-
-
     <div class="popup-reg-bg">
         <div class="popup">
-            <form action="" method="" class="popup-form">
+            <form method="post" asp-page="/Register" class="popup-form">
                     <h3 class="popup-title">Регистрация</h3>
                     <div class="popup-input-wrap input">
                         <label class="input-name form-label">Никнейм</label>
-                        <input type="text" class="input-nickname form-input" id="nickname">
+                        <input name="username" type="text" class="input-nickname form-input" id="nickname">
                         <label class="input-name form-label">Пароль</label>
-                        <input type="password" class="input-password form-input" id="password">
+                        <input name="password" type="password" class="input-password form-input" id="password">
                     </div>
                     <div class="popup-persondata persondata">
                         <div class="heart-container" title="Like">

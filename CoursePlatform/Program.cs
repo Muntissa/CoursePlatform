@@ -1,6 +1,8 @@
 using CoursePlatform.Common;
 using CoursePlatform.Common.Entities;
 using CoursePlatform.Common.Interfaces;
+using CoursePlatform.WebApi;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoursePlatform
@@ -10,7 +12,7 @@ namespace CoursePlatform
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            
+
             // Add services to the container.
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
@@ -19,9 +21,19 @@ namespace CoursePlatform
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             builder.Services.AddDbContext<CoursePlatformContext>();
-            
+
+/*            builder.Services
+                .AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<CoursePlatformContext>();*/
+
+            builder.Services.AddIdentity<User, Role>()
+                .AddEntityFrameworkStores<CoursePlatformContext>()
+                .AddDefaultUI()
+                .AddDefaultTokenProviders();
+
+
             var app = builder.Build();
-            
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -32,22 +44,24 @@ namespace CoursePlatform
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
+
 
             app.MapRazorPages();
 
-            using(var scope = app.Services.CreateScope()) 
+            using (var scope = app.Services.CreateScope())
             {
                 var provider = scope.ServiceProvider;
                 using (var context = new CoursePlatformContext(provider))
                 {
                     if (context.Database.GetPendingMigrations().Any())
                         context.Database.Migrate();
-                }
 
+                    if (!context.Set<Role>().Any())
+                        Busket.FillDataBase(provider);
+                }
             }
 
             app.Run();

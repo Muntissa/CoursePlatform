@@ -1,6 +1,6 @@
 ﻿@page
 @using CoursePlatform.Common.Additional
-@model ProfilePage
+@model ProfilePageModel
 @{
     ViewData["Title"] = "Home page";
 }
@@ -14,9 +14,9 @@
             <div class="profile-top">
                 <div class="profile-user user">
                     <div class="user-top">
-                        <p class="user-name">June and Sarvis</p>
+                        <p class="user-name">@Model.CurrentUser.Profile.GetFullName()</p>
                         <div class="user-type">
-                            <p class="user-type--text">Студент</p>
+                            <p class="user-type--text">@Model.Role</p>
                         </div>
                     </div>
                     <div class="user-bottom">
@@ -42,11 +42,11 @@
                     <form action="#" class="form-info">
                         <div class="form-wrapper">
                             <label class="info-label form-label">Фамииля</label>
-                            <input type="text" class="info-input form-input">
+                            <input type="text" placeholder="@Model.CurrentUser.Profile.Surname" class="info-input form-input">
                             <label class="info-label form-label">Имя</label>
-                            <input type="text" class="info-input form-input">
+                            <input type="text" placeholder="@Model.CurrentUser.Profile.Name" class="info-input form-input">
                             <label class="info-label form-label">Отчество</label>
-                            <input type="text" class="info-input form-input">
+                            <input type="text" placeholder="@Model.CurrentUser.Profile.LastName" class="info-input form-input">
                             <label class="info-label form-label">Дата</label>
                             <input type="date" class="info-input form-input">
                         </div>

@@ -12,6 +12,7 @@ namespace CoursePlatform.Common.Additional
         {
             _context = context;
         }
+
         public User? GetUserSession()
         {
             return _context.Set<User>().FirstOrDefault();

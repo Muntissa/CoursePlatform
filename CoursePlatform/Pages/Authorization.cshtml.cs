@@ -19,7 +19,7 @@ namespace CoursePlatform.Pages
 
         public void OnPost(string name, string password) 
         {
-            var user = new User { Username = name, Password = password };
+            var user = new User { UserName = name, PasswordHash = password };
 
             _context.Set<User>().Add(user);
             _context.SaveChanges();
