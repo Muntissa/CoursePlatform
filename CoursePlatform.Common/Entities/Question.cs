@@ -6,8 +6,10 @@ namespace CoursePlatform.Common.Entities
     {
         public string Content { get; set; }
         public QuestionType QuestionType { get; set; }
-        public string? ImagePath { get; set; }
 
-        public Test Test { get; set; }
+        public long? TestId { get; set; }
+        public Test? Test { get; set; }
+
+        public List<Answer> Answers { get; set; } = new();
     }
 }

@@ -13,7 +13,7 @@ namespace CoursePlatform.Common.Entities
         public long CourseId { get; set; }
         public Course Course { get; set; }
 
-        public List<Progress> Progreses { get; set; }
+        public List<Progress>? Progreses { get; set; } = new();
         public Certificate? Certificate { get; set; }
     }
 }

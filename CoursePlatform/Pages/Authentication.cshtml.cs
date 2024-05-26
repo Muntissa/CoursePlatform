@@ -71,18 +71,9 @@ namespace CoursePlatform.WebApi.Pages
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(username, password, isPersistent: false, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    return RedirectToPage("/ProfilePage");
-                }
+
                 if (result.IsLockedOut)
-                {
                     ModelState.AddModelError(string.Empty, "User account locked out.");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                }
             }
 
             var param = new { FilterType = "All" };

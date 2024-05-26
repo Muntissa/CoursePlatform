@@ -5,20 +5,6 @@
     ViewData["Title"] = "Home page";
 }
 
-@* <div class="container">
-    <h1 class="course_maintitle">Платформа для онлайн-курсов</h1>
-    <div class="course_tabbar">
-        <div class="course_tabbar_tab tab_active">
-            <h5>Все курсы</h5>
-        </div>
-        <div class="course_tabbar_tab">
-            <h5>В процессе</h5>
-        </div>
-        <div class="course_tabbar_tab">
-            <h5>Пройденные</h5>
-        </div>
-    </div>
-</div> *@
 <section class="course-details">
     <div class="container">
         <div class="course-details--wrapper details">
@@ -67,11 +53,22 @@
                 <p class="details-description-text">
                     @Model.Course.CourseDecription
                 </p>
-                <form method="post">
-                    <div class="details-btn">
-                        <button type="submit" name="course" value="@Model.Course.Id" class="details-btn--link">Записаться</button>
-                    </div>
-                </form>
+
+                @if(User.Identity.IsAuthenticated)
+                {
+                    <form asp-page="/CourseLanding" method="post">
+                        <div class="details-btn">
+                            <button type="submit" name="courseid" value="@Model.Course.Id" class="details-btn--link">Записаться</button>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <span>Сначала авторизируйтесь, перед тем как записаться на курс</span>
+                }
+
+
+
             </div>
             <div class="details-lesson lesson">
                 @foreach(var stage in Model.Course.Lectures.OrderBy(l => l.OrderInCourse))

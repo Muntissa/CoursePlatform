@@ -24,6 +24,7 @@
 ul,li,ol{
     margin: 0;
     padding: 0;
+    list-style: none;
 }
 
 
@@ -58,7 +59,6 @@ h1, h2, h3, h4, h5, h6, p {
 
 .layout-menu--link{
     font-size: 16px;
-    font-family: var(--RM);
     margin-right: 25px;
     transition: all .3s ease;
 }
@@ -76,7 +76,6 @@ h1, h2, h3, h4, h5, h6, p {
 .nav_logo {
     display: flex;
     align-items: center; /* ����������� �������� �� ��������� */
-    margin-left: 100px;
 }
 
 .nav_logo a{
@@ -230,7 +229,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .search-input{
-    width: 80%;
+    width: 100%;
     height: 50px;
     font-size: 18px;
     padding-left: 50px;
@@ -807,6 +806,261 @@ h1, h2, h3, h4, h5, h6, p {
     margin-bottom: 50px;
 }
 
+
+/* тест */
+
+.block-test{
+    margin-bottom: 100px; 
+}
+
+.test-list{
+    
+}
+
+.test-item{
+    position: relative;
+    margin-bottom: 75px;
+}
+
+.test-item:not(:last-child)::after{
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 2px;
+    background-color: #B5B5B5;
+    bottom: -45px;
+    left: 0;
+}
+
+.test-question{
+    font-size: 38px;
+    font-family: var(--RM);
+    color: #252525;
+    margin-bottom: 50px;
+}
+
+.test-answer{
+}
+
+/* радиобатон */
+
+.test-answer--form {
+    display: block;
+    max-width: 10em;
+    position: relative;
+}
+
+.test-answer--form input {
+    position: fixed;
+    top: -1.5em;
+    left: -1.5em;
+}
+
+.test-answer--form label {
+    cursor: pointer;
+    display: block;
+    font-weight: bold;
+    text-shadow: 0 0.1em 0.1em rgba(0, 0, 0, 0.2);
+    transition: color 0.2s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+.test-answer--form label:not(:last-of-type) {
+    margin-bottom: 1.5em;
+}
+
+.test-answer--form label span {
+    box-shadow: 0 0 0 0.2em currentColor inset, 0 0.2em 0.2em rgba(0, 0, 0, 0.2), 0 0.3em 0.2em rgba(0, 0, 0, 0.2) inset;
+    display: inline-block;
+    margin-right: 1em;
+    vertical-align: bottom;
+    border-radius: 50%;
+    width: 1.5em;
+    height: 1.5em;
+    transition: transform 0.2s cubic-bezier(0.5, 0, 0.5, 2), box-shadow 0.2s cubic-bezier(0.45, 0.05, 0.55, 0.95), color 0.2s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+.test-answer--form input:checked + label,
+.test-answer--form input:checked + label span {
+    color: #E85B81;
+}
+
+.test-answer--form input:checked + label,
+.test-answer--form input:checked + label span {
+    transition-delay: 0.4s;
+}
+
+.test-answer--form label span {
+    transform: scale(1.2);
+}
+
+.test-answer--form .worm {
+    top: 0.375em;
+    left: 0.375em;
+    position: absolute;
+}
+
+.test-answer--form .worm-segment {
+    position: absolute;
+    top: 0;
+    left: 0px;
+    width: 0.75em;
+    height: 0.75em;
+    border-radius: 50%;
+    transition: transform 0.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+.test-answer--form .worm-segment:before {
+    animation-duration: 0.4s;
+    animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+    background: currentColor;
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.test-answer--form .worm-segment:first-child:before,
+.test-answer--form .worm-segment:last-child:before {
+    box-shadow: 0 0 1em 0 currentColor;
+}
+
+@keyframes hop1 {
+    from,
+    to {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-1.5em);
+    }
+}
+
+@keyframes hop2 {
+    from,
+    to {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-1.5em);
+    }
+}
+
+@keyframes hop3 {
+    from,
+    to {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-1.5em);
+    }
+}
+
+.test-answer--form input:nth-of-type(1):checked ~ .worm .worm-segment {
+    transform: translateY(0);
+}
+
+.test-answer--form input:nth-of-type(1):checked ~ .worm .worm-segment:before {
+    animation-name: hop1;
+}
+
+.test-answer--form input:nth-of-type(2):checked ~ .worm .worm-segment {
+    transform: translateY(3em);
+}
+
+.test-answer--form input:nth-of-type(2):checked ~ .worm .worm-segment:before {
+    animation-name: hop2;
+}
+
+.test-answer--form input:nth-of-type(3):checked ~ .worm .worm-segment {
+    transform: translateY(6em);
+}
+
+.test-answer--form input:nth-of-type(3):checked ~ .worm .worm-segment:before {
+    animation-name: hop3;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+
+.test-answer--form input:checked + label,
+.test-answer--form input:checked + label span,
+    .test-answer--form .worm-segment:before {
+    color: #e85b81;
+    }
+}
+
+/* радиобатон */
+
+/* чексбоксер */
+
+.test-checkbox{
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.test-checkbox--answer{
+    font-size: 18px;
+    font-family: var(--RM);
+    color: #252525;
+}
+
+.test-checkbox--container input {
+    opacity: 0;
+    cursor: pointer;
+    width: 0;
+    height: 0;
+}
+
+.test-checkbox--container {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    font-size: 20px;
+    user-select: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 3px;
+    background: rgba(216, 216, 216, 0.603);
+    transition: .7s transform cubic-bezier(0,1,.33,1.2), background .4s;
+}
+
+.test-checkbox--container:hover {
+    background: #e85b81;
+    transition: .7s transform cubic-bezier(0,1,.33,1.2), background .4s;
+}
+
+.test-checkbox--container:hover .test-checkbox--line{
+    background: #fff;
+}
+
+.test-checkbox--line {
+    width: calc(100% - 8px);
+    z-index: 2;
+    height: 3px;
+    left: 4px;
+    background: rgb(58, 58, 58);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: .7s transform cubic-bezier(0,1,.33,1.2), background .4s;
+}
+
+.line-indicator {
+    transform: translateY(-50%) rotate(90deg);
+}
+
+.test-checkbox--container input:checked ~ .test-checkbox--line {
+    transform: translateY(-50%);
+}
+
+/* чексбоксер */
+
+/* тест */
+
 /* текст */
 
 .block-text{
@@ -947,6 +1201,7 @@ h1, h2, h3, h4, h5, h6, p {
 .nav-link{
     font-size: 16px;
     font-family: var(--RL);
+    color: #252525 !important;
 }
 
 .nav-item .dropdown-menu {

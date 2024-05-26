@@ -12,48 +12,40 @@ namespace CoursePlatform.Pages
     public class CourseLanding : PageModel
     {
         private readonly CoursePlatformContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public string VideoUrl { get; set; }
-
-        public CourseLanding(CoursePlatformContext context)
+        public CourseLanding(CoursePlatformContext context, UserManager<User> userManager)
         {
+            _userManager = userManager;
             _context = context;
-            VideoUrl = "https://www.youtube.com/embed/watch?v=_l5UvqVN6k0";
         }
 
-        public Course course;
+        public Course Course { get; set; }
 
-        public void OnGet(int? id)
+        public void OnGet(int? courseid)
         {
-            VideoUrl = "https://www.youtube.com/embed/watch?v=_l5UvqVN6k0";
-            if (id is null)
+            if (courseid is null)
                 return;
 
-            course = _context.Set<Course>().Where(c => c.Id == id)
+            Course = _context.Set<Course>()
                 .Include(c => c.Lectures)
-                .Include(c => c.Teacher)
-                .ThenInclude(t => t.Profile)
-                .FirstOrDefault();
+                .FirstOrDefault(c => c.Id == courseid);
         }
 
-        public IActionResult OnPost(int course)
+        public async Task<IActionResult> OnPost(int courseid)
         {
+            var user = await _userManager.GetUserAsync(User);
+
             _context.Set<Course>()
                 .Include(c => c.CourseEnrollments)
-                .FirstOrDefault(c => c.Id == course)
-                .CourseEnrollments.Add(new CourseEnrollment() { EnrollmentDate = DateTime.Now, Student = new UserSession(_context).GetUserSession() });
+                .FirstOrDefault(c => c.Id == courseid)
+                .CourseEnrollments.Add(new CourseEnrollment() { EnrollmentDate = DateTime.Now, Student = user });
 
             _context.SaveChanges();
-            
-            var testcourse = _context.Set<Course>()
-                .Include(c => c.CourseEnrollments)
-                .FirstOrDefault(c => c.Id == course);
 
-            var user = _context.Set<User>()
-                .Include(c => c.CourseEnrollments)
-                .FirstOrDefault(u => u.Id == testcourse.CourseEnrollments.Select(c => c.Student).FirstOrDefault().Id);
+            var param = new { FilterType = "All" };
 
-            return RedirectToPage("Index");
+            return RedirectToPage("/Index", param);
         }
     }
 }

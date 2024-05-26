@@ -9,6 +9,15 @@
     <div class="lecture-wrapper">
         <div class="lecture-menu">
             <ul class="lecture-list">
+                @* @foreach (var lecture in Model.Course.Lectures.OrderBy(l => l.OrderInCourse))
+                {
+                    <li class="lecture-item">
+                        <a href="#" class="lecture-link">
+                            <span>@lecture.OrderInCourse</span>
+                            @lecture.Title
+                        </a>
+                    </li>
+                } *@
                 <li class="lecture-item">
                     <a href="#" class="lecture-link">
                     <span>1</span>
@@ -35,6 +44,64 @@
                 <h2 class="lecture-content--title">Крутой курс</h2>
                 <p class="lecture-content--description">Альтушка — это девушка с необычной внешностью. Какие фильмы и сериалы она смотрит, какую музыку слушает, чем увлекается и с кем дружит, уже не имеет значения. В молодежном сленге альтушка — это необычная, нестандартная девушка, странная для нормисов.</p>
                 <div class="lecture-content--block block">
+                    
+                    <div class="block-test test">
+                        <ul class="test-list">
+                            <li class="test-item">
+                                <div class="test-question">
+                                    <h2 class="test-question--title">Кто убил Кеннади?</h2>
+                                </div>
+                                <div class="test-answer">
+                                    <form action="#" class="test-answer--form">
+                                        <input checked="" value="a" name="hopping" type="radio" id="a">
+                                        <label for="a"><span></span>ХУЙЛО</label>
+                                        <input value="b" name="hopping" type="radio" id="b">
+                                        <label for="b"><span></span>BАЛОЕД</label>
+                                        <input value="c" name="hopping" type="radio" id="c">
+                                        <label for="c"><span></span>CОСУН</label>
+                                        <div class="test-answer--worm worm">
+                                            <div class="worm-segment"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="test-item">
+                                <div class="test-question">
+                                    <h2 class="test-question--title">Кто трахнул петуха?</h2>
+                                </div>
+                                <div class="test-answer">
+                                    <form action="#" class="test-answer--form">
+                                        <li class="test-answer--checkbox test-checkbox">
+                                            <label class="test-checkbox--container">
+                                                <input type="checkbox" checked="checked">
+                                                <div class=" test-checkbox--line"></div>
+                                                <div class="test-checkbox--line line-indicator"></div>
+                                            </label>
+                                            <span class="test-checkbox--answer">Говноев</span>
+                                        </li>
+                                        <li class="test-answer--checkbox test-checkbox">
+                                            <label class="test-checkbox--container">
+                                                <input type="checkbox" checked="checked">
+                                                <div class=" test-checkbox--line"></div>
+                                                <div class="test-checkbox--line line-indicator"></div>
+                                            </label>
+                                            <span class="test-checkbox--answer">Говноев</span>
+                                        </li>
+                                        <li class="test-answer--checkbox test-checkbox">
+                                            <label class="test-checkbox--container">
+                                                <input type="checkbox" checked="checked">
+                                                <div class=" test-checkbox--line"></div>
+                                                <div class="test-checkbox--line line-indicator"></div>
+                                            </label>
+                                            <span class="test-checkbox--answer">Говноев</span>
+                                        </li>
+                                        
+                                    </form>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
                     <div class="block-text">
                         <p class="block-text--description">
                             Веб-разработка — это процесс создания веб-сайтов и веб-приложений, которые работают через интернет или интранет. Она включает в себя широкий спектр задач, от разработки простых статических страниц с текстом и изображениями до сложных веб-приложений, ориентированных на взаимодействие с пользователями, динамическим контентом и интеграцией с базами данных и другими сервисами. Веб-разработка подразделяется на фронтенд (клиентская сторона) и бэкенд (серверная сторона) разработку. Фронтенд отвечает за все, что пользователь видит и с чем взаимодействует в браузере, тогда как бэкенд обрабатывает данные, выполняет бизнес-логику и отвечает за взаимодействие с базой данных.

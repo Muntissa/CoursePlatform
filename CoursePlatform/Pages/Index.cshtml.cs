@@ -12,40 +12,37 @@ namespace CoursePlatform.Pages
     public class IndexModel : PageModel
     {
         private readonly CoursePlatformContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public IndexModel(CoursePlatformContext context)
+        public IndexModel(CoursePlatformContext context, UserManager<User> userManager)
         {
+            _userManager = userManager;
             _context = context;
-            VideoUrl = "https://www.youtube.com/embed/watch?v=dQw4w9WgXcQ";
         }
 
         public IList<Course> Courses { get; set; }
-        public IList<User> Users { get; set; }
-        public string VideoUrl { get; set; }
+        public User CurrentUser { get; set; }
 
-        public void OnGet(string FilterType)
+        public async Task OnGet(string FilterType)
         {
+            CurrentUser = await _userManager.GetUserAsync(User);
+
             if (string.IsNullOrEmpty(FilterType) || FilterType == "All")
             {
-                Courses = _context.Set<Course>()
+                Courses = await _context.Set<Course>()
                     .Include(c => c.Lectures)
                     .Include(c => c.Teacher).ThenInclude(t => t.Profile)
                     .Include(c => c.CourseCategories)
-                    .ToList();
+                    .ToListAsync();
             }
 
             else if (FilterType == "InProgress")
             {
-                Courses = _context.Set<CourseEnrollment>()
-                    .Where(ce => ce.Student == new UserSession(_context).GetUserSession())
+                Courses = await _context.Set<CourseEnrollment>()
+                    .Where(ce => ce.Student == CurrentUser)
                     .Select(ce => ce.Course)
                     .Distinct()
-                    .ToList();
-
-                var userSession = new UserSession(_context).GetUserSession();
-
-                /*var CoursesInProgress = */
-                    
+                    .ToListAsync();
             }
             else if (FilterType == "Complete")
             {
