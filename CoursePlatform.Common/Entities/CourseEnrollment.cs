@@ -6,8 +6,13 @@ namespace CoursePlatform.Common.Entities
     {
         public DateTime EnrollmentDate { get; set; }
 
+
+        public long StudentId { get; set; }
         public User Student { get; set; }
+
+        public long CourseId { get; set; }
         public Course Course { get; set; }
+
         public List<Progress> Progreses { get; set; }
         public Certificate? Certificate { get; set; }
     }

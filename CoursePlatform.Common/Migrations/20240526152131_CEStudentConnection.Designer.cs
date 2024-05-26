@@ -3,6 +3,7 @@ using System;
 using CoursePlatform.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoursePlatform.Common.Migrations
 {
     [DbContext(typeof(CoursePlatformContext))]
-    partial class CoursePlatformContextModelSnapshot : ModelSnapshot
+    [Migration("20240526152131_CEStudentConnection")]
+    partial class CEStudentConnection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,7 +93,7 @@ namespace CoursePlatform.Common.Migrations
                     b.Property<long?>("CourseEnrollmentId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("IssueDate")
+                    b.Property<DateTime>("IssueDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Path")
@@ -642,13 +645,13 @@ namespace CoursePlatform.Common.Migrations
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Progress", b =>
                 {
-                    b.HasOne("CoursePlatform.Common.Entities.CourseEnrollment", "CourseEnrollment")
+                    b.HasOne("CoursePlatform.Common.Entities.CourseEnrollment", "Enrollment")
                         .WithMany("Progreses")
                         .HasForeignKey("CourseEnrollmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CourseEnrollment");
+                    b.Navigation("Enrollment");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Question", b =>

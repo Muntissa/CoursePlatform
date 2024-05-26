@@ -13,17 +13,17 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <div class="nav_logo">
-                    <img class="nav_rectangle" src="/image/nav_rectangle.svg" alt="Logo" />
-                    <h5 class="nav_logotext">COURSES</h5>
+                    <a asp-page="/Index">
+                        <img class="nav_rectangle" src="/image/nav_rectangle.svg" alt="Logo" />
+                        <h5 class="nav_logotext">COURSES</h5>
+                    </a>
                 </div>
 
                 <div class="nav_main">
                     <div class="nav_main_threeitems">
-                        <h2>
-                            <a asp-page="/Index">Все курсы</a>
-                        </h2>
-                        <h2>Мои курсы</h2>
-                        <h2>Создать свой курс</h2>
+                        <a class="layout-menu--link"asp-page="/Index">Все курсы</a>
+                        <a class="layout-menu--link" asp-page="">Мои курсы</a>
+                        <a class="layout-menu--link" asp-page="">Создать свой курс</a>
                     </div>
                     <div class="nav_main_lineimg">
                         <img src ="/image/nav_main_lineimg.svg"/>
@@ -37,13 +37,12 @@
                                     {
                                         <a class="dropdown-item" asp-page="/ProfilePage">Профиль</a>
                                         <form method="post" asp-page="/Authentication" asp-page-handler="Logout">
-                                            <button type ="submit"></button>
+                                            <button class="dropdown-item" type ="submit">Выйти</button>
                                         </form>
-                                        <a class="dropdown-item" asp-page="/Authentication" asp-page-handler="Logout">Выйти</a>
                                     }
                                     else
                                     {
-                                        <a class="dropdown-item" href="#">Авторизация</a>
+                                        <a class="dropdown-item popup-auth" href="#">Авторизация</a>
                                         <a class="dropdown-item popup-reg" href="#">Регистрация</a>
                                     }
 								</div>
@@ -68,6 +67,20 @@
                         <input name="username" type="text" class="input-nickname form-input" id="nickname">
                         <label class="input-name form-label">Пароль</label>
                         <input name="password" type="password" class="input-password form-input" id="password">
+                    </div>
+                    <div class="wrapper-rb">
+                        <div class="option-rb">
+                            <input class="input-rb" type="radio" name="btn" value="option1" checked="">
+                            <div class="btn-rb">
+                                <span class="span-rb">Преподаватель</span>
+                            </div>
+                        </div>
+                        <div class="option-rb">
+                            <input class="input-rb" type="radio" name="btn" value="option2">
+                            <div class="btn-rb">
+                                <span class="span-rb">Студент</span>
+                            </div>  
+                        </div> 
                     </div>
                     <div class="popup-persondata persondata">
                         <div class="heart-container" title="Like">
@@ -95,7 +108,23 @@
                     </div>
                     <div class="popup-btn">
                         <button class="popup-btn--reg btn">Зарегистрироваться</button>
-                        <button class="popup-btn--acc">У меня уже есть аккаунт</button>
+                    </div>
+                </form>
+        </div>
+    </div>
+
+    <div class="popup-auth-bg">
+        <div class="popup">
+            <form method="post" asp-page="/Authentication" asp-page-handler="Login" class="popup-form">
+                    <h3 class="popup-title">Авторизация</h3>
+                    <div class="popup-input-wrap input">
+                        <label class="input-name form-label">Никнейм</label>
+                        <input name="username" type="text" class="input-nickname form-input" id="nickname">
+                        <label class="input-name form-label">Пароль</label>
+                        <input name="password" type="password" class="input-password form-input" id="password">
+                    </div>
+                    <div class="popup-btn">
+                        <button class="popup-btn--reg btn">Авторизоваться</button>
                     </div>
                 </form>
         </div>

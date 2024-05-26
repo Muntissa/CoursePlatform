@@ -31,9 +31,9 @@
             </div>
             <div class="details-top">
                 <p class="details-for details-grey">
-                    @if (Model.course.Teacher is not null && !String.IsNullOrEmpty(Model.course.Teacher.Profile.Name))
+                    @if (Model.Course.Teacher is not null && !String.IsNullOrEmpty(Model.Course.Teacher.Profile.Name))
                     {
-                        Model.course.Teacher.Profile.GetFullName();
+                        Model.Course.Teacher.Profile.GetFullName();
                     }
                     else
                     {
@@ -41,15 +41,15 @@
                     }
                 </p>
                 <div class="details-name">
-                    <h3 class="details-name--title">@Model.course.CourseTitle</h3>
+                    <h3 class="details-name--title">@Model.Course.CourseTitle</h3>
                     <div class="details-name--star star">
-                        @if (Model.course.Complexity == Common.Enums.Complexity.Light)
+                        @if (Model.Course.Complexity == Common.Enums.Complexity.Light)
                         {
                             <img src="/image/fullstar.svg" alt="" class="card-star--icon">
                             <img src="/image/emptystar.svg" alt="" class="card-star--icon">
                             <img src="/image/emptystar.svg" alt="" class="card-star--icon">
                         }
-                        else if (Model.course.Complexity == Common.Enums.Complexity.Medium)
+                        else if (Model.Course.Complexity == Common.Enums.Complexity.Medium)
                         {
                             <img src="/image/fullstar.svg" alt="" class="card-star--icon">
                             <img src="/image/fullstar.svg" alt="" class="card-star--icon">
@@ -65,16 +65,16 @@
                 </div>
                 <p class="details-description details-grey">Описание</p>
                 <p class="details-description-text">
-                    @Model.course.CourseDecription
+                    @Model.Course.CourseDecription
                 </p>
                 <form method="post">
                     <div class="details-btn">
-                        <button type="submit" name="course" value="@Model.course.Id" class="details-btn--link">Записаться</button>
+                        <button type="submit" name="course" value="@Model.Course.Id" class="details-btn--link">Записаться</button>
                     </div>
                 </form>
             </div>
             <div class="details-lesson lesson">
-                @foreach(var stage in Model.course.Lectures.OrderBy(l => l.OrderInCourse))
+                @foreach(var stage in Model.Course.Lectures.OrderBy(l => l.OrderInCourse))
                 {
                     <div class="lesson-item">
                         <div class="lesson-top">

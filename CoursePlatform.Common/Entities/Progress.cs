@@ -14,6 +14,6 @@ namespace CoursePlatform.Common.Entities
         public Lecture Lecture { get; set; }
 
         public long CourseEnrollmentId { get; set; }
-        public CourseEnrollment Enrollment { get; set; } 
+        public CourseEnrollment CourseEnrollment { get; set; } 
     }
 }

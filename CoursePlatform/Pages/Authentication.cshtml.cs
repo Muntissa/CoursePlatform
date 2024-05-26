@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CoursePlatform.WebApi.Pages
 {
     public class AuthenticationModel : PageModel
-    {
+    {   
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<Role> _roleManager;

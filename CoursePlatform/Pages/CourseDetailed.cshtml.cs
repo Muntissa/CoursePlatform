@@ -11,32 +11,41 @@ namespace CoursePlatform.Pages
     public class CourseDetailedModel : PageModel
     {
         private readonly CoursePlatformContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public CourseDetailedModel(CoursePlatformContext context)
+        public CourseDetailedModel(CoursePlatformContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        public Course course;
+        public Course Course { get; set; }
 
         public void OnGet(int? id)
         {
             if (id is null)
                 return;
 
-            course = _context.Set<Course>().Where(c => c.Id == id)
+            Course = _context.Set<Course>().Where(c => c.Id == id)
                 .Include(c => c.Lectures)
                 .Include(c => c.Teacher)
                 .ThenInclude(t => t.Profile)
                 .FirstOrDefault();
         }
 
-        public IActionResult OnPost(int course)
+        public async Task<IActionResult> OnPost(int course)
         {
-            _context.Set<Course>()
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            _context.Set<User>()
                 .Include(c => c.CourseEnrollments)
-                .FirstOrDefault(c => c.Id == course)
-                .CourseEnrollments.Add(new CourseEnrollment() { EnrollmentDate = DateTime.Now, Student = new UserSession(_context).GetUserSession() });
+                .FirstOrDefault(c => c.Id == currentUser.Id)
+                .CourseEnrollments.Add(new CourseEnrollment() 
+                { 
+                    EnrollmentDate = DateTime.Now, 
+                    Certificate = new() { Path = $"/image/Student{currentUser.UserName}{Course.CourseTitle.Replace(" ", "")}" },
+                    Progreses = new(Course.Lectures.Count())
+                });
 
             _context.SaveChanges();
             
@@ -48,7 +57,7 @@ namespace CoursePlatform.Pages
                 .Include(c => c.CourseEnrollments)
                 .FirstOrDefault(u => u.Id == testcourse.CourseEnrollments.Select(c => c.Student).FirstOrDefault().Id);
 
-            return RedirectToPage("Index");
+            return RedirectToPage("/Index");
         }
     }
 }

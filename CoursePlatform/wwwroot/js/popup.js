@@ -11,3 +11,17 @@ $('.popup-reg-bg').click(function(e) {
         $('html').removeClass('no-scroll');
     }
 });
+
+$('.popup-auth').click(function(e) {
+    e.preventDefault();
+    $('.popup-auth-bg').fadeIn(400);
+    $('html').addClass('no-scroll');
+});
+
+$('.popup-auth-bg').click(function(e) {
+    // Проверяем, был ли клик по самой фоновой области
+    if ($(e.target).hasClass('popup-auth-bg')) {
+        $(this).fadeOut(200);
+        $('html').removeClass('no-scroll');
+    }
+});
