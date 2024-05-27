@@ -12,15 +12,25 @@
             <div class="platform-menu">
                 <nav class="platform-menu--wrapper">
                     <ul class="platform-menu--list">
-                        <li class="platform-menu--item">
-                            <a href="?FilterType=All" class="platform-menu--link @if(Request.Query["FilterType"] == "All") { <text>platform-menu--active</text> }">Все курсы</a>
-                        </li>
-                        <li class="platform-menu--item">
-                            <a href="?FilterType=InProgress" class="platform-menu--link @if(Request.Query["FilterType"] == "InProgress") { <text>platform-menu--active</text> }">В процессе</a>
-                        </li>
-                        <li class="platform-menu--item">
-                            <a href="?FilterType=Complete" class="platform-menu--link @if(Request.Query["FilterType"] == "Complete") { <text>platform-menu--active</text> }">Пройденные</a>
-                        </li>
+                        @if(User.Identity.IsAuthenticated)
+                        {
+                            <li class="platform-menu--item">
+                                <a href="?FilterType=All" class="platform-menu--link @if(Request.Query["FilterType"] == "All") { <text>platform-menu--active</text> }">Все курсы</a>
+                            </li>
+                            <li class="platform-menu--item">
+                                <a href="?FilterType=InProgress" class="platform-menu--link @if(Request.Query["FilterType"] == "InProgress") { <text>platform-menu--active</text>}">В процессе</a>
+                            </li>
+                            <li class="platform-menu--item">
+                                <a href="?FilterType=Complete" class="platform-menu--link @if(Request.Query["FilterType"] == "Complete") { <text>platform-menu--active</text>}">Пройденные</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="platform-menu--item">
+                                <a href="?FilterType=All" class="platform-menu--link @if(Request.Query["FilterType"] == "All") { <text>platform-menu--active</text>}">Все курсы</a>
+                            </li>
+                        }
+
                     </ul>
                 </nav>
             </div>
@@ -47,17 +57,18 @@
                     <div class="card-wrapper">
                         <div class="card-top">
                             <h3 class="card-teacher">
-                                    @if(course.Teacher is not null && !String.IsNullOrEmpty(course.Teacher.Profile.Name))
-                                    {
-                                        @course.Teacher.Profile.GetShoryName();
-                                    }
-                                    else
-                                    {
-                                        <span>Неизвестный преподаватель</span>
-                                    }
+                                @if (course.Teacher is not null && !String.IsNullOrEmpty(course.Teacher.Profile.Name))
+                                {
+                                    @course.Teacher.Profile.GetShoryName()
+                                    ;
+                                }
+                                else
+                                {
+                                    <span>Неизвестный преподаватель</span>
+                                }
                             </h3>
                             <div class="card-star">
-                                @if(course.Complexity == Common.Enums.Complexity.Light)
+                                @if (course.Complexity == Common.Enums.Complexity.Light)
                                 {
                                     <img src="/image/fullstar.svg" alt="" class="card-star--icon">
                                     <img src="/image/emptystar.svg" alt="" class="card-star--icon">
@@ -75,7 +86,6 @@
                                     <img src="/image/fullstar.svg" alt="" class="card-star--icon">
                                     <img src="/image/fullstar.svg" alt="" class="card-star--icon">
                                 }
-
                             </div>
                         </div>
                         <div class="card-middle">
@@ -92,52 +102,15 @@
                         </div>
                     </div>
                     <div class="card-bottom">
-                        <a href="./CourseDetailed?courseid=@course.Id" class="card-button--link">Подробнее</a>
+                        @{
+                            var filterType = Request.Query["FilterType"];
+                            var detailPage = filterType == "InProgress" || filterType == "Complete" ? "CourseLanding" : "CourseDetailed";
+                            var url = Url.Page(detailPage, new { courseid = course.Id });
+                        }
+                        <a href="@url" class="card-button--link">Подробнее</a>
                     </div>
                 </div>
             }
-
         </div>
     </div>
 </section>
-
-
-@*     <h1 class="display-4">Welcome</h1>
-    <p>Learn about building Web apps with ASP.NET Core.</p>
-
-    <h2>Courses</h2>
-    <ul>
-        @foreach (var item in Model.Courses)
-        {
-            <li>@item.CourseTitle - @item.CourseDecription</li>
-        }
-    </ul>
-
-    <h2>Users</h2>
-    <ul>
-        @foreach (var item in Model.Users)
-        {
-            <li>@item.Username - @item.Password:
-            @foreach(var course in item.Courses)
-                {
-                    @course.CourseTitle <br />
-                }
-            </li>
-        }
-    </ul>
-
-    <form method="post">
-        <!-- Кнопка для отправки POST запроса -->
-        <button type="submit" name="handler" value="Create">Добавить новую сущность</button>
-    </form>
-    <form method="post">
-        <!-- Кнопка для отправки POST запроса -->
-        <button type="submit" name="handler" value="Delete">Добавить новую сущность</button>
-    </form>
-
-    <h2>Courses - @Model.Courses.Count() </h2>
-    <h2>Users - @Model.Users.Count() </h2> *@
-</div>
-
-
-

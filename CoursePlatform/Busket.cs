@@ -1,5 +1,6 @@
 ﻿using CoursePlatform.Common;
 using CoursePlatform.Common.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoursePlatform.WebApi
 {
@@ -9,22 +10,9 @@ namespace CoursePlatform.WebApi
         {
             using (var context = new CoursePlatformContext(provider))
             {
-                context.AddRange(
-                    new Role()
-                    {
-                        Name = "Student",
-                        NormalizedName = "Студент"
-                    },
-                    new Role()
-                    {
-                        Name = "Teacher",
-                        NormalizedName = "Преподаватель"
-                    },
-                    new Role()
-                    {
-                        Name = "Admin",
-                        NormalizedName = "Администратор"
-                    });
+                var course = context.Set<Course>().Include(c => c.Lectures).FirstOrDefault(c => c.Id == 25);
+
+                course.Lectures.Add(new Lecture() { OrderInCourse = 3, Title = "Тест", Summary = "Тест самари" });
 
                 context.SaveChanges();
             }

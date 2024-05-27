@@ -21,8 +21,9 @@ namespace CoursePlatform.Pages
         }
 
         public Course Course { get; set; }
+        public Lecture CurrentLecture { get; set; }
 
-        public void OnGet(int? courseid)
+        public void OnGet(int? courseid, int? lectureid)
         {
             if (courseid is null)
                 return;
@@ -30,6 +31,8 @@ namespace CoursePlatform.Pages
             Course = _context.Set<Course>()
                 .Include(c => c.Lectures)
                 .FirstOrDefault(c => c.Id == courseid);
+
+            CurrentLecture = Course.Lectures.Where(l => l.Id == lectureid).FirstOrDefault();
         }
 
         public async Task<IActionResult> OnPost(int courseid)
@@ -43,9 +46,7 @@ namespace CoursePlatform.Pages
 
             _context.SaveChanges();
 
-            var param = new { FilterType = "All" };
-
-            return RedirectToPage("/Index", param);
+            return RedirectToPage(new { courseid });
         }
     }
 }

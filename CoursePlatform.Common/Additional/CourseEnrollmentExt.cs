@@ -13,8 +13,7 @@ namespace CoursePlatform.Common.Additional
         {
             var allProgress = courseE.Progreses.Count();
 
-            if (allProgress == 0)
-                return 0;
+            var progressCount = courseE.Course.Lectures.Count();
 
             var getCurrentProgress = courseE.Progreses.Where(p => p.CompletionStatus == Enums.Status.Success).Count();
 

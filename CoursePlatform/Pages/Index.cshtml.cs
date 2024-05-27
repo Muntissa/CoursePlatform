@@ -38,16 +38,54 @@ namespace CoursePlatform.Pages
 
             else if (FilterType == "InProgress")
             {
-                Courses = await _context.Set<CourseEnrollment>()
-                    .Where(ce => ce.Student == CurrentUser)
-                    .Select(ce => ce.Course)
-                    .Distinct()
-                    .ToListAsync();
+                var courses = await _context.Set<CourseEnrollment>()
+    .Include(ce => ce.Course)
+        .ThenInclude(c => c.Lectures)
+    .Include(ce => ce.Course)
+        .ThenInclude(c => c.CourseCategories)
+    .Include(ce => ce.Course)
+                    .ThenInclude(c => c.Teacher)
+                .ThenInclude(t => t.Profile)
+                .Where(ce => ce.StudentId == CurrentUser.Id &&(ce.Progreses.Any(p => p.CompletionStatus == Status.InProgress) || ce.Progreses.Count() == 0))
+                .Select(ce => ce.Course)
+                .Distinct()
+                .ToListAsync();
+
+                Courses = courses;
             }
             else if (FilterType == "Complete")
             {
-                
+                var courses = await _context.Set<CourseEnrollment>()
+                    .Include(ce => ce.Course).ThenInclude(c => c.Lectures)
+                    .Include(ce => ce.Course).ThenInclude(c => c.CourseCategories)
+                    .Include(ce => ce.Course).ThenInclude(c => c.Teacher).ThenInclude(t => t.Profile)
+                    .Where(ce => ce.Progreses.Any(p => p.CompletionStatus == Status.Success) || ce.Progreses.Count() == ce.Course.Lectures.Count())
+                    .Select(ce => ce.Course)
+                    .Distinct()
+                    .ToListAsync();
+
+                Courses = courses;
             }
+
         }
+
+        public async Task<IActionResult> OnPostAsync(int courseid)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var course = _context.Set<Course>()
+                .Include(c => c.CourseEnrollments)
+                .FirstOrDefault(c => c.Id == courseid);
+
+            if (course != null)
+            {
+                course.CourseEnrollments.Add(new CourseEnrollment() { EnrollmentDate = DateTime.Now, Student = user });
+                await _context.SaveChangesAsync();
+            }
+
+            // Перенаправление на ту же страницу с параметром courseid
+            return RedirectToPage(new { courseid });
+        }
+
     }
 }

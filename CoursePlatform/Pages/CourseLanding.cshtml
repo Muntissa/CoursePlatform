@@ -9,16 +9,16 @@
     <div class="lecture-wrapper">
         <div class="lecture-menu">
             <ul class="lecture-list">
-                @* @foreach (var lecture in Model.Course.Lectures.OrderBy(l => l.OrderInCourse))
+                @foreach (var lecture in Model.Course.Lectures.OrderBy(l => l.OrderInCourse))
                 {
                     <li class="lecture-item">
-                        <a href="#" class="lecture-link">
+                        <a href="/CourseLanding?courseid=@Model.Course.Id&lectureid=@lecture.Id" class="lecture-link lecture-active">
                             <span>@lecture.OrderInCourse</span>
                             @lecture.Title
                         </a>
                     </li>
-                } *@
-                <li class="lecture-item">
+                }
+@*                 <li class="lecture-item">
                     <a href="#" class="lecture-link">
                     <span>1</span>
                     Глава Введение
@@ -35,30 +35,30 @@
                     <span>3</span>
                     Глава Введение
                     </a>
-                </li>
+                </li> *@
             </ul>
         </div>
         <div class="lecture-content">
             <div class="lecture-content--wrapper">
-                <p class="lecture-content--suptitle">1.3 как не стать скуфом</p>
+                <p class="lecture-content--suptitle">2 Введение в SQL</p>
                 <h2 class="lecture-content--title">Крутой курс</h2>
-                <p class="lecture-content--description">Альтушка — это девушка с необычной внешностью. Какие фильмы и сериалы она смотрит, какую музыку слушает, чем увлекается и с кем дружит, уже не имеет значения. В молодежном сленге альтушка — это необычная, нестандартная девушка, странная для нормисов.</p>
+                <p class="lecture-content--description">SQL — декларативный язык программирования, применяемый для создания, модификации и управления данными в реляционной базе данных, управляемой соответствующей системой управления базами данных.</p>
                 <div class="lecture-content--block block">
                     
                     <div class="block-test test">
                         <ul class="test-list">
                             <li class="test-item">
                                 <div class="test-question">
-                                    <h2 class="test-question--title">Кто убил Кеннади?</h2>
+                                    <h2 class="test-question--title">Что такое SQL?</h2>
                                 </div>
                                 <div class="test-answer">
                                     <form action="#" class="test-answer--form">
                                         <input checked="" value="a" name="hopping" type="radio" id="a">
-                                        <label for="a"><span></span>ХУЙЛО</label>
+                                        <label for="a"><span></span>Инструмент</label>
                                         <input value="b" name="hopping" type="radio" id="b">
-                                        <label for="b"><span></span>BАЛОЕД</label>
+                                        <label for="b"><span></span>Проект</label>
                                         <input value="c" name="hopping" type="radio" id="c">
-                                        <label for="c"><span></span>CОСУН</label>
+                                        <label for="c"><span></span>Не знаю</label>
                                         <div class="test-answer--worm worm">
                                             <div class="worm-segment"></div>
                                         </div>
@@ -67,7 +67,7 @@
                             </li>
                             <li class="test-item">
                                 <div class="test-question">
-                                    <h2 class="test-question--title">Кто трахнул петуха?</h2>
+                                    <h2 class="test-question--title">Что такое SELECT?</h2>
                                 </div>
                                 <div class="test-answer">
                                     <form action="#" class="test-answer--form">
@@ -77,7 +77,7 @@
                                                 <div class=" test-checkbox--line"></div>
                                                 <div class="test-checkbox--line line-indicator"></div>
                                             </label>
-                                            <span class="test-checkbox--answer">Говноев</span>
+                                            <span class="test-checkbox--answer">Один из запросов в SQL</span>
                                         </li>
                                         <li class="test-answer--checkbox test-checkbox">
                                             <label class="test-checkbox--container">
@@ -85,7 +85,7 @@
                                                 <div class=" test-checkbox--line"></div>
                                                 <div class="test-checkbox--line line-indicator"></div>
                                             </label>
-                                            <span class="test-checkbox--answer">Говноев</span>
+                                            <span class="test-checkbox--answer">Запрос-фильтрация</span>
                                         </li>
                                         <li class="test-answer--checkbox test-checkbox">
                                             <label class="test-checkbox--container">
@@ -93,7 +93,7 @@
                                                 <div class=" test-checkbox--line"></div>
                                                 <div class="test-checkbox--line line-indicator"></div>
                                             </label>
-                                            <span class="test-checkbox--answer">Говноев</span>
+                                            <span class="test-checkbox--answer">Не знаю</span>
                                         </li>
                                         
                                     </form>
@@ -133,7 +133,7 @@
                             <li class="block-download--item">
                                 <a download class="block-download--link" href="/image/back-arrow.svg">
                                     <img class="block-downloand--icon" src="/image/pdf.svg">
-                                    <span>Глава седьмая, я ебал этот диплом во все щели 24/7s</span>
+                                    <span>Материал к лекции</span>
                                 </a>
                             </li>
                             
