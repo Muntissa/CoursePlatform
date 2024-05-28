@@ -12,8 +12,9 @@
             <ul class="lecture-list">
                 @foreach (var lecture in Model.Course.Lectures.OrderBy(l => l.OrderInCourse))
                 {
+                    var isActive = lecture.Id == Model.CurrentLecture?.Id ? "lecture-active" : "";
                     <li class="lecture-item">
-                        <a href="/CourseLanding?courseid=@Model.Course.Id&lectureid=@lecture.Id" class="lecture-link lecture-active">
+                        <a href="/CourseLanding?courseid=@Model.Course.Id&lectureid=@lecture.Id" class="lecture-link @isActive">
                             <span>@lecture.OrderInCourse</span>
                             @lecture.Title
                         </a>
@@ -21,17 +22,33 @@
                 }
             </ul>
         </div>
+
         @if(Model.CurrentLecture is not null)
         {
             <div class="lecture-content">
                 <div class="lecture-content--wrapper">
+                    @{
+                        var progressToLecture = Model.CurrentCE.Progreses.FirstOrDefault(p => p.Lecture.Id == Model.CurrentLecture.Id);
+
+                        if(progressToLecture is null || progressToLecture.CompletionStatus != Common.Enums.Status.Success)
+                        {
+                            <p class="lecture-content--suptitle">Не пройдено</p>
+                        }
+                        else
+                        {
+                            <p class="lecture-content--suptitle">Пройдено</p>
+                        }  
+                    }
+                    
                     <h2 class="lecture-content--title">@Model.CurrentLecture.Title</h2>
                     <p class="lecture-content--description">@Model.CurrentLecture.Summary</p>
                     <div class="lecture-content--block block">
                         @if (Model.CurrentLecture.Test is not null)
                         {
                             <div class="block-test test">
-                                <form asp-page-handler="TestCheck" method="post" class="test-answer--form">
+                                <form asp-page-handler="CheckProgress" method="post" id="testForm" class="test-answer--form">
+                                    <input type="hidden" name="courseid" value="@Model.Course.Id"></input>
+                                    <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id"></input>
                                     <ul class="test-list">
                                         @for (int i = 0; i < Model.CurrentLecture.Test.Questions.Count; i++)
                                         {
@@ -116,24 +133,20 @@
 
                     </div>
                 </div>
-                <div class="lecture-btn">
-                        @if (Model.CurrentLecture.OrderInCourse == 1)
-                        {
-                            <div class="lecture-btn--done lecture-btn--view">Выполненно</div>
-                            <div class="lecture-btn--next lecture-btn--view">Далее</div>
-                        }
-                        else if (Model.Course.Lectures.OrderBy(l => l.OrderInCourse).Last().Id == Model.CurrentLecture.Id)
-                        {
-                            <div class="lecture-btn--back lecture-btn--view">Назад</div>
-                            <div class="lecture-btn--done lecture-btn--view">Выполненно</div>
-                        }
-                        else
-                        {
-                        <div class="lecture-btn--back lecture-btn--view">Назад</div>
-                        <div class="lecture-btn--done lecture-btn--view">Выполненно</div>
-                        <div class="lecture-btn--next lecture-btn--view">Далее</div>
-                        }
-                </div>
+                @{
+                    if(progressToLecture is null)
+                    {
+                        <div class="lecture-btn">
+                            <div class="lecture-btn--done lecture-btn--view">
+                                <form asp-page-handler="CheckProgress" method="post" id="testForm" class="test-answer--form">
+                                    <button id="progressButton">Подтвердить выполнение</button>
+                                    <input type="hidden" name="courseid" value="@Model.Course.Id"></input>
+                                    <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id"></input>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         }
         else
@@ -184,3 +197,9 @@
         }
     </div>
 </section>
+
+<script>
+    $('#progressButton').click(function () {
+        $('#testForm').submit();
+    });
+</script>
