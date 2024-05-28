@@ -49,6 +49,11 @@ body {
     background-color: #f9f9f9;
 }
 
+button{
+    background-color: transparent;
+    border: none;
+}
+
 .pb-3 {
     padding-bottom: 0rem !important;
 }
@@ -850,13 +855,13 @@ h1, h2, h3, h4, h5, h6, p {
     position: relative;
 }
 
-.test-answer--form input {
+.test-answer--form .input {
     position: fixed;
     top: -1.5em;
     left: -1.5em;
 }
 
-.test-answer--form label {
+.test-answer--form .label {
     cursor: pointer;
     display: block;
     font-weight: bold;
@@ -864,11 +869,11 @@ h1, h2, h3, h4, h5, h6, p {
     transition: color 0.2s cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 
-.test-answer--form label:not(:last-of-type) {
+.test-answer--form .label:not(:last-of-type) {
     margin-bottom: 1.5em;
 }
 
-.test-answer--form label span {
+.test-answer--form .label span {
     box-shadow: 0 0 0 0.2em currentColor inset, 0 0.2em 0.2em rgba(0, 0, 0, 0.2), 0 0.3em 0.2em rgba(0, 0, 0, 0.2) inset;
     display: inline-block;
     margin-right: 1em;
@@ -879,17 +884,17 @@ h1, h2, h3, h4, h5, h6, p {
     transition: transform 0.2s cubic-bezier(0.5, 0, 0.5, 2), box-shadow 0.2s cubic-bezier(0.45, 0.05, 0.55, 0.95), color 0.2s cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 
-.test-answer--form input:checked + label,
-.test-answer--form input:checked + label span {
+.test-answer--form .input:checked + .label,
+.test-answer--form .input:checked + .label span {
     color: #E85B81;
 }
 
-.test-answer--form input:checked + label,
-.test-answer--form input:checked + label span {
+.test-answer--form .input:checked + .label,
+.test-answer--form .input:checked + .label span {
     transition-delay: 0.4s;
 }
 
-.test-answer--form label span {
+.test-answer--form .label span {
     transform: scale(1.2);
 }
 
@@ -958,34 +963,53 @@ h1, h2, h3, h4, h5, h6, p {
     }
 }
 
-.test-answer--form input:nth-of-type(1):checked ~ .worm .worm-segment {
+@keyframes hop4 {
+    from,
+    to {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-1.5em);
+    }
+}
+
+.test-answer--form .input:nth-of-type(1):checked ~ .worm .worm-segment {
     transform: translateY(0);
 }
 
-.test-answer--form input:nth-of-type(1):checked ~ .worm .worm-segment:before {
+.test-answer--form .input:nth-of-type(1):checked ~ .worm .worm-segment:before {
     animation-name: hop1;
 }
 
-.test-answer--form input:nth-of-type(2):checked ~ .worm .worm-segment {
+.test-answer--form .input:nth-of-type(2):checked ~ .worm .worm-segment {
     transform: translateY(3em);
 }
 
-.test-answer--form input:nth-of-type(2):checked ~ .worm .worm-segment:before {
+.test-answer--form .input:nth-of-type(2):checked ~ .worm .worm-segment:before {
     animation-name: hop2;
 }
 
-.test-answer--form input:nth-of-type(3):checked ~ .worm .worm-segment {
+.test-answer--form .input:nth-of-type(3):checked ~ .worm .worm-segment {
     transform: translateY(6em);
 }
 
-.test-answer--form input:nth-of-type(3):checked ~ .worm .worm-segment:before {
+.test-answer--form .input:nth-of-type(3):checked ~ .worm .worm-segment:before {
     animation-name: hop3;
+}
+
+.test-answer--form .input:nth-of-type(4):checked ~ .worm .worm-segment {
+    transform: translateY(9em);
+}
+
+.test-answer--form .input:nth-of-type(4):checked ~ .worm .worm-segment:before {
+    animation-name: hop4;
 }
 
 @media screen and (prefers-color-scheme: dark) {
 
-.test-answer--form input:checked + label,
-.test-answer--form input:checked + label span,
+.test-answer--form .input:checked + .label,
+.test-answer--form .input:checked + .label span,
     .test-answer--form .worm-segment:before {
     color: #e85b81;
     }
@@ -1002,60 +1026,120 @@ h1, h2, h3, h4, h5, h6, p {
     gap: 10px;
 }
 
+
+
 .test-checkbox--answer{
     font-size: 18px;
     font-family: var(--RM);
     color: #252525;
 }
 
-.test-checkbox--container input {
-    opacity: 0;
-    cursor: pointer;
-    width: 0;
-    height: 0;
+/* new */
+
+/* checkbox settings 👇 */
+
+.test-checkbox--ui {
+    --primary-color: #e85b81;
+    --secondary-color: #fff;
+    --primary-hover-color: #c12d54;
+    /* checkbox */
+    --checkbox-diameter: 25px;
+    --checkbox-border-radius: 5px;
+    --checkbox-border-color: #d9d9d9;
+    --checkbox-border-width: 1px;
+    --checkbox-border-style: solid;
+    /* checkmark */
+    --checkmark-size: 1.2;
 }
 
-.test-checkbox--container {
-    display: block;
+.test-checkbox--ui, 
+  .test-checkbox--ui *, 
+  .test-checkbox--ui *::before, 
+  .test-checkbox--ui *::after {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.test-checkbox--ui {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: var(--checkbox-diameter);
+    height: var(--checkbox-diameter);
+    border-radius: var(--checkbox-border-radius);
+    background: var(--secondary-color);
+    border: var(--checkbox-border-width) var(--checkbox-border-style) var(--checkbox-border-color);
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+    cursor: pointer;
     position: relative;
-    cursor: pointer;
-    font-size: 20px;
-    user-select: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 3px;
-    background: rgba(216, 216, 216, 0.603);
-    transition: .7s transform cubic-bezier(0,1,.33,1.2), background .4s;
 }
 
-.test-checkbox--container:hover {
-    background: #e85b81;
-    transition: .7s transform cubic-bezier(0,1,.33,1.2), background .4s;
-}
-
-.test-checkbox--container:hover .test-checkbox--line{
-    background: #fff;
-}
-
-.test-checkbox--line {
-    width: calc(100% - 8px);
-    z-index: 2;
-    height: 3px;
-    left: 4px;
-    background: rgb(58, 58, 58);
+.test-checkbox--ui::after {
+    content: "";
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: .7s transform cubic-bezier(0,1,.33,1.2), background .4s;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-box-shadow: 0 0 0 calc(var(--checkbox-diameter) / 2.5) var(--primary-color);
+    box-shadow: 0 0 0 calc(var(--checkbox-diameter) / 2.5) var(--primary-color);
+    border-radius: inherit;
+    opacity: 0;
+    -webkit-transition: all 0.5s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+    -o-transition: all 0.5s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+    transition: all 0.5s cubic-bezier(0.12, 0.4, 0.29, 1.46);
 }
 
-.line-indicator {
-    transform: translateY(-50%) rotate(90deg);
+.test-checkbox--ui::before {
+    top: 43%;
+    left: 54%;
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 11px;
+    border-right: 2px solid var(--secondary-color);
+    border-bottom: 2px solid var(--secondary-color);;
+    -webkit-transform: translate(-50%, -50%) rotate(45deg) scale(0);
+    -ms-transform: translate(-50%, -50%) rotate(45deg) scale(0);
+    transform: translate(-50%, -50%) rotate(45deg) scale(0);
+    opacity: 0;
+    -webkit-transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6),opacity 0.1s;
+    -o-transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6),opacity 0.1s;
+    transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6),opacity 0.1s;
 }
 
-.test-checkbox--container input:checked ~ .test-checkbox--line {
-    transform: translateY(-50%);
+/* actions */
+
+.test-checkbox--ui:hover {
+    border-color: var(--primary-color);
 }
+
+.test-checkbox--ui:checked {
+    background: var(--primary-color);
+    border-color: transparent;
+}
+
+.test-checkbox--ui:checked::before {
+    opacity: 1;
+    -webkit-transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
+    -ms-transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
+    transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
+    -webkit-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+    -o-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+    transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+}
+
+.test-checkbox--ui:active:not(:checked)::after {
+    -webkit-transition: none;
+    -o-transition: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    transition: none;
+    opacity: 1;
+}
+
 
 /* чексбоксер */
 
@@ -1150,8 +1234,6 @@ h1, h2, h3, h4, h5, h6, p {
 
 /* файлы */
 
-
-
 .lecture-btn{
     margin-top: 50px;
     display: flex;
@@ -1191,6 +1273,298 @@ h1, h2, h3, h4, h5, h6, p {
 
 /* страница курса */
 
+/* страница курса для добавления/редактирования */
+
+.lecture-content--top{
+    margin-bottom: 50px;
+}
+
+.lecture-add{
+    margin: 15px 0 0 30px;
+}
+
+.lecture-add svg{
+    stroke: #B5B5B5;
+    transition: all .3s ease;
+}
+
+.lecture-add:hover svg{
+    stroke: #e85b81;
+    transform: rotate(180deg) scale(1.1);
+    transition: all .3s ease;
+}
+
+.lecture-content--form{
+    margin: 50px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-lecture--title{
+    font-size: 38px !important;
+    padding: 6px 20px;
+    width: 600px;
+    height: 100px;
+}
+
+.form-lecture--desctription{
+    font-size: 18px !important;
+    min-height: 100px;
+}
+
+.lecture-save--btn{
+    background-color: #e85b81;
+    padding: 12px 60px;
+    border-radius: 8px;
+    color: #fff;
+    transition: all .3s ease;
+    font-size: 16px;
+    font-family: var(--RM);
+    transition: all .3s ease;
+}
+
+.lecture-save--btn:hover{
+    background-color: #c12d54;
+    transform: scale(.95);
+    transition: all .3s ease;
+}
+
+.lecture-content--buttons{
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.lecture-button{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-family: var(--RM);
+    background-color: #e85b81;
+    padding: 15px 60px;
+    color: #fff;
+    border-radius: 8px;
+    transition: all .3s ease;
+}
+
+.lecture-button:hover{
+    background-color: #c12d54;
+    transform: scale(.95);
+    transition: all .3s ease;
+}
+
+.lecture-content--block{
+}
+
+.block-item{
+    background-color: #fff;
+    padding: 24px 32px;
+    border-radius: 16px;
+    box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.block-item:first-child{
+    margin-top: 100px;
+}
+
+.block-item:not(:last-child){
+    margin-bottom: 25px;
+}
+
+.input-add--lecture{
+    font-size: 20px !important;
+    margin-bottom: 0 !important;
+    width: 100%;
+}
+
+
+/* текст */
+
+.add-text--input{
+    min-height: 50px;
+}
+
+/* текст */
+
+/* видео */
+
+.block-add--video{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.block-add--video img{
+    width: 40px;
+    height: 40px;
+}
+
+.add-video--form{
+    flex: 1 1 auto;
+}
+
+/* видео */
+
+/* фото */
+
+.add-image--form{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.block-add--image img{
+    width: 40px;
+    height: 40px;
+}
+
+.add-image--form{
+    font-size: 18px;
+    font-family: var(--RL);
+}
+
+/* фото */
+
+/* файл */
+
+.add-file--form{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.block-add--file img{
+    width: 40px;
+    height: 40px;
+}
+
+.add-file--form{
+    font-size: 18px;
+    font-family: var(--RL);
+}
+
+/* файл */
+
+/* тест */
+
+.add-test--input{
+    margin-bottom: 20px !important;
+}
+
+.add-test-answer{
+    min-width: 100%;
+}
+
+.add-test-answer .label{
+    display: flex;
+    align-items: center;
+}
+
+.add-test-answer .worm-segment{
+    top: 13px;
+}
+
+@keyframes hop1 {
+    from,
+    to {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-1.5em);
+    }
+}
+
+@keyframes hop2 {
+    from,
+    to {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-1.5em);
+    }
+}
+
+@keyframes hop3 {
+    from,
+    to {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-1.5em);
+    }
+}
+
+@keyframes hop4 {
+    from,
+    to {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-1.5em);
+    }
+}
+
+.add-test-answer .input:nth-of-type(1):checked ~ .worm .worm-segment {
+    transform: translateY(0);
+}
+
+.add-test-answer .input:nth-of-type(1):checked ~ .worm .worm-segment:before {
+    animation-name: hop1;
+}
+
+.add-test-answer .input:nth-of-type(2):checked ~ .worm .worm-segment {
+    transform: translateY(4.8em);
+}
+
+.add-test-answer .input:nth-of-type(2):checked ~ .worm .worm-segment:before {
+    animation-name: hop2;
+}
+
+.add-test-answer .input:nth-of-type(3):checked ~ .worm .worm-segment {
+    transform: translateY(9.6em);
+}
+
+.add-test-answer .input:nth-of-type(3):checked ~ .worm .worm-segment:before {
+    animation-name: hop3;
+}
+
+.add-test-answer .input:nth-of-type(4):checked ~ .worm .worm-segment {
+    transform: translateY(14.4em);
+}
+
+.add-test-answer .input:nth-of-type(4):checked ~ .worm .worm-segment:before {
+    animation-name: hop4;
+}
+
+/* тест */
+
+/* добавление блока */
+
+.block-add--btn{
+    width: 100%;
+    text-align: left;
+}
+
+.block-add--btn svg{
+    fill: #B5B5B5;
+    transition: all .3s ease;
+}
+
+.block-add--btn:hover svg{
+    fill: #e85b81;
+    transform: rotate(180deg) scale(1.1);
+    transition: all .3s ease;
+}
+
+/* добавление блока */
+
+/* страница курса для добавления/редактирования */
 
 
 /* --------------------------------------------- */

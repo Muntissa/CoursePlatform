@@ -1,0 +1,142 @@
+﻿@page
+@using CoursePlatform.Common.Additional
+@model CourseConstructor
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<section class="lecture">
+    <div class="lecture-wrapper">
+        <div class="lecture-menu">
+            <ul class="lecture-list">
+@*                 @foreach (var lecture in Model.Course.Lectures.OrderBy(l => l.OrderInCourse))
+                {
+                    <li class="lecture-item">
+                        <a href="/CourseLanding?courseid=@Model.Course.Id&lectureid=@lecture.Id" class="lecture-link lecture-active">
+                            <span>@lecture.OrderInCourse</span>
+                            @lecture.Title
+                        </a>
+                    </li>
+                } *@
+                <li class="lecture-item">
+                    <a href="#" class="lecture-link">
+                    <span>1</span>
+                    Глава Введение
+                    </a>
+                </li>
+                <li class="lecture-item">
+                    <a href="#" class="lecture-link lecture-active">
+                    <span>2</span>
+                    Глава Введение
+                    </a>
+                </li>
+                <li class="lecture-item">
+                    <a href="#" class="lecture-link">
+                    <span>3</span>
+                    Глава Введение
+                    </a>
+                </li>
+            </ul>
+            <button class="lecture-add">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 0.856934V23.1426" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M0.857178 11.9312H23.1429" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>    
+            </button>
+        </div>
+        <div class="lecture-content">
+            <div class="lecture-content--wrapper">
+                <div class="lecture-content--top">
+                    <p class="lecture-content--suptitle">2 Введение в SQL</p>
+                    <form action="" class="lecture-content--form form">
+                        <input type="text" class="form-lecture--title form-input" value="Крутой курс">
+                        <textarea class="form-lecture--desctription form-input" name="" id="">SQL — декларативный язык программирования, применяемый для создания, модификации и управления данными в реляционной базе данных, управляемой соответствующей системой управления базами данных.</textarea>
+                    </form>
+                    <button type="submit" class="lecture-save--btn">Сохранить</button>
+                </div>
+                <div class="lecture-content--buttons">
+                    <button class="lecture-button">
+                        <span>Текст</span>
+                    </button>
+                    <button class="lecture-button">
+                        <span>Изображение</span>
+                    </button>
+                    <button class="lecture-button">
+                        <span>Видео</span>    
+                    </button>
+                    <button class="lecture-button">
+                        <span>Тест</span>
+                    </button>
+                    <button class="lecture-button">
+                        <span>Файл</span>
+                    </button>
+                </div>
+                <div class="lecture-content--block block">
+                    <div class="block-item block-add--text add-text">
+                        <form action="" class="add-text--form">
+                            <textarea class="add-text--input form-input input-add--lecture" name="" id="" placeholder="Вставьте текст"></textarea>
+                        </form>
+                    </div>
+
+                    <div class="block-item block-add--video add-video">
+                        <img src="/image/video-icon.svg" alt="">
+                        <form action="" class="add-video--form">
+                            <input type="text" class="add-video--input form-input input-add--lecture" placeholder="Вставьте URL видео">
+                        </form>
+                    </div>
+
+                    <div class="block-item block-add--image add-image">
+                        <form action="" class="add-image--form">
+                            <img src="/image/image-icon.svg" alt="">
+                            <input type="file" id="upload-button" accept="image/png, image/jpg, image/jpeg"/>
+                        </form>
+                    </div>
+
+                    <div class="block-item block-add--file add-file">
+                        <form action="" class="add-file--form">
+                            <img src="/image/file-icon.svg" alt="">
+                            <input type="file" id="upload-button" accept=".pdf, .doc"/>
+                        </form>
+                    </div>
+
+                    <div class="block-item block-add--test add-test">
+                        <form action="" class="add-test--form">
+                            <input type="text" class="add-test--input form-input input-add--lecture" placeholder="Вопрос">
+                            <div class="test-answer">
+                                <div class="test-answer--form add-test-answer">
+                                    <input class="input" checked="" value="a" name="hopping" type="radio" id="a">
+                                    <label class="label" for="a"><span></span>
+                                        <input type="text" id="a" class="form-input input-add--lecture" placeholder="Вставьте ответ">
+                                    </label>
+                                    <input class="input" value="b" name="hopping" type="radio" id="b">
+                                    <label class="label" for="b"><span></span>
+                                        <input type="text" id="a" class="form-input input-add--lecture" placeholder="Вставьте ответ">
+                                    </label>
+                                    <input class="input" value="c" name="hopping" type="radio" id="c">
+                                    <label class="label" for="c"><span></span>
+                                        <input type="text" id="a" class="form-input input-add--lecture" placeholder="Вставьте ответ">
+                                    </label>
+                                    <input class="input" value="d" name="hopping" type="radio" id="d">
+                                    <label class="label" for="d"><span></span>
+                                        <input type="text" id="a" class="form-input input-add--lecture" placeholder="Вставьте ответ">
+                                    </label>
+                                    <div class="test-answer--worm worm">
+                                        <div class="worm-segment"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <button class="block-add--btn block-item">
+                        <svg width="25" height="25" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.8125 6.79688V9.51562H0.21875V6.79688H15.8125ZM9.46875 0.15625V16.7188H6.57812V0.15625H9.46875Z"/>
+                        </svg>
+                    </button>
+
+                    <button type="submit" class="lecture-save--btn block-btn--save">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
