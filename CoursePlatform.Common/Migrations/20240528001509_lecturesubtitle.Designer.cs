@@ -3,6 +3,7 @@ using System;
 using CoursePlatform.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoursePlatform.Common.Migrations
 {
     [DbContext(typeof(CoursePlatformContext))]
-    partial class CoursePlatformContextModelSnapshot : ModelSnapshot
+    [Migration("20240528001509_lecturesubtitle")]
+    partial class lecturesubtitle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,13 +55,12 @@ namespace CoursePlatform.Common.Migrations
                     b.Property<int>("FileType")
                         .HasColumnType("integer");
 
-                    b.Property<long?>("LectureId")
+                    b.Property<long>("LectureId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LectureId")
-                        .IsUnique();
+                    b.HasIndex("LectureId");
 
                     b.ToTable("AdditionalFile");
                 });
@@ -185,29 +187,6 @@ namespace CoursePlatform.Common.Migrations
                     b.ToTable("CourseEnrollment");
                 });
 
-            modelBuilder.Entity("CoursePlatform.Common.Entities.Image", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<long?>("LectureId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LectureId")
-                        .IsUnique();
-
-                    b.ToTable("Image");
-                });
-
             modelBuilder.Entity("CoursePlatform.Common.Entities.Lecture", b =>
                 {
                     b.Property<long>("Id")
@@ -226,6 +205,7 @@ namespace CoursePlatform.Common.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("SubTitle")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Summary")
@@ -258,13 +238,12 @@ namespace CoursePlatform.Common.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long?>("LectureId")
+                    b.Property<long>("LectureId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LectureId")
-                        .IsUnique();
+                    b.HasIndex("LectureId");
 
                     b.ToTable("LectureMaterial");
                 });
@@ -472,7 +451,7 @@ namespace CoursePlatform.Common.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("LectureId")
+                    b.Property<long>("LectureId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("VideoURL")
@@ -481,8 +460,7 @@ namespace CoursePlatform.Common.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LectureId")
-                        .IsUnique();
+                    b.HasIndex("LectureId");
 
                     b.ToTable("Video");
                 });
@@ -608,8 +586,10 @@ namespace CoursePlatform.Common.Migrations
             modelBuilder.Entity("CoursePlatform.Common.Entities.AdditionalFile", b =>
                 {
                     b.HasOne("CoursePlatform.Common.Entities.Lecture", "Lecture")
-                        .WithOne("AdditionalFile")
-                        .HasForeignKey("CoursePlatform.Common.Entities.AdditionalFile", "LectureId");
+                        .WithMany("AdditionalFiles")
+                        .HasForeignKey("LectureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Lecture");
                 });
@@ -662,15 +642,6 @@ namespace CoursePlatform.Common.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("CoursePlatform.Common.Entities.Image", b =>
-                {
-                    b.HasOne("CoursePlatform.Common.Entities.Lecture", "Lecture")
-                        .WithOne("Image")
-                        .HasForeignKey("CoursePlatform.Common.Entities.Image", "LectureId");
-
-                    b.Navigation("Lecture");
-                });
-
             modelBuilder.Entity("CoursePlatform.Common.Entities.Lecture", b =>
                 {
                     b.HasOne("CoursePlatform.Common.Entities.Course", "Course")
@@ -689,8 +660,10 @@ namespace CoursePlatform.Common.Migrations
             modelBuilder.Entity("CoursePlatform.Common.Entities.LectureMaterial", b =>
                 {
                     b.HasOne("CoursePlatform.Common.Entities.Lecture", "Lecture")
-                        .WithOne("LectureMaterial")
-                        .HasForeignKey("CoursePlatform.Common.Entities.LectureMaterial", "LectureId");
+                        .WithMany("LectureMaterials")
+                        .HasForeignKey("LectureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Lecture");
                 });
@@ -742,8 +715,10 @@ namespace CoursePlatform.Common.Migrations
             modelBuilder.Entity("CoursePlatform.Common.Entities.Video", b =>
                 {
                     b.HasOne("CoursePlatform.Common.Entities.Lecture", "Lecture")
-                        .WithOne("Video")
-                        .HasForeignKey("CoursePlatform.Common.Entities.Video", "LectureId");
+                        .WithMany("Videos")
+                        .HasForeignKey("LectureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Lecture");
                 });
@@ -817,15 +792,13 @@ namespace CoursePlatform.Common.Migrations
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Lecture", b =>
                 {
-                    b.Navigation("AdditionalFile");
+                    b.Navigation("AdditionalFiles");
 
-                    b.Navigation("Image");
-
-                    b.Navigation("LectureMaterial");
+                    b.Navigation("LectureMaterials");
 
                     b.Navigation("Test");
 
-                    b.Navigation("Video");
+                    b.Navigation("Videos");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Progress", b =>

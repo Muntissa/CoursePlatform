@@ -10,6 +10,8 @@ namespace CoursePlatform.Common.Entities
     {
         public string Title { get; set; }
         public string Summary { get; set; }
+
+        public string? SubTitle { get; set; }
         public int OrderInCourse { get; set; }
 
         public long? CourseId { get; set; }
@@ -18,8 +20,9 @@ namespace CoursePlatform.Common.Entities
         public Progress? Progress { get; set; }
 
         public Test? Test { get; set; }
-        public List<Video>? Videos { get; set; }
-        public List<AdditionalFile>? AdditionalFiles { get; set; }
-        public List<LectureMaterial>? LectureMaterials { get; set; }
+        public Image? Image { get; set; }
+        public Video? Video { get; set; }
+        public AdditionalFile? AdditionalFile { get; set; }
+        public LectureMaterial? LectureMaterial { get; set; }
     }
 }

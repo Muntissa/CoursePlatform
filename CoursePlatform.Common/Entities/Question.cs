@@ -5,7 +5,6 @@ namespace CoursePlatform.Common.Entities
     public class Question : BaseEntity
     {
         public string Content { get; set; }
-        public QuestionType QuestionType { get; set; }
 
         public long? TestId { get; set; }
         public Test? Test { get; set; }

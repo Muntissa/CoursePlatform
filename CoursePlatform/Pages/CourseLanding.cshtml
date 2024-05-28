@@ -1,5 +1,6 @@
 ﻿@page
 @using CoursePlatform.Common.Additional
+@using System.IO
 @model CourseLanding
 @{
     ViewData["Title"] = "Home page";
@@ -18,122 +19,168 @@
                         </a>
                     </li>
                 }
-@*                 <li class="lecture-item">
-                    <a href="#" class="lecture-link">
-                    <span>1</span>
-                    Глава Введение
-                    </a>
-                </li>
-                <li class="lecture-item">
-                    <a href="#" class="lecture-link lecture-active">
-                    <span>2</span>
-                    Глава Введение
-                    </a>
-                </li>
-                <li class="lecture-item">
-                    <a href="#" class="lecture-link">
-                    <span>3</span>
-                    Глава Введение
-                    </a>
-                </li> *@
             </ul>
         </div>
-        <div class="lecture-content">
-            <div class="lecture-content--wrapper">
-                <p class="lecture-content--suptitle">2 Введение в SQL</p>
-                <h2 class="lecture-content--title">Крутой курс</h2>
-                <p class="lecture-content--description">SQL — декларативный язык программирования, применяемый для создания, модификации и управления данными в реляционной базе данных, управляемой соответствующей системой управления базами данных.</p>
-                <div class="lecture-content--block block">
-                    
-                    <div class="block-test test">
-                        <ul class="test-list">
-                            <li class="test-item">
-                                <div class="test-question">
-                                    <h2 class="test-question--title">Что такое SQL?</h2>
-                                </div>
-                                <div class="test-answer">
-                                    <form action="#" class="test-answer--form">
-                                        <input class="input" checked="" value="a" name="hopping" type="radio" id="a">
-                                        <label class="label" for="a"><span></span>Инструмент</label>
-                                        <input class="input" value="b" name="hopping" type="radio" id="b">
-                                        <label class="label" for="b"><span></span>Проект</label>
-                                        <input class="input" value="c" name="hopping" type="radio" id="c">
-                                        <label class="label" for="c"><span></span>Не знаю</label>
-                                        <div class="test-answer--worm worm">
-                                            <div class="worm-segment"></div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </li>
-                            <li class="test-item">
-                                <div class="test-question">
-                                    <h2 class="test-question--title">Что такое SELECT?</h2>
-                                </div>
-                                <div class="test-answer">
-                                    <form action="#" class="test-answer--form-checkbox">
-                                        <li class="test-answer--checkbox test-checkbox">
-                                            <input type="checkbox" class="test-checkbox--ui">
-                                            <span class="test-checkbox--answer">Один из запросов в SQL</span>
-                                        </li>
-                                        <li class="test-answer--checkbox test-checkbox">
-                                            <input type="checkbox" class="test-checkbox--ui">
-                                            <span class="test-checkbox--answer">Запрос-фильтрация</span>
-                                        </li>
-                                        <li class="test-answer--checkbox test-checkbox">
-                                            <input type="checkbox" class="test-checkbox--ui">
-                                            <span class="test-checkbox--answer">Не знаю</span>
-                                        </li>
-                                        
-                                    </form>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+        @if(Model.CurrentLecture is not null)
+        {
+            <div class="lecture-content">
+                <div class="lecture-content--wrapper">
+                    <h2 class="lecture-content--title">@Model.CurrentLecture.Title</h2>
+                    <p class="lecture-content--description">@Model.CurrentLecture.Summary</p>
+                    <div class="lecture-content--block block">
+                        @if (Model.CurrentLecture.Test is not null)
+                        {
+                            <div class="block-test test">
+                                <form asp-page-handler="TestCheck" method="post" class="test-answer--form">
+                                    <ul class="test-list">
+                                        @for (int i = 0; i < Model.CurrentLecture.Test.Questions.Count; i++)
+                                        {
+                                            var question = Model.CurrentLecture.Test.Questions[i];
+                                            <li class="test-item">
+                                                <div class="test-question">
+                                                    <h2 class="test-question--title">@question.Content</h2>
+                                                </div>
+                                                <div class="test-answer">
+                                                    @for (int j = 0; j < question.Answers.Count; j++)
+                                                    {
+                                                        var answer = question.Answers[j];
+                                                        <input class="input" value="@answer.Id" name="Answers[@i].SelectedAnswerId" type="radio" id="answer_@answer.Id">
+                                                        <label class="label" for="answer_@answer.Id"><span></span>@answer.AnswerContent</label>
+                                                        <input type="hidden" name="Answers[@i].QuestionId" value="@question.Id" />
+                                                    }
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        }
 
-                    <div class="block-text">
-                        <p class="block-text--description">
-                            Веб-разработка — это процесс создания веб-сайтов и веб-приложений, которые работают через интернет или интранет. Она включает в себя широкий спектр задач, от разработки простых статических страниц с текстом и изображениями до сложных веб-приложений, ориентированных на взаимодействие с пользователями, динамическим контентом и интеграцией с базами данных и другими сервисами. Веб-разработка подразделяется на фронтенд (клиентская сторона) и бэкенд (серверная сторона) разработку. Фронтенд отвечает за все, что пользователь видит и с чем взаимодействует в браузере, тогда как бэкенд обрабатывает данные, выполняет бизнес-логику и отвечает за взаимодействие с базой данных.
+                        @if (Model.CurrentLecture.LectureMaterial is not null)
+                        {
+                            <div class="block-text">
+                                @{
+                                    var paragraphs = Model.CurrentLecture.LectureMaterial.Content
+                                    .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                                }
+
+                                @foreach (var paragraph in paragraphs)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(paragraph))
+                                    {
+                                        <p class="block-text--description">@paragraph</p>
+                                    }
+                                }
+                            </div>
+                        }
+
+                        @if(Model.CurrentLecture.Image is not null)
+                        {
+                            <div class="block-image">
+                                <div class="block-image--photo image-photo">
+                                    <img src="@Model.CurrentLecture.Image.ImagePath" class="image-photo--item" />
+                                </div>
+                            </div>
+                        }
+
+                        @if(Model.CurrentLecture.Video is not null)
+                        {
+                            <div class="block-video">
+                                <iframe width="1280" height="720" src="@Model.CurrentLecture.Video.VideoURL.Replace(".com/watch?v=", ".com/embed/")" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                        }
+
+                        @if(Model.CurrentLecture.AdditionalFile is not null)
+                        {
+                            <div class="block-download">
+                                <ul class="block-download--list">
+                                    <li class="block-download--item">
+                                        <a download class="block-download--link" href="@Model.CurrentLecture.AdditionalFile.FilePath">
+                                            @if (Model.CurrentLecture.AdditionalFile.FileType == Common.Enums.FileType.PDF)
+                                            {
+                                                <img class="block-downloand--icon" src="/image/pdf.svg">
+                                                <span>Обработка дерева</span>
+                                            }
+                                            else
+                                            {
+                                                <img class="block-downloand--icon" src="/image/docx.svg">
+                                                <span>@System.IO.Path.GetFileNameWithoutExtension(Model.CurrentLecture.AdditionalFile.FilePath)</span>
+                                            }
+
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+                <div class="lecture-btn">
+                        @if (Model.CurrentLecture.OrderInCourse == 1)
+                        {
+                            <div class="lecture-btn--done lecture-btn--view">Выполненно</div>
+                            <div class="lecture-btn--next lecture-btn--view">Далее</div>
+                        }
+                        else if (Model.Course.Lectures.OrderBy(l => l.OrderInCourse).Last().Id == Model.CurrentLecture.Id)
+                        {
+                            <div class="lecture-btn--back lecture-btn--view">Назад</div>
+                            <div class="lecture-btn--done lecture-btn--view">Выполненно</div>
+                        }
+                        else
+                        {
+                        <div class="lecture-btn--back lecture-btn--view">Назад</div>
+                        <div class="lecture-btn--done lecture-btn--view">Выполненно</div>
+                        <div class="lecture-btn--next lecture-btn--view">Далее</div>
+                        }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="lecture-content">
+                <div class="course-details--wrapper details">
+                    <div class="details-top">
+                        <p class="details-for details-grey">
+                            @if (Model.Course.Teacher is not null && !String.IsNullOrEmpty(Model.Course.Teacher.Profile.Name))
+                            {
+                                Model.Course.Teacher.Profile.GetFullName();
+                            }
+                            else
+                            {
+                                <span>Неизвестный преподаватель</span>
+                            }
                         </p>
-                        <p class="block-text--description">
-                            Веб-разработка — это процесс создания веб-сайтов и веб-приложений, которые работают через интернет или интранет. Она включает в себя широкий спектр задач, от разработки простых статических страниц с текстом и изображениями до сложных веб-приложений, ориентированных на взаимодействие с пользователями, динамическим контентом и интеграцией с базами данных и другими сервисами. Веб-разработка подразделяется на фронтенд (клиентская сторона) и бэкенд (серверная сторона) разработку. Фронтенд отвечает за все, что пользователь видит и с чем взаимодействует в браузере, тогда как бэкенд обрабатывает данные, выполняет бизнес-логику и отвечает за взаимодействие с базой данных.
+                        <div class="details-name">
+                            <h3 class="details-name--title">@Model.Course.CourseTitle</h3>
+                            <div class="details-name--star star">
+                                @if (Model.Course.Complexity == Common.Enums.Complexity.Light)
+                                {
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                                }
+                                else if (Model.Course.Complexity == Common.Enums.Complexity.Medium)
+                                {
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                                }
+                                else
+                                {
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                }
+                            </div>
+                        </div>
+                        <p class="details-description details-grey">Описание</p>
+                        <p class="details-description-text">
+                            @Model.Course.CourseDecription
                         </p>
-                    </div>
-                    
-                    <div class="block-image">
-                        <div class="block-image--photo image-photo">
-                            <img src ="/image/online-lessons.jpg" class="image-photo--item"/>
-                        </div>
-                        <div class="block-image--photo image-photo">
-                            <img src ="/image/lesson2.jpg" class="image-photo--item"/>
-                        </div>
-                    </div>
-                    <div class="block-video">
-                        <iframe width="1280" height="720" src="https://www.youtube.com/embed/adz6jPsenBk?si=r17Vv4t1pu9dpvDJ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                    </div>
-                    <div class="block-download">
-                        <ul class="block-download--list">
-                            <li class="block-download--item">
-                                <a download class="block-download--link" href="/image/online-lessons.jpg">
-                                    <img class="block-downloand--icon" src="/image/pdf.svg">
-                                    <span>Обработка дерева</span>
-                                </a>
-                            </li>
-                            <li class="block-download--item">
-                                <a download class="block-download--link" href="/image/back-arrow.svg">
-                                    <img class="block-downloand--icon" src="/image/pdf.svg">
-                                    <span>Материал к лекции</span>
-                                </a>
-                            </li>
-                            
-                        </ul>
                     </div>
                 </div>
             </div>
-            <div class="lecture-btn">
-                <div class="lecture-btn--back lecture-btn--view">Назад</div>
-                <div class="lecture-btn--done lecture-btn--view">Выполненно</div>
-                <div class="lecture-btn--next lecture-btn--view">Далее</div>
-            </div>
-        </div>
+        }
     </div>
 </section>

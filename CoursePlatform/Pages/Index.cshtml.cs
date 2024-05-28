@@ -39,17 +39,13 @@ namespace CoursePlatform.Pages
             else if (FilterType == "InProgress")
             {
                 var courses = await _context.Set<CourseEnrollment>()
-    .Include(ce => ce.Course)
-        .ThenInclude(c => c.Lectures)
-    .Include(ce => ce.Course)
-        .ThenInclude(c => c.CourseCategories)
-    .Include(ce => ce.Course)
-                    .ThenInclude(c => c.Teacher)
-                .ThenInclude(t => t.Profile)
-                .Where(ce => ce.StudentId == CurrentUser.Id &&(ce.Progreses.Any(p => p.CompletionStatus == Status.InProgress) || ce.Progreses.Count() == 0))
-                .Select(ce => ce.Course)
-                .Distinct()
-                .ToListAsync();
+                    .Include(ce => ce.Course).ThenInclude(c => c.Lectures)
+                    .Include(ce => ce.Course).ThenInclude(c => c.CourseCategories)
+                    .Include(ce => ce.Course).ThenInclude(c => c.Teacher).ThenInclude(t => t.Profile)
+                    .Where(ce => ce.StudentId == CurrentUser.Id &&(ce.Progreses.Any(p => p.CompletionStatus == Status.InProgress) || ce.Progreses.Count() == 0))
+                    .Select(ce => ce.Course)
+                    .Distinct()
+                    .ToListAsync();
 
                 Courses = courses;
             }
