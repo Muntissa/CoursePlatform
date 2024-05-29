@@ -22,9 +22,16 @@
 
                 <div class="nav_main">
                     <div class="nav_main_threeitems">
-                        <a class="layout-menu--link"asp-page="/Index">Все курсы</a>
-                        <a class="layout-menu--link" asp-page="">Мои курсы</a>
-                        <a class="layout-menu--link" asp-page="">Создать свой курс</a>
+                        @if(User.Identity.IsAuthenticated && User.IsInRole("Teacher"))
+                        {
+                            <a class="layout-menu--link" asp-page="/MyCourses">Мои курсы</a>
+                            <a class="layout-menu--link" asp-page="/NewCourse">Создать свой курс</a>
+                        }
+                        else
+                        {
+                            <a class="layout-menu--link" asp-page="/Index">Все курсы</a>
+                        }
+
                     </div>
                     <div class="nav_main_lineimg">
                         <img src ="/image/nav_main_lineimg.svg"/>
@@ -71,19 +78,19 @@
                     </div>
                     <div class="wrapper-rb">
                         <div class="option-rb">
-                            <input class="input-rb" type="radio" name="btn" value="option1" checked="">
+                            <input class="input-rb" type="radio" name="btn" value="teacher" checked="">
                             <div class="btn-rb">
                                 <span class="span-rb">Преподаватель</span>
                             </div>
                         </div>
                         <div class="option-rb">
-                            <input class="input-rb" type="radio" name="btn" value="option2">
+                            <input class="input-rb" type="radio" name="btn" value="student">
                             <div class="btn-rb">
                                 <span class="span-rb">Студент</span>
-                            </div>  
+                            </div>
                         </div> 
                     </div>
-                    <div class="popup-persondata persondata">
+@*                     <div class="popup-persondata persondata">
                         <div class="heart-container" title="Like">
                             <input type="checkbox" class="checkbox" id="Give-It-An-Id">
                             <div class="svg-container">
@@ -106,7 +113,7 @@
                             </div>
                         </div>
                         <p class="persondata-text">Согласие на обработку <br> персональных данных</p>
-                    </div>
+                    </div> *@
                     <div class="popup-btn">
                         <button class="popup-btn--reg btn">Зарегистрироваться</button>
                     </div>

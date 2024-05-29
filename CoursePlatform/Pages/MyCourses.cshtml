@@ -1,0 +1,111 @@
+﻿@page
+@using CoursePlatform.Common.Additional
+@model MyCourses
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<section class="platform">
+    <div class="container">
+        <div class="platform-wrrapper">
+            <h2 class="platform-title">Платформа для онлайн-курсов</h2>
+            <div class="platform-menu">
+                <nav class="platform-menu--wrapper">
+@*                     <ul class="platform-menu--list">
+                        @if(User.Identity.IsAuthenticated)
+                        {
+                            <li class="platform-menu--item">
+                                <a href="?FilterType=All" class="platform-menu--link @if(Request.Query["FilterType"] == "All") { <text>platform-menu--active</text> }">Все курсы</a>
+                            </li>
+                            <li class="platform-menu--item">
+                                <a href="?FilterType=InProgress" class="platform-menu--link @if(Request.Query["FilterType"] == "InProgress") { <text>platform-menu--active</text>}">В процессе</a>
+                            </li>
+                            <li class="platform-menu--item">
+                                <a href="?FilterType=Complete" class="platform-menu--link @if(Request.Query["FilterType"] == "Complete") { <text>platform-menu--active</text>}">Пройденные</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="platform-menu--item">
+                                <a href="?FilterType=All" class="platform-menu--link @if(Request.Query["FilterType"] == "All") { <text>platform-menu--active</text>}">Все курсы</a>
+                            </li>
+                        }
+
+                    </ul> *@
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="course">
+    <div class="container">
+        <div class="couser-search search">
+            <form action="#" class="search-form">
+                <div class="search-input--wrapper">
+                    <input type="text" class="search-input form-input " placeholder="Введите текст">
+                    <button type="submit">
+                        <img src="/image/search.svg" alt="" class="search-icon">
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="course-wrapper">
+            @foreach (var course in Model.Courses)
+            {
+                <div class="course-card card">
+                    <div class="card-wrapper">
+                        <div class="card-top">
+                            <h3 class="card-teacher">
+                                @if (course.Teacher is not null && !String.IsNullOrEmpty(course.Teacher.Profile.Name))
+                                {
+                                    @course.Teacher.Profile.GetShoryName()
+                                    ;
+                                }
+                                else
+                                {
+                                    <span>Неизвестный преподаватель</span>
+                                }
+                            </h3>
+                            <div class="card-star">
+                                @if (course.Complexity == Common.Enums.Complexity.Light)
+                                {
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                                }
+                                else if (course.Complexity == Common.Enums.Complexity.Medium)
+                                {
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                                }
+                                else
+                                {
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                }
+                            </div>
+                        </div>
+                        <div class="card-middle">
+                            <h3 class="card-title">@course.CourseTitle</h3>
+                            <p class="card-lessons">@course.Lectures.Count() лекций</p>
+                            <div class="card-category category">
+                                @foreach (var category in course.CourseCategories)
+                                {
+                                    <div class="category-block category-block--prog">
+                                        <p class="category-name category-name--prog">@category.Name</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="/MyCourseDetail?courseid=@course.Id" class="card-button--link">Подробнее</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

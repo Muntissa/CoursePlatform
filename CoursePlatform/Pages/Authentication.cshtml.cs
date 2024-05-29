@@ -27,34 +27,64 @@ namespace CoursePlatform.WebApi.Pages
         {
         }
         
-        public async Task<IActionResult> OnPostRegistrationAsync(string username, string password)
+        public async Task<IActionResult> OnPostRegistrationAsync(string username, string password, string btn)
         {
+            var param = new { FilterType = "All" };
+
             if (ModelState.IsValid)
             {
                 var user = new User { UserName = username };
                 var result = await _userManager.CreateAsync(user, password);
-                if (result.Succeeded)
+
+                if (btn == "student")
                 {
-                    if (!await _roleManager.RoleExistsAsync("Student"))
+                    if (result.Succeeded)
                     {
-                        await _roleManager.CreateAsync(new Role { Name = "Student" });
+                        if (!await _roleManager.RoleExistsAsync("Student"))
+                        {
+                            await _roleManager.CreateAsync(new Role { Name = "Student" });
+                        }
+
+                        await _userManager.AddToRoleAsync(user, "Student");
+
+                        await _signInManager.SignInAsync(user, isPersistent: false); 
+                        return RedirectToPage("/ProfilePage");
                     }
 
-                    await _userManager.AddToRoleAsync(user, "Student");
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
 
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToPage("/ProfilePage");
+                    return RedirectToPage("/Index", param);
                 }
 
-                foreach (var error in result.Errors)
+                else
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    if (result.Succeeded)
+                    {
+                        if (!await _roleManager.RoleExistsAsync("Teacher"))
+                        {
+                            await _roleManager.CreateAsync(new Role { Name = "Teacher" });
+                        }
+
+                        await _userManager.AddToRoleAsync(user, "Teacher");
+
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return RedirectToPage("/ProfilePage");
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+
+                    return RedirectToPage("/MyCourses");
                 }
             }
 
-            var param = new { FilterType = "All" };
-
             return RedirectToPage("/Index", param);
+
         }
 
         public async Task<IActionResult> OnPostLogoutAsync()
