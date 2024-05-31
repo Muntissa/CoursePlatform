@@ -59,7 +59,7 @@ namespace CoursePlatform
                     if (context.Database.GetPendingMigrations().Any())
                         context.Database.Migrate();
 
-                    Busket.FillDataBase(provider);
+                    /*Busket.FillDataBase(provider);*/
                 }
             }
 

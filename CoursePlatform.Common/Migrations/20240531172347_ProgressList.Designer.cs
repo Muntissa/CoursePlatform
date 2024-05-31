@@ -3,6 +3,7 @@ using System;
 using CoursePlatform.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoursePlatform.Common.Migrations
 {
     [DbContext(typeof(CoursePlatformContext))]
-    partial class CoursePlatformContextModelSnapshot : ModelSnapshot
+    [Migration("20240531172347_ProgressList")]
+    partial class ProgressList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace CoursePlatform.Common.Migrations
 
                     b.HasIndex("CoursesId");
 
-                    b.ToTable("CategoryCourse", (string)null);
+                    b.ToTable("CategoryCourse");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.AdditionalFile", b =>
@@ -60,7 +63,7 @@ namespace CoursePlatform.Common.Migrations
                     b.HasIndex("LectureId")
                         .IsUnique();
 
-                    b.ToTable("AdditionalFile", (string)null);
+                    b.ToTable("AdditionalFile");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Answer", b =>
@@ -85,7 +88,7 @@ namespace CoursePlatform.Common.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answer", (string)null);
+                    b.ToTable("Answer");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Category", b =>
@@ -102,7 +105,7 @@ namespace CoursePlatform.Common.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Certificate", b =>
@@ -127,7 +130,7 @@ namespace CoursePlatform.Common.Migrations
                     b.HasIndex("CourseEnrollmentId")
                         .IsUnique();
 
-                    b.ToTable("Certificate", (string)null);
+                    b.ToTable("Certificate");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Course", b =>
@@ -156,7 +159,7 @@ namespace CoursePlatform.Common.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Course", (string)null);
+                    b.ToTable("Course");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.CourseEnrollment", b =>
@@ -182,7 +185,7 @@ namespace CoursePlatform.Common.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("CourseEnrollment", (string)null);
+                    b.ToTable("CourseEnrollment");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Image", b =>
@@ -205,7 +208,7 @@ namespace CoursePlatform.Common.Migrations
                     b.HasIndex("LectureId")
                         .IsUnique();
 
-                    b.ToTable("Image", (string)null);
+                    b.ToTable("Image");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Lecture", b =>
@@ -237,7 +240,7 @@ namespace CoursePlatform.Common.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Lecture", (string)null);
+                    b.ToTable("Lecture");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.LectureMaterial", b =>
@@ -260,7 +263,7 @@ namespace CoursePlatform.Common.Migrations
                     b.HasIndex("LectureId")
                         .IsUnique();
 
-                    b.ToTable("LectureMaterial", (string)null);
+                    b.ToTable("LectureMaterial");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Profile", b =>
@@ -291,7 +294,7 @@ namespace CoursePlatform.Common.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Profile", (string)null);
+                    b.ToTable("Profile");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Progress", b =>
@@ -317,7 +320,7 @@ namespace CoursePlatform.Common.Migrations
 
                     b.HasIndex("LectureId");
 
-                    b.ToTable("Progress", (string)null);
+                    b.ToTable("Progress");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Question", b =>
@@ -339,7 +342,7 @@ namespace CoursePlatform.Common.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("Question", (string)null);
+                    b.ToTable("Question");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.Role", b =>
@@ -393,7 +396,7 @@ namespace CoursePlatform.Common.Migrations
                     b.HasIndex("LectureId")
                         .IsUnique();
 
-                    b.ToTable("Test", (string)null);
+                    b.ToTable("Test");
                 });
 
             modelBuilder.Entity("CoursePlatform.Common.Entities.User", b =>
@@ -483,7 +486,7 @@ namespace CoursePlatform.Common.Migrations
                     b.HasIndex("LectureId")
                         .IsUnique();
 
-                    b.ToTable("Video", (string)null);
+                    b.ToTable("Video");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>

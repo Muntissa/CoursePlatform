@@ -12,12 +12,12 @@ using static System.Net.WebRequestMethods;
 
 namespace CoursePlatform.Pages
 {
-    public class CourseLanding : PageModel
+    public class TestCreate : PageModel
     {
         private readonly CoursePlatformContext _context;
         private readonly UserManager<User> _userManager;
 
-        public CourseLanding(CoursePlatformContext context, UserManager<User> userManager)
+        public TestCreate(CoursePlatformContext context, UserManager<User> userManager)
         {
             _userManager = userManager;
             _context = context;

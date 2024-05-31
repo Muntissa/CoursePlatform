@@ -64,6 +64,7 @@
                 <td>
                     <form method="post" asp-page-handler="DeleteEnrollment" asp-route-enrollmentId="@enrollment.Id">
                         <button type="submit" class="btn btn-danger">Delete</button>
+                        <input type="hidden" name="courseid" value="@Model.CurrentCourse.Id"/>
                     </form>
                 </td>
             </tr>

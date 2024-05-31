@@ -51,9 +51,9 @@ namespace CoursePlatform.Pages
             {
                 return NotFound($"Course with ID {courseid} not found.");
             }
-
+                
             AllCategories = await _context.Set<Category>().ToListAsync();
-
+            
             Title = CurrentCourse.CourseTitle;
             Description = CurrentCourse.CourseDecription;
             Complexity = CurrentCourse.Complexity;
@@ -62,7 +62,7 @@ namespace CoursePlatform.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostDeleteEnrollmentAsync(int enrollmentId)
+        public async Task<IActionResult> OnPostDeleteEnrollmentAsync(int enrollmentId, int? courseid)
         {
             var enrollmentToDelete = await _context.Set<CourseEnrollment>()
                 .Include(ce => ce.Progreses)
@@ -70,12 +70,19 @@ namespace CoursePlatform.Pages
 
             if (enrollmentToDelete != null)
             {
+                foreach (var l in enrollmentToDelete.Progreses) 
+                {
+                    l.Lecture = null;
+                }
+
                 _context.Set<Progress>().RemoveRange(enrollmentToDelete.Progreses);
+
+
                 _context.Set<CourseEnrollment>().Remove(enrollmentToDelete);
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToPage();
+            return RedirectToPage(new { courseid = courseid});
         }
 
         public async Task<IActionResult> OnPostEditCourseAsync(int courseId)
