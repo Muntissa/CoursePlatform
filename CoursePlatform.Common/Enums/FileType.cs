@@ -10,6 +10,5 @@ namespace CoursePlatform.Common.Enums
     {
         PDF,
         Word,
-        Image
     }
 }

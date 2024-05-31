@@ -1,45 +1,17 @@
 ﻿@page
 @using CoursePlatform.Common.Additional
 @using System.IO
-@model CourseLanding
+@model LectureDemo
 @{
     ViewData["Title"] = "Home page";
 }
 
 <section class="lecture">
     <div class="lecture-wrapper">
-        <div class="lecture-menu">
-            <ul class="lecture-list">
-                @foreach (var lecture in Model.Course.Lectures.OrderBy(l => l.OrderInCourse))
-                {
-                    var isActive = lecture.Id == Model.CurrentLecture?.Id ? "lecture-active" : "";
-                    <li class="lecture-item">
-                        <a href="/CourseLanding?courseid=@Model.Course.Id&lectureid=@lecture.Id" class="lecture-link @isActive">
-                            <span>@lecture.OrderInCourse</span>
-                            @lecture.Title
-                        </a>
-                    </li>
-                }
-            </ul>
-        </div>
-
         @if(Model.CurrentLecture is not null)
         {
             <div class="lecture-content">
-                <div class="lecture-content--wrapper">
-                    @{
-                        var progressToLecture = Model.CurrentCE.Progreses.FirstOrDefault(p => p.Lecture.Id == Model.CurrentLecture.Id);
-
-                        if(progressToLecture is null || progressToLecture.CompletionStatus != Common.Enums.Status.Success)
-                        {
-                            <p class="lecture-content--suptitle">Не пройдено</p>
-                        }
-                        else
-                        {
-                            <p class="lecture-content--suptitle">Пройдено</p>
-                        }  
-                    }
-                    
+                <div class="lecture-content--wrapper">          
                     <h2 class="lecture-content--title">@Model.CurrentLecture.Title</h2>
                     <p class="lecture-content--description">@Model.CurrentLecture.Summary</p>
                     <div class="lecture-content--block block">
@@ -69,7 +41,6 @@
                                             </li>
                                         }
                                     </ul>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
                             </div>
                         }
@@ -131,66 +102,6 @@
                             </div>
                         }
 
-                    </div>
-                </div>
-                @{
-                    if(progressToLecture is null)
-                    {
-                        <div class="lecture-btn">
-                            <div class="lecture-btn--done lecture-btn--view">
-                                <form asp-page-handler="CheckProgress" method="post" id="testForm" class="test-answer--form">
-                                    <button id="progressButton">Подтвердить выполнение</button>
-                                    <input type="hidden" name="courseid" value="@Model.Course.Id"></input>
-                                    <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id"></input>
-                                </form>
-                            </div>
-                        </div>
-                    }
-                }
-            </div>
-        }
-        else
-        {
-            <div class="lecture-content">
-                <div class="course-details--wrapper details">
-                    <div class="details-top">
-                        <p class="details-for details-grey">
-                            @if (Model.Course.Teacher is not null && !String.IsNullOrEmpty(Model.Course.Teacher.Profile.Name))
-                            {
-                                Model.Course.Teacher.Profile.GetFullName();
-                            }
-                            else
-                            {
-                                <span>Неизвестный преподаватель</span>
-                            }
-                        </p>
-                        <div class="details-name">
-                            <h3 class="details-name--title">@Model.Course.CourseTitle</h3>
-                            <div class="details-name--star star">
-                                @if (Model.Course.Complexity == Common.Enums.Complexity.Light)
-                                {
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
-                                }
-                                else if (Model.Course.Complexity == Common.Enums.Complexity.Medium)
-                                {
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
-                                }
-                                else
-                                {
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                }
-                            </div>
-                        </div>
-                        <p class="details-description details-grey">Описание</p>
-                        <p class="details-description-text">
-                            @Model.Course.CourseDecription
-                        </p>
                     </div>
                 </div>
             </div>

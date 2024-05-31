@@ -9,134 +9,128 @@
     <div class="lecture-wrapper">
         <div class="lecture-menu">
             <ul class="lecture-list">
-@*                 @foreach (var lecture in Model.Course.Lectures.OrderBy(l => l.OrderInCourse))
+                @foreach (var lecture in Model.CurrentCourse.Lectures.OrderBy(l => l.OrderInCourse))
                 {
+                    var isActive = lecture.Id == Model.CurrentLecture?.Id ? "lecture-active" : "";
                     <li class="lecture-item">
-                        <a href="/CourseLanding?courseid=@Model.Course.Id&lectureid=@lecture.Id" class="lecture-link lecture-active">
+                        <a href="/CourseConstructor?courseid=@Model.CurrentCourse.Id&lectureid=@lecture.Id" class="lecture-link @isActive">
                             <span>@lecture.OrderInCourse</span>
                             @lecture.Title
                         </a>
                     </li>
-                } *@
-                <li class="lecture-item">
-                    <a href="#" class="lecture-link">
-                    <span>1</span>
-                    Глава Введение
-                    </a>
-                </li>
-                <li class="lecture-item">
-                    <a href="#" class="lecture-link lecture-active">
-                    <span>2</span>
-                    Глава Введение
-                    </a>
-                </li>
-                <li class="lecture-item">
-                    <a href="#" class="lecture-link">
-                    <span>3</span>
-                    Глава Введение
-                    </a>
-                </li>
+                }
             </ul>
-            <button class="lecture-add">
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 0.856934V23.1426" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M0.857178 11.9312H23.1429" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>    
-            </button>
+            <form method="post" asp-page-handler="AddNewLecture">
+                <button type="submit" class="lecture-add">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 0.856934V23.1426" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M0.857178 11.9312H23.1429" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id" />
+                <input type="hidden" name="courseid" value="@Model.CurrentCourse.Id" />
+            </form>
         </div>
         <div class="lecture-content">
             <div class="lecture-content--wrapper">
                 <div class="lecture-content--top">
-                    <p class="lecture-content--suptitle">2 Введение в SQL</p>
-                    <form action="" class="lecture-content--form form">
-                        <input type="text" class="form-lecture--title form-input" value="Крутой курс">
-                        <textarea class="form-lecture--desctription form-input" name="" id="">SQL — декларативный язык программирования, применяемый для создания, модификации и управления данными в реляционной базе данных, управляемой соответствующей системой управления базами данных.</textarea>
+                    <form method="post" asp-page-handler="EditLectureTitle">
+                        <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id" />
+                        <input type="hidden" name="courseid" value="@Model.CurrentCourse.Id" />
+                        <input type="text" class="form-lecture--title form-input" name="title" value="@Model.CurrentLecture.Title" placeholder="Title">
+                        <textarea class="form-lecture--desctription form-input" name="subtitle" placeholder="Subtitle">@Model.CurrentLecture.SubTitle</textarea>
+                        <textarea class="form-lecture--desctription form-input" name="summary" placeholder="Summary">@Model.CurrentLecture.Summary</textarea>
+                        <button type="submit" class="lecture-save--btn">Сохранить</button>
                     </form>
-                    <button type="submit" class="lecture-save--btn">Сохранить</button>
                 </div>
+
+                @{
+                    if (Model.CurrentLecture.LectureMaterial is not null)
+                    {
+                        <span>Текущий вид лекции: Текст</span>
+                    }
+                    else if (Model.CurrentLecture.Image is not null)
+                    {
+                        <span>Текущий вид лекции: Избражение</span>
+                    }
+                    else if (Model.CurrentLecture.Video is not null)
+                    {
+                        <span>Текущий вид лекции: Видео</span>
+                    }
+                    else if (Model.CurrentLecture.Test is not null)
+                    {
+                        <span>Текущий вид лекции: Тест</span>
+                    }
+                    else if (Model.CurrentLecture.AdditionalFile is not null)
+                    {
+                        <span>Текущий вид лекции: Файл для скачивания</span>
+                    }
+                }
+
+
+
+                <a href="/LectureDemo?lectureid=@Model.CurrentLecture.Id">Демо</a>
+                
+
                 <div class="lecture-content--buttons">
-                    <button class="lecture-button">
+                    <button class="lecture-button" id="textButton">
                         <span>Текст</span>
                     </button>
-                    <button class="lecture-button">
+                    <button class="lecture-button" id="imageButton">
                         <span>Изображение</span>
                     </button>
-                    <button class="lecture-button">
-                        <span>Видео</span>    
+                    <button class="lecture-button" id="videoButton">
+                        <span>Видео</span>
                     </button>
-                    <button class="lecture-button">
+                    <button class="lecture-button" id="testButton">
                         <span>Тест</span>
                     </button>
-                    <button class="lecture-button">
+                    <button class="lecture-button" id="fileButton">
                         <span>Файл</span>
                     </button>
                 </div>
                 <div class="lecture-content--block block">
-                    <div class="block-item block-add--text add-text">
-                        <form action="" class="add-text--form">
-                            <textarea class="add-text--input form-input input-add--lecture" name="" id="" placeholder="Вставьте текст"></textarea>
+                    <div class="block-item block-add--text add-text" id="textBlock">
+                        <form asp-page-handler="AddLectureMaterial" class="add-text--form">
+                            <textarea class="add-text--input form-input input-add--lecture" name="content" id="textContent" placeholder="Вставьте текст">@Model.CurrentLecture.LectureMaterial?.Content</textarea>
+                            <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id" />
+                            <input type="hidden" name="courseid" value="@Model.CurrentCourse.Id" />
                         </form>
                     </div>
 
-                    <div class="block-item block-add--video add-video">
+                    <div class="block-item block-add--video add-video" id="videoBlock">
                         <img src="/image/video-icon.svg" alt="">
-                        <form action="" class="add-video--form">
-                            <input type="text" class="add-video--input form-input input-add--lecture" placeholder="Вставьте URL видео">
+                        <form asp-page-handler="AddVideo" class="add-video--form">
+                            <input type="text" class="add-video--input form-input input-add--lecture" name="videourl" id="videoUrl" placeholder="Вставьте URL видео" value="@Model.CurrentLecture.Video?.VideoURL">
+                            <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id" />
+                            <input type="hidden" name="courseid" value="@Model.CurrentCourse.Id" />
                         </form>
                     </div>
-
-                    <div class="block-item block-add--image add-image">
-                        <form action="" class="add-image--form">
+                    
+                    <div class="block-item block-add--image add-image" id="imageBlock">
+                        <form asp-page-handler="AddImage" class="add-image--form" enctype="multipart/form-data">
                             <img src="/image/image-icon.svg" alt="">
-                            <input type="file" id="upload-button" accept="image/png, image/jpg, image/jpeg"/>
+                            <input type="file" id="uploadButton" name="imageFile" accept="image/png, image/jpg, image/jpeg" />
+                            <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id" />
+                            <input type="hidden" name="courseid" value="@Model.CurrentCourse.Id" />
                         </form>
                     </div>
-
-                    <div class="block-item block-add--file add-file">
-                        <form action="" class="add-file--form">
+                    
+                    <div class="block-item block-add--file add-file" id="fileBlock">
+                        <form asp-page-handler="AddAdditionalFile" class="add-file--form" enctype="multipart/form-data">
                             <img src="/image/file-icon.svg" alt="">
-                            <input type="file" id="upload-button" accept=".pdf, .doc"/>
+                            <input type="file" id="fileUploadButton" name="additionalFile" accept=".pdf, .doc" />
+                            <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id" />
+                            <input type="hidden" name="courseid" value="@Model.CurrentCourse.Id" />
                         </form>
                     </div>
 
-                    <div class="block-item block-add--test add-test">
-                        <form action="" class="add-test--form">
-                            <input type="text" class="add-test--input form-input input-add--lecture" placeholder="Вопрос">
-                            <div class="test-answer">
-                                <div class="test-answer--form add-test-answer">
-                                    <input class="input" checked="" value="a" name="hopping" type="radio" id="a">
-                                    <label class="label" for="a"><span></span>
-                                        <input type="text" id="a" class="form-input input-add--lecture" placeholder="Вставьте ответ">
-                                    </label>
-                                    <input class="input" value="b" name="hopping" type="radio" id="b">
-                                    <label class="label" for="b"><span></span>
-                                        <input type="text" id="a" class="form-input input-add--lecture" placeholder="Вставьте ответ">
-                                    </label>
-                                    <input class="input" value="c" name="hopping" type="radio" id="c">
-                                    <label class="label" for="c"><span></span>
-                                        <input type="text" id="a" class="form-input input-add--lecture" placeholder="Вставьте ответ">
-                                    </label>
-                                    <input class="input" value="d" name="hopping" type="radio" id="d">
-                                    <label class="label" for="d"><span></span>
-                                        <input type="text" id="a" class="form-input input-add--lecture" placeholder="Вставьте ответ">
-                                    </label>
-                                    <div class="test-answer--worm worm">
-                                        <div class="worm-segment"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-
-                    <button class="block-add--btn block-item">
-                        <svg width="25" height="25" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15.8125 6.79688V9.51562H0.21875V6.79688H15.8125ZM9.46875 0.15625V16.7188H6.57812V0.15625H9.46875Z"/>
-                        </svg>
-                    </button>
-
-                    <button type="submit" class="lecture-save--btn block-btn--save">Сохранить</button>
+                    <button type="button" class="lecture-save--btn block-btn--save" id="saveContentButton">Сохранить содержимое</button>
                 </div>
             </div>
         </div>
+
     </div>
 </section>
+
+<script src="/js/constructor.js"></script>
