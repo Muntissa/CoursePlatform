@@ -1,4 +1,5 @@
 using CoursePlatform.Common;
+using CoursePlatform.Common.Additional;
 using CoursePlatform.Common.Entities;
 using CoursePlatform.Common.Interfaces;
 using CoursePlatform.WebApi;
@@ -51,6 +52,7 @@ namespace CoursePlatform
 
             app.MapRazorPages();
 
+            Generating.GenerateCertificate();
             using (var scope = app.Services.CreateScope())
             {
                 var provider = scope.ServiceProvider;

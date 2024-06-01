@@ -1,6 +1,7 @@
 ﻿@page
 @using CoursePlatform.Common.Additional
 @using System.IO
+@using CoursePlatform.Common.Enums
 @model TestCreate
 @{
     ViewData["Title"] = "Home page";
@@ -10,196 +11,62 @@
     <div class="lecture-wrapper">
         <div class="lecture-menu">
             <ul class="lecture-list">
-                @foreach (var lecture in Model.Course.Lectures.OrderBy(l => l.OrderInCourse))
-                {
-                    var isActive = lecture.Id == Model.CurrentLecture?.Id ? "lecture-active" : "";
-                    <li class="lecture-item">
-                        <a href="/CourseLanding?courseid=@Model.Course.Id&lectureid=@lecture.Id" class="lecture-link @isActive">
-                            <span>@lecture.OrderInCourse</span>
-                            @lecture.Title
-                        </a>
-                    </li>
+                @{
+                    int counter = 1;
+                    @foreach (var question in Model.CurrentTest.Questions)
+                    {
+                        var isActive = question.Id == Model.CurrentQuestion?.Id ? "lecture-active" : "";
+                        <li class="lecture-item">
+                            <a href="/TestCreate?testid=@Model.CurrentTest.Id&questionid=@question.Id" class="lecture-link @isActive">
+                                <span>@counter</span>
+                                вопрос
+                            </a>
+                        </li>
+                        counter++;
+                    }
                 }
+                <form method="post" asp-page-handler="AddNewQuestion">
+                    <button type="submit" class="lecture-add">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 0.856934V23.1426" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M0.857178 11.9312H23.1429" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <input type="hidden" name="testid" value="@Model.CurrentTest.Id" />
+                </form>
             </ul>
         </div>
 
-        @if(Model.CurrentLecture is not null)
+        @if (Model.CurrentQuestion is not null)
         {
             <div class="lecture-content">
                 <div class="lecture-content--wrapper">
-                    @{
-                        var progressToLecture = Model.CurrentCE.Progreses.FirstOrDefault(p => p.Lecture.Id == Model.CurrentLecture.Id);
-
-                        if(progressToLecture is null || progressToLecture.CompletionStatus != Common.Enums.Status.Success)
-                        {
-                            <p class="lecture-content--suptitle">Не пройдено</p>
-                        }
-                        else
-                        {
-                            <p class="lecture-content--suptitle">Пройдено</p>
-                        }  
-                    }
-                    
-                    <h2 class="lecture-content--title">@Model.CurrentLecture.Title</h2>
-                    <p class="lecture-content--description">@Model.CurrentLecture.Summary</p>
-                    <div class="lecture-content--block block">
-                        @if (Model.CurrentLecture.Test is not null)
-                        {
-                            <div class="block-test test">
-                                <form asp-page-handler="CheckProgress" method="post" id="testForm" class="test-answer--form">
-                                    <input type="hidden" name="courseid" value="@Model.Course.Id"></input>
-                                    <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id"></input>
-                                    <ul class="test-list">
-                                        @for (int i = 0; i < Model.CurrentLecture.Test.Questions.Count; i++)
-                                        {
-                                            var question = Model.CurrentLecture.Test.Questions[i];
-                                            <li class="test-item">
-                                                <div class="test-question">
-                                                    <h2 class="test-question--title">@question.Content</h2>
-                                                </div>
-                                                <div class="test-answer">
-                                                    @for (int j = 0; j < question.Answers.Count; j++)
-                                                    {
-                                                        var answer = question.Answers[j];
-                                                        <input class="input" value="@answer.Id" name="Answers[@i].SelectedAnswerId" type="radio" id="answer_@answer.Id">
-                                                        <label class="label" for="answer_@answer.Id"><span></span>@answer.AnswerContent</label>
-                                                        <input type="hidden" name="Answers[@i].QuestionId" value="@question.Id" />
-                                                    }
-                                                </div>
-                                            </li>
-                                        }
-                                    </ul>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </form>
-                            </div>
-                        }
-
-                        @if (Model.CurrentLecture.LectureMaterial is not null)
-                        {
-                            <div class="block-text">
-                                @{
-                                    var paragraphs = Model.CurrentLecture.LectureMaterial.Content
-                                    .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-                                }
-
-                                @foreach (var paragraph in paragraphs)
-                                {
-                                    if (!string.IsNullOrWhiteSpace(paragraph))
+                    <div class="block-item block-add--test add-test">
+                        <form method="post" asp-page-handler="SaveQuestion" class="add-test--form">
+                            <input type="hidden" name="questionid" value="@Model.CurrentQuestion.Id" />
+                            <input type="text" name="questionContent" class="add-test--input form-input input-add--lecture" placeholder="Вопрос" value="@Model.CurrentQuestion.Content">
+                            <div class="test-answer">
+                                <div class="test-answer--form add-test-answer">
+                                    @for (int i = 0; i < Model.CurrentQuestion.Answers.Count; i++)
                                     {
-                                        <p class="block-text--description">@paragraph</p>
+                                        var answer = Model.CurrentQuestion.Answers[i];
+                                        var isChecked = answer.AnswerType == AnswerType.Correct ? "checked" : "";
+                                        <input class="input" value="@i" name="correctAnswerIndex" type="radio" id="answer-@i" @isChecked>
+                                        <label class="label" for="answer-@i">
+                                            <span></span>
+                                            <input type="text" name="answers[@i]" class="form-input input-add--lecture" placeholder="Вставьте ответ" value="@answer.AnswerContent">
+                                        </label>
                                     }
-                                }
-                            </div>
-                        }
-
-                        @if(Model.CurrentLecture.Image is not null)
-                        {
-                            <div class="block-image">
-                                <div class="block-image--photo image-photo">
-                                    <img src="~/image/lectureImages/@Model.CurrentLecture.Image.ImagePath" class="image-photo--item" />
+                                    <div class="test-answer--worm worm">
+                                        <div class="worm-segment"></div>
+                                    </div>
                                 </div>
                             </div>
-                        }
-
-                        @if(Model.CurrentLecture.Video is not null)
-                        {
-                            <div class="block-video">
-                                <iframe width="1280" height="720" src="@Model.CurrentLecture.Video.VideoURL.Replace(".com/watch?v=", ".com/embed/")" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                            </div>
-                        }
-
-                        @if(Model.CurrentLecture.AdditionalFile is not null)
-                        {
-                            <div class="block-download">
-                                <ul class="block-download--list">
-                                    <li class="block-download--item">
-                                        <a download class="block-download--link" href="/files/lectureFiles/@Model.CurrentLecture.AdditionalFile.FilePath">
-                                            @if (Model.CurrentLecture.AdditionalFile.FileType == Common.Enums.FileType.PDF)
-                                            {
-                                                <img class="block-downloand--icon" src="/image/pdf.svg">
-                                                <span>@System.IO.Path.GetFileNameWithoutExtension(Model.CurrentLecture.AdditionalFile.FilePath)</span>
-                                            }
-                                            else
-                                            {
-                                                <img class="block-downloand--icon" src="/image/docx.svg">
-                                                <span>@System.IO.Path.GetFileNameWithoutExtension(Model.CurrentLecture.AdditionalFile.FilePath)</span>
-                                            }
-
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        }
-
-                    </div>
-                </div>
-                @{
-                    if(progressToLecture is null)
-                    {
-                        <div class="lecture-btn">
-                            <div class="lecture-btn--done lecture-btn--view">
-                                <form asp-page-handler="CheckProgress" method="post" id="testForm" class="test-answer--form">
-                                    <button id="progressButton">Подтвердить выполнение</button>
-                                    <input type="hidden" name="courseid" value="@Model.Course.Id"></input>
-                                    <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id"></input>
-                                </form>
-                            </div>
-                        </div>
-                    }
-                }
-            </div>
-        }
-        else
-        {
-            <div class="lecture-content">
-                <div class="course-details--wrapper details">
-                    <div class="details-top">
-                        <p class="details-for details-grey">
-                            @if (Model.Course.Teacher is not null && !String.IsNullOrEmpty(Model.Course.Teacher.Profile.Name))
-                            {
-                                Model.Course.Teacher.Profile.GetFullName();
-                            }
-                            else
-                            {
-                                <span>Неизвестный преподаватель</span>
-                            }
-                        </p>
-                        <div class="details-name">
-                            <h3 class="details-name--title">@Model.Course.CourseTitle</h3>
-                            <div class="details-name--star star">
-                                @if (Model.Course.Complexity == Common.Enums.Complexity.Light)
-                                {
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
-                                }
-                                else if (Model.Course.Complexity == Common.Enums.Complexity.Medium)
-                                {
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
-                                }
-                                else
-                                {
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                }
-                            </div>
-                        </div>
-                        <p class="details-description details-grey">Описание</p>
-                        <p class="details-description-text">
-                            @Model.Course.CourseDecription
-                        </p>
+                            <button type="submit" class="btn btn-primary">Сохранить</button>
+                        </form>
                     </div>
                 </div>
             </div>
         }
     </div>
 </section>
-
-<script>
-    $('#progressButton').click(function () {
-        $('#testForm').submit();
-    });
-</script>

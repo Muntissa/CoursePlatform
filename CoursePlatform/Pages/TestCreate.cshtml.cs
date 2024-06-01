@@ -23,119 +23,100 @@ namespace CoursePlatform.Pages
             _context = context;
         }
 
-        [BindProperty]
-        public List<TestAnswerModel> Answers { get; set; }
-        public Course Course { get; set; }
-        public Lecture CurrentLecture { get; set; }
-        public CourseEnrollment CurrentCE { get; set; }
 
-        public async Task OnGetAsync(int? courseid, int? lectureid)
+        public int counter = 1;
+        public Test CurrentTest { get; set; }
+        public Question CurrentQuestion { get; set; }
+
+        public async Task OnGetAsync(int? testid, int? questionid)
         {
-            if (courseid is null)
-                return;
+            var test = _context.Set<Test>()
+                .Include(t => t.Lecture)
+                .Include(t => t.Questions).ThenInclude(q => q.Answers)
+                .FirstOrDefault(l => l.Id == testid);
 
-            Course = _context.Set<Course>()
-                .Include(c => c.Lectures).ThenInclude(l => l.LectureMaterial)
-                .Include(c => c.CourseEnrollments)
-                .Include(c => c.Lectures).ThenInclude(l => l.Test).ThenInclude(t => t.Questions).ThenInclude(q => q.Answers)
-                .Include(c => c.Lectures).ThenInclude(l => l.Image)
-                .Include(c => c.Lectures).ThenInclude(l => l.Video)
-                .Include(c => c.Lectures).ThenInclude(l => l.AdditionalFile)
-                .FirstOrDefault(c => c.Id == courseid);
-
-            var user = await _userManager.GetUserAsync(User);
-
-            var studentsCEs = _context.Set<CourseEnrollment>().Include(c => c.Progreses).Include(ce => ce.Course).Where(ce => ce.StudentId == user.Id).ToList();
-
-            CurrentCE = studentsCEs.FirstOrDefault(ce => ce.Course.Id == courseid);
-
-            CurrentLecture = Course.Lectures.Where(l => l.Id == lectureid).FirstOrDefault();
+            CurrentTest = test;
+            CurrentQuestion = _context.Set<Question>().Include(q => q.Answers).FirstOrDefault(q => q.Id == questionid);
         }
 
-        public async Task<IActionResult> OnPostCheckProgress(int? courseid, int? lectureid)
+        public async Task<IActionResult> OnPost(int lectureid)
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            var lecture = await _context.Set<Lecture>()
+                .Include(l => l.Test)
+                .FirstOrDefaultAsync(l => l.Id == lectureid);
 
-            Course = _context.Set<Course>()
-                .Include(c => c.Lectures).ThenInclude(l => l.LectureMaterial)
-                .Include(c => c.CourseEnrollments)
-                .Include(c => c.Lectures).ThenInclude(l => l.Test).ThenInclude(t => t.Questions).ThenInclude(q => q.Answers)
-                .Include(c => c.Lectures).ThenInclude(l => l.Image)
-                .Include(c => c.Lectures).ThenInclude(l => l.Video)
-                .Include(c => c.Lectures).ThenInclude(l => l.AdditionalFile)
-                .FirstOrDefault(c => c.Id == courseid);
-
-            CurrentLecture = Course.Lectures.Where(l => l.Id == lectureid).FirstOrDefault();
-
-            if (Answers.Count() != 0)
-            {
-                var counter = 0;
-
-                // Логика проверки правильности ответов
-                foreach (var answer in Answers)
-                {
-                    // Получение вопроса и ответа из базы данных для проверки правильности
-                    var question = _context.Set<Question>()
-                        .Include(q => q.Answers)
-                        .FirstOrDefault(q => q.Id == answer.QuestionId);
-
-                    var selectedAnswer = question?.Answers.FirstOrDefault(a => a.Id == answer.SelectedAnswerId);
-
-                    if (selectedAnswer != null && selectedAnswer.AnswerType == AnswerType.Correct)
-                    {
-                        counter++;
-                        continue;
-                    }
-                        
-                    else
-                        return Page();
-                    
-                }
-
-                var lecture = CurrentLecture;
-
-                if (counter == lecture.Test.Questions.Count())
-                {
-                    var user = await _userManager.GetUserAsync(User);
-
-                    CurrentCE = _context.Set<CourseEnrollment>().FirstOrDefault(ce => ce.StudentId == user.Id);
-
-                    CurrentCE.Progreses.Add(new() { Lecture = CurrentLecture, CompletionStatus = Status.Success });
-
-                    _context.SaveChanges();
-                }
-            }
-            else
-            {
-                var user = await _userManager.GetUserAsync(User);
-
-                CurrentCE = _context.Set<CourseEnrollment>().FirstOrDefault(ce => ce.StudentId == user.Id);
-
-                CurrentCE.Progreses.Add(new() { Lecture = CurrentLecture, CompletionStatus = Status.Success });
-
-                _context.SaveChanges();
-            }
-
-
-            // Перенаправление или отображение результата
-            return RedirectToPage("/CourseLanding", new { courseid = courseid, lectureid = lectureid });
-        }
-
-        public async Task<IActionResult> OnPost(int courseid)
-        {
-            var user = await _userManager.GetUserAsync(User);
-
-            _context.Set<Course>()
-                .Include(c => c.CourseEnrollments)
-                .FirstOrDefault(c => c.Id == courseid)
-                .CourseEnrollments.Add(new CourseEnrollment() { EnrollmentDate = DateTime.Now, Student = user, Course = _context.Set<Course>().FirstOrDefault(c => c.Id == courseid) });
+            if(lecture.Test is null)
+                lecture.Test = new Test();
+            
 
             _context.SaveChanges();
 
-            return RedirectToPage(new { courseid });
+            return RedirectToPage("/TestCreate", new { testid = lecture.Test.Id});
+        }
+
+        public async Task<IActionResult> OnPostAddNewQuestionAsync(int testid)
+        {
+            var test = await _context.Set<Test>()
+                .Include(t => t.Questions).ThenInclude(q => q.Answers)
+                .FirstOrDefaultAsync(c => c.Id == testid);
+
+            if (test == null)
+            {
+                return NotFound();
+            }
+
+            var newAnswers = new List<Answer>()
+            {
+                new()
+                {
+                    AnswerContent = "Вариант А",
+                    AnswerType = AnswerType.Correct
+                },
+                new()
+                {
+                    AnswerContent = "Вариант B",
+                    AnswerType = AnswerType.Incorrect
+                },
+                new()
+                {
+                    AnswerContent = "Вариант А",
+                    AnswerType = AnswerType.Incorrect
+                },
+                new()
+                {
+                    AnswerContent = "Вариант А",
+                    AnswerType = AnswerType.Incorrect
+                },
+            };
+
+            var newQuestion = new Question() { Content = "Новый вопрос?", Answers = newAnswers };
+
+            test.Questions.Add(newQuestion);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage(new { testid = test.Id });
+        }
+
+        public async Task<IActionResult> OnPostSaveQuestionAsync(int questionid, string questionContent, int correctAnswerIndex, string[] answers)
+        {
+            var question = await _context.Set<Question>().Include(q => q.Answers).FirstOrDefaultAsync(q => q.Id == questionid);
+
+            if (question == null)
+            {
+                return NotFound();
+            }
+
+            question.Content = questionContent;
+            for (int i = 0; i < question.Answers.Count; i++)
+            {
+                question.Answers[i].AnswerContent = answers[i];
+                question.Answers[i].AnswerType = (i == correctAnswerIndex) ? AnswerType.Correct : AnswerType.Incorrect;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage(new { testid = question.TestId, questionid = question.Id });
         }
     }
 }

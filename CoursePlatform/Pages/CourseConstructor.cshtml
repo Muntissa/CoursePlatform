@@ -82,9 +82,13 @@
                     <button class="lecture-button" id="videoButton">
                         <span>Видео</span>
                     </button>
-                    <button class="lecture-button" id="testButton">
-                        <span>Тест</span>
-                    </button>
+                    <form asp-page="/TestCreate" method="post">
+                        <button class="lecture-button" id="testButton">
+                            <span>Тест</span>
+                        </button>
+                        <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id"/>
+                    </form>
+
                     <button class="lecture-button" id="fileButton">
                         <span>Файл</span>
                     </button>

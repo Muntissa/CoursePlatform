@@ -128,10 +128,16 @@ namespace CoursePlatform.Pages
         {
             var user = await _userManager.GetUserAsync(User);
 
-            _context.Set<Course>()
+            var course = _context.Set<Course>()
                 .Include(c => c.CourseEnrollments)
-                .FirstOrDefault(c => c.Id == courseid)
-                .CourseEnrollments.Add(new CourseEnrollment() { EnrollmentDate = DateTime.Now, Student = user, Course = _context.Set<Course>().FirstOrDefault(c => c.Id == courseid) });
+                .FirstOrDefault(c => c.Id == courseid);
+
+            course.CourseEnrollments.Add(new CourseEnrollment() 
+                { 
+                    EnrollmentDate = DateTime.Now, 
+                    Student = user,
+                    Certificate = new() { Path = $"/image/Certificates/Student{user.UserName}{course.CourseTitle.Replace(" ", "")}" },
+                });
 
             _context.SaveChanges();
 

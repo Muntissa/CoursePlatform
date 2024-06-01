@@ -48,11 +48,14 @@ namespace CoursePlatform.Pages
                     Certificate = new() { Path = $"/image/Student{currentUser.UserName}{Course.CourseTitle.Replace(" ", "")}" },
                 });
 
-            var userToTest = _context.Set<User>()
-                .Include(u => u.CourseEnrollments)
-                .FirstOrDefault(u => u.Id == currentUser.Id);
+
 
             _context.SaveChanges();
+
+            var userToTest = _context.Set<User>()
+                .Include(u => u.CourseEnrollments)
+                .ThenInclude(ce => ce.Certificate)
+                .FirstOrDefault(u => u.Id == currentUser.Id);
             /*            
                         var testcourse = _context.Set<Course>()
                             .Include(c => c.CourseEnrollments)
