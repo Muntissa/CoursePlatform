@@ -109,14 +109,6 @@ namespace CoursePlatform.Pages
 
             return RedirectToPage(new { courseid = courseId });
         }
-
-        public static int GetProgress(CourseEnrollment courseE)
-        {
-            if (courseE.Course.Lectures.Count == 0) return 0;
-
-            var completedLectures = courseE.Progreses.Count(p => p.CompletionStatus == Status.Success);
-            return (completedLectures * 100) / courseE.Course.Lectures.Count;
-        }
     }
 
 }

@@ -49,7 +49,6 @@ namespace CoursePlatform.Pages
                 });
 
 
-
             _context.SaveChanges();
 
             var userToTest = _context.Set<User>()

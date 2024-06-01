@@ -41,15 +41,17 @@
 <section class="course">
     <div class="container">
         <div class="couser-search search">
-            <form action="#" class="search-form">
+            <form class="search-form" method="get">
+                <input type="hidden" name="FilterType" value="@Model.CurrentFilterType" />
                 <div class="search-input--wrapper">
-                    <input type="text" class="search-input form-input " placeholder="Введите текст">
+                    <input type="text" name="searchTerm" class="search-input form-input " placeholder="Введите текст">
                     <button type="submit">
                         <img src="/image/search.svg" alt="" class="search-icon">
                     </button>
                 </div>
             </form>
         </div>
+
         <div class="course-wrapper">
             @foreach (var course in Model.Courses)
             {

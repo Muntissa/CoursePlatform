@@ -1,5 +1,6 @@
 ﻿@page
 @model MyCourseDetailModel
+@using CoursePlatform.Common.Additional;
 @{
     ViewData["Title"] = "Course Details";
 }
@@ -60,7 +61,7 @@
             <tr>
                 <td>@enrollment.Student.Profile.Name @enrollment.Student.Profile.Surname</td>
                 <td>@enrollment.EnrollmentDate.ToShortDateString()</td>
-                <td>@MyCourseDetailModel.GetProgress(enrollment)</td>
+                <td>@enrollment.GetProgress()</td>
                 <td>
                     <form method="post" asp-page-handler="DeleteEnrollment" asp-route-enrollmentId="@enrollment.Id">
                         <button type="submit" class="btn btn-danger">Delete</button>
