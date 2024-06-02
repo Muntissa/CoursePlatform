@@ -45,10 +45,11 @@ namespace CoursePlatform.Pages
                 .Include(l => l.Test)
                 .FirstOrDefaultAsync(l => l.Id == lectureid);
 
+            DeleteAnotherClass.DeleteAnother("Test", lectureid, _context);
+
             if(lecture.Test is null)
                 lecture.Test = new Test();
             
-
             _context.SaveChanges();
 
             return RedirectToPage("/TestCreate", new { testid = lecture.Test.Id});

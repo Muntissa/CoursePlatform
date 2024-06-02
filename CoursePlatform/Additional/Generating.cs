@@ -1,6 +1,8 @@
 ﻿
 using CoursePlatform.Common.Entities;
+using CoursePlatform.Common.Migrations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
@@ -13,13 +15,21 @@ namespace CoursePlatform.Common.Additional
 {
     public static class Generating
     {
-        public static async void GenerateCertificate()
+        public static async void GenerateCertificate(this Certificate certificate, CoursePlatformContext context)
         {
             var shablon = "./wwwroot/image/shablon.png";
+            var certificatesDirectory = "./wwwroot/image/Certificates";
 
-            var profile = new Profile() { Name = "Илья", Surname = "Виноградов", LastName = "Алексеевич" };
-            var course = new Course() { CourseTitle = "Название тестового курса жесть полная просто жесть" };
-            var cert = new Certificate() { IssueDate = DateTime.Now };
+            // Проверяем существование директории для сертификатов
+            if (!Directory.Exists(certificatesDirectory))
+            {
+                Directory.CreateDirectory(certificatesDirectory);
+            }
+
+            var currentCert = context.Set<Certificate>()
+                .Include(c => c.CourseEnrollment).ThenInclude(ce => ce.Student).ThenInclude(s => s.Profile)
+                .Include(c => c.CourseEnrollment).ThenInclude(ce => ce.Course)
+                .FirstOrDefault(c => c.Id == certificate.Id);
 
             FontCollection collection = new();
             collection.Add("./wwwroot/fonts/TeXGyreAdventor-Bold.ttf");
@@ -30,19 +40,17 @@ namespace CoursePlatform.Common.Additional
 
             frame.Mutate(ctx => ctx.Fill(Color.FromRgb(0x79, 0x6a, 0x69), GetPath($"выдан", 500, 310, collection, 30, true, 700)));
             frame.Mutate(ctx => ctx.Fill(Color.FromRgb(0x79, 0x6a, 0x69), GetPath($"пользователю", 600, 310, collection, 30, true, 700)));
-            frame.Mutate(ctx => ctx.Fill(Color.FromRgb(0x24, 0x43, 0x73), GetPath($"{profile.Surname}", 360 , 350, collection, 100, true, 1000)));
-            frame.Mutate(ctx => ctx.Fill(Color.FromRgb(0x24, 0x43, 0x73), GetPath($"{profile.Name}", 360, 450, collection, 100, true, 1000)));
-            frame.Mutate(ctx => ctx.Fill(Color.FromRgb(0x79, 0x6a, 0x69), GetPath($"за окончание курса «{course.CourseTitle}»", 330, 585, collection, 25, true, 720)));
+            frame.Mutate(ctx => ctx.Fill(Color.FromRgb(0x24, 0x43, 0x73), GetPath($"{currentCert.CourseEnrollment.Student.Profile.Surname}", 360 , 350, collection, 100, true, 1000)));
+            frame.Mutate(ctx => ctx.Fill(Color.FromRgb(0x24, 0x43, 0x73), GetPath($"{currentCert.CourseEnrollment.Student.Profile.Name}", 360, 450, collection, 100, true, 1000)));
+            frame.Mutate(ctx => ctx.Fill(Color.FromRgb(0x79, 0x6a, 0x69), GetPath($"за окончание курса «{currentCert.CourseEnrollment.Course.CourseTitle}»", 330, 585, collection, 25, true, 720)));
             
-            frame.Mutate(ctx => ctx.Fill(Color.FromRgb(0x79, 0x6a, 0x69), GetPath($"usernamet0p", 340, 730, collection, 28, false, 650)));
+            frame.Mutate(ctx => ctx.Fill(Color.FromRgb(0x79, 0x6a, 0x69), GetPath($"{currentCert.CourseEnrollment.Student.UserName}", 340, 730, collection, 28, false, 650)));
             frame.Mutate(ctx => ctx.Fill(Color.FromRgb(0x24, 0x43, 0x73), GetPath($"имя пользователя", 325, 770, collection, 26, false, 650)));
             
-            frame.Mutate(ctx => ctx.Fill(Color.FromRgb(0x79, 0x6a, 0x69), GetPath($"{cert.IssueDate.Value.ToShortDateString()}", 765, 730, collection, 28, true, 650)));
+            frame.Mutate(ctx => ctx.Fill(Color.FromRgb(0x79, 0x6a, 0x69), GetPath($"{currentCert.IssueDate.Value.ToShortDateString()}", 765, 730, collection, 28, true, 650)));
             frame.Mutate(ctx => ctx.Fill(Color.FromRgb(0x24, 0x43, 0x73), GetPath($"дата вручения", 745, 770, collection, 26, true, 650)));
 
-
-
-            var outputPath = $"./wwwroot/image/certificate_{profile.Name}.png";
+            var outputPath = $"./wwwroot/image/Certificates/{certificate.CourseEnrollment.Student.UserName}__{certificate.CourseEnrollment.Course.CourseTitle.Replace(" ", "")}.png";
             await frame.SaveAsync(outputPath, frame.DetectEncoder(shablon));
         } 
 

@@ -51,8 +51,6 @@ namespace CoursePlatform
 
 
             app.MapRazorPages();
-
-            Generating.GenerateCertificate();
             using (var scope = app.Services.CreateScope())
             {
                 var provider = scope.ServiceProvider;

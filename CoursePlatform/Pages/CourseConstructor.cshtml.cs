@@ -230,7 +230,7 @@ namespace CoursePlatform.Pages
             };
         }
 
-        private  void DeleteAnother(string type, int lectureid)
+        public void DeleteAnother(string type, int lectureid)
         {
             var lectureToEdit = _context.Set<Lecture>()
                 .Include(l => l.Image)

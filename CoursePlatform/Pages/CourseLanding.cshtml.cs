@@ -28,6 +28,7 @@ namespace CoursePlatform.Pages
         public Course Course { get; set; }
         public Lecture CurrentLecture { get; set; }
         public CourseEnrollment CurrentCE { get; set; }
+        public Certificate Certificate { get; set; }
 
         public async Task OnGetAsync(int? courseid, int? lectureid)
         {
@@ -43,13 +44,62 @@ namespace CoursePlatform.Pages
                 .Include(c => c.Lectures).ThenInclude(l => l.AdditionalFile)
                 .FirstOrDefault(c => c.Id == courseid);
 
+            if (Course is null)
+                return;
+
             var user = await _userManager.GetUserAsync(User);
 
-            var studentsCEs = _context.Set<CourseEnrollment>().Include(c => c.Progreses).Include(ce => ce.Course).Where(ce => ce.StudentId == user.Id).ToList();
+            var studentsCEs = _context.Set<CourseEnrollment>().Include(ce => ce.Certificate).Include(c => c.Progreses).Include(ce => ce.Course).Where(ce => ce.StudentId == user.Id).ToList();
 
             CurrentCE = studentsCEs.FirstOrDefault(ce => ce.Course.Id == courseid);
 
             CurrentLecture = Course.Lectures.Where(l => l.Id == lectureid).FirstOrDefault();
+
+            var progress = CurrentCE.GetProgress();
+
+            if (CurrentCE.GetProgress() == 100)
+            {
+                if (!CheckCertificate(CurrentCE))
+                {
+                    CurrentCE.Certificate.IssueDate = DateTime.Now;
+                    await _context.SaveChangesAsync();
+                    CurrentCE.Certificate.GenerateCertificate(_context);
+                }
+
+                Certificate = CurrentCE.Certificate;
+            }
+        }
+
+        private bool CheckCertificate(CourseEnrollment courseEnrollment)
+        {
+            if (courseEnrollment.Certificate != null)
+            {
+                var certPath = $"./wwwroot/image/Certificates/{courseEnrollment.Student.UserName}__{courseEnrollment.Course.CourseTitle.Replace(" ", "")}.png";
+                return System.IO.File.Exists(certPath);
+            }
+            return false;
+        }
+
+
+
+        public async Task<IActionResult> OnPost(int courseid)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var course = _context.Set<Course>()
+                .Include(c => c.CourseEnrollments)
+                .FirstOrDefault(c => c.Id == courseid);
+
+            course.CourseEnrollments.Add(new CourseEnrollment() 
+                { 
+                    EnrollmentDate = DateTime.Now, 
+                    Student = user,
+                    Certificate = new() { Path = $"/image/Certificates/{user.UserName}__{course.CourseTitle.Replace(" ", "")}.png" },
+                });
+
+            _context.SaveChanges();
+
+            return RedirectToPage(new { courseid });
         }
 
         public async Task<IActionResult> OnPostCheckProgress(int? courseid, int? lectureid)
@@ -89,10 +139,10 @@ namespace CoursePlatform.Pages
                         counter++;
                         continue;
                     }
-                        
+
                     else
                         return Page();
-                    
+
                 }
 
                 var lecture = CurrentLecture;
@@ -101,7 +151,9 @@ namespace CoursePlatform.Pages
                 {
                     var user = await _userManager.GetUserAsync(User);
 
-                    CurrentCE = _context.Set<CourseEnrollment>().FirstOrDefault(ce => ce.StudentId == user.Id);
+                    var studentsCEs = _context.Set<CourseEnrollment>().Include(c => c.Progreses).Include(ce => ce.Course).Where(ce => ce.StudentId == user.Id).ToList();
+
+                    CurrentCE = studentsCEs.FirstOrDefault(ce => ce.Course.Id == courseid);
 
                     CurrentCE.Progreses.Add(new() { Lecture = CurrentLecture, CompletionStatus = Status.Success });
 
@@ -112,7 +164,9 @@ namespace CoursePlatform.Pages
             {
                 var user = await _userManager.GetUserAsync(User);
 
-                CurrentCE = _context.Set<CourseEnrollment>().FirstOrDefault(ce => ce.StudentId == user.Id);
+                var studentsCEs = _context.Set<CourseEnrollment>().Include(c => c.Progreses).Include(ce => ce.Course).Where(ce => ce.StudentId == user.Id).ToList();
+
+                CurrentCE = studentsCEs.FirstOrDefault(ce => ce.Course.Id == courseid);
 
                 CurrentCE.Progreses.Add(new() { Lecture = CurrentLecture, CompletionStatus = Status.Success });
 
@@ -120,28 +174,7 @@ namespace CoursePlatform.Pages
             }
 
 
-            // Перенаправление или отображение результата
             return RedirectToPage("/CourseLanding", new { courseid = courseid, lectureid = lectureid });
-        }
-
-        public async Task<IActionResult> OnPost(int courseid)
-        {
-            var user = await _userManager.GetUserAsync(User);
-
-            var course = _context.Set<Course>()
-                .Include(c => c.CourseEnrollments)
-                .FirstOrDefault(c => c.Id == courseid);
-
-            course.CourseEnrollments.Add(new CourseEnrollment() 
-                { 
-                    EnrollmentDate = DateTime.Now, 
-                    Student = user,
-                    Certificate = new() { Path = $"/image/Certificates/Student{user.UserName}{course.CourseTitle.Replace(" ", "")}" },
-                });
-
-            _context.SaveChanges();
-
-            return RedirectToPage(new { courseid });
         }
     }
 }

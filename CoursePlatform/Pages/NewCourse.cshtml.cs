@@ -53,7 +53,7 @@ namespace CoursePlatform.Pages
                 .ToListAsync();
 
             newCourse.CourseCategories = selectedCategories;
-
+            newCourse.Lectures.Add(new Lecture() { OrderInCourse = 1, Title = "Тут будет название лекции", SubTitle = "Тут будет краткая информация о курсе, которая будет видна в карточке", Summary = "Тут будет описание, для чего нужен этот курс", });
             _context.Set<Course>().Add(newCourse);
             await _context.SaveChangesAsync();
 

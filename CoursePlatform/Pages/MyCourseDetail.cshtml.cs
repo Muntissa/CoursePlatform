@@ -66,6 +66,7 @@ namespace CoursePlatform.Pages
         {
             var enrollmentToDelete = await _context.Set<CourseEnrollment>()
                 .Include(ce => ce.Progreses)
+                .Include(ce => ce.Certificate)  
                 .FirstOrDefaultAsync(ce => ce.Id == enrollmentId);
 
             if (enrollmentToDelete != null)
@@ -76,7 +77,7 @@ namespace CoursePlatform.Pages
                 }
 
                 _context.Set<Progress>().RemoveRange(enrollmentToDelete.Progreses);
-
+                _context.Set<Certificate>().Remove(enrollmentToDelete.Certificate);
 
                 _context.Set<CourseEnrollment>().Remove(enrollmentToDelete);
                 await _context.SaveChangesAsync();
