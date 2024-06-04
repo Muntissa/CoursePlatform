@@ -110,6 +110,13 @@
                             var url = Url.Page(detailPage, new { courseid = course.Id,  });
                         }
                         <a href="@url" class="card-button--link">Подробнее</a>
+                        @if(Request.Query["FilterType"] == "InProgress")
+                        {
+                            <form method="post" asp-page-handler="Unsubcribe">
+                                <button class="card-botton--link">Отписаться</button>
+                                <input type="hidden" name="courseid" value="@course.Id"/>
+                            </form>
+                        }
                     </div>
                 </div>
             }

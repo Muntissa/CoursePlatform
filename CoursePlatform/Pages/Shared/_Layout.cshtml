@@ -14,10 +14,20 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <div class="nav_logo">
-                    <a asp-page="/Index">
-                        <img class="nav_rectangle" src="/image/nav_rectangle.svg" alt="Logo" />
-                        <h5 class="nav_logotext">COURSES</h5>
-                    </a>
+                    @if(User.Identity.IsAuthenticated && User.IsInRole("Teacher"))
+                    {
+                        <a asp-page="/MyCourses">
+                            <img class="nav_rectangle" src="/image/nav_rectangle.svg" alt="Logo" />
+                            <h5 class="nav_logotext">COURSES</h5>
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-page="/Index">
+                            <img class="nav_rectangle" src="/image/nav_rectangle.svg" alt="Logo" />
+                            <h5 class="nav_logotext">COURSES</h5>
+                        </a>
+                    }
                 </div>
 
                 <div class="nav_main">

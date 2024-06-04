@@ -57,12 +57,15 @@ namespace CoursePlatform.Common.Additional
         public static IPathCollection GetPath(string text, float x, float y, FontCollection collection, int size, bool isBold = false, int length = 400)
         {
             var fnt = isBold ? collection.Families.First() : collection.Families.Last();
+
             var textOptions = new TextOptions(fnt.CreateFont(size)) { WrappingLength = length };
             var pathBuilder = new PathBuilder();
+
             pathBuilder.SetOrigin(new PointF(x, y));
             pathBuilder.AddLine(new PointF(0, 0), new PointF(1000, 0));
 
             IPath path = pathBuilder.Build();
+
             return TextBuilder.GenerateGlyphs(text, path, textOptions);
         }
     }

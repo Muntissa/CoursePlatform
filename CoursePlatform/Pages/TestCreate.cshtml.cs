@@ -30,13 +30,17 @@ namespace CoursePlatform.Pages
 
         public async Task OnGetAsync(int? testid, int? questionid)
         {
-            var test = _context.Set<Test>()
+            var test = await _context.Set<Test>()
                 .Include(t => t.Lecture)
                 .Include(t => t.Questions).ThenInclude(q => q.Answers)
-                .FirstOrDefault(l => l.Id == testid);
+                .FirstOrDefaultAsync(l => l.Id == testid);
 
             CurrentTest = test;
-            CurrentQuestion = _context.Set<Question>().Include(q => q.Answers).FirstOrDefault(q => q.Id == questionid);
+
+            if(questionid is null)
+                CurrentQuestion = test.Questions.FirstOrDefault();
+            else
+                CurrentQuestion = test.Questions.FirstOrDefault(q => q.Id == questionid);
         }
 
         public async Task<IActionResult> OnPost(int lectureid)
@@ -53,6 +57,27 @@ namespace CoursePlatform.Pages
             _context.SaveChanges();
 
             return RedirectToPage("/TestCreate", new { testid = lecture.Test.Id});
+        }
+
+        public async Task<IActionResult> OnPostDeleteQuestionAsync(int? testid, int? questionid)
+        {
+            var test = await _context.Set<Test>()
+                .Include(t => t.Questions).ThenInclude(q => q.Answers)
+                .FirstOrDefaultAsync(t => t.Id == testid);
+
+            var question = test.Questions.FirstOrDefault(q => q.Id == questionid);
+
+            if(question is not null)
+            {
+                foreach (var answer in question.Answers)
+                    _context.Remove(answer);
+
+                _context.Remove(question);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("/TestCreate", new { testid = testid });
         }
 
         public async Task<IActionResult> OnPostAddNewQuestionAsync(int testid)

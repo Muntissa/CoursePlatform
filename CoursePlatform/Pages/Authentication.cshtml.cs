@@ -79,12 +79,10 @@ namespace CoursePlatform.WebApi.Pages
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
 
-                    return RedirectToPage("/MyCourses");
-                }
+                    return RedirectToPage("/Index");
+                } 
             }
-
-            return RedirectToPage("/Index", param);
-
+                    return RedirectToPage("/Index");
         }
 
         public async Task<IActionResult> OnPostLogoutAsync()
@@ -95,20 +93,51 @@ namespace CoursePlatform.WebApi.Pages
 
             return RedirectToPage("/Index", param);
         }
-        
+
         public async Task<IActionResult> OnPostLoginAsync(string username, string password)
         {
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(username, password, isPersistent: false, lockoutOnFailure: false);
 
-                if (result.IsLockedOut)
+                if (result.Succeeded)
+                {
+                    var user = await _userManager.FindByNameAsync(username);
+                    if (user != null)
+                    {
+                        var roles = await _userManager.GetRolesAsync(user);
+
+                        if (roles.Contains("Admin"))
+                        {
+                            return RedirectToPage("/AdminDashboard");
+                        }
+                        else if (roles.Contains("Teacher"))
+                        {
+                            return RedirectToPage("/MyCourses");
+                        }
+                        else if (roles.Contains("Student"))
+                        {
+                            return RedirectToPage("/Index", new { FilterType = "InProgress" });
+                        }
+                        else
+                        {
+                            // Redirect to a default page if no specific role is matched
+                            return RedirectToPage("/Index");
+                        }
+                    }
+                }
+                else if (result.IsLockedOut)
+                {
                     ModelState.AddModelError(string.Empty, "User account locked out.");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                }
             }
 
-            var param = new { FilterType = "All" };
-
-            return RedirectToPage("/Index", param);
+            // If we got this far, something failed, redisplay form
+            return RedirectToPage("/Index");
         }
 
         public async Task<IActionResult> OnPostEditAccountAsync(string currentusername, string newusername, string newpassword)

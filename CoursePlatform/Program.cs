@@ -51,17 +51,8 @@ namespace CoursePlatform
 
 
             app.MapRazorPages();
-            using (var scope = app.Services.CreateScope())
-            {
-                var provider = scope.ServiceProvider;
-                using (var context = new CoursePlatformContext(provider))
-                {
-                    if (context.Database.GetPendingMigrations().Any())
-                        context.Database.Migrate();
 
-                    /*Busket.FillDataBase(provider);*/
-                }
-            }
+            
 
             app.Run();
         }

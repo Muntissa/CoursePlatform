@@ -43,7 +43,7 @@ namespace CoursePlatform.Pages
             CurrentCourse = await _context.Set<Course>()
                 .Include(c => c.Teacher).ThenInclude(t => t.Profile)
                 .Include(c => c.CourseEnrollments).ThenInclude(ce => ce.Student).ThenInclude(s => s.Profile)
-                .Include(c => c.Lectures)
+                .Include(c => c.Lectures).ThenInclude(l => l.Progreses)
                 .Include(c => c.CourseCategories)
                 .FirstOrDefaultAsync(c => c.Id == courseid);
 

@@ -102,7 +102,25 @@ namespace CoursePlatform.Pages
             }
         }
 
+        public async Task<IActionResult> OnPostUnsubcribeAsync(int courseid)
+        {
+            var user = await _userManager.GetUserAsync(User);
 
+            var course = _context.Set<Course>()
+                .Include(c => c.CourseEnrollments).ThenInclude(ce => ce.Progreses)
+                .Include(c => c.CourseEnrollments).ThenInclude(ce => ce.Certificate)
+                .FirstOrDefault(c => c.Id == courseid);
+
+            var ceToDelete = course.CourseEnrollments.FirstOrDefault(ce => ce.Student.Id == user.Id);
+
+            _context.Remove(ceToDelete.Certificate);
+            _context.RemoveRange(ceToDelete.Progreses);
+            _context.Remove(ceToDelete);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("/Index", new { FilterType = "All" });
+        }
 
         public async Task<IActionResult> OnPostAsync(int courseid)
         {

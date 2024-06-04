@@ -67,6 +67,53 @@ namespace CoursePlatform.Pages
             return RedirectToPage("/CourseConstructor", new { courseid = course.Id, lectureid = newLecture.Id });
         }
 
+        public async Task<IActionResult> OnPostDeleteLectureAsync(int? courseid, int? lectureid)
+        {
+            var course = await _context.Set<Course>()
+                .Include(c => c.Lectures).ThenInclude(l => l.LectureMaterial)
+                .Include(c => c.Lectures).ThenInclude(l => l.Image)
+                .Include(c => c.Lectures).ThenInclude(l => l.AdditionalFile)
+                .Include(c => c.Lectures).ThenInclude(l => l.Progreses)
+                .Include(c => c.Lectures).ThenInclude(l => l.Video)
+                .Include(c => c.Lectures).ThenInclude(l => l.Test).ThenInclude(t => t.Questions).ThenInclude(q => q.Answers)
+                .FirstOrDefaultAsync(c => c.Id == courseid);
+
+            var lectureToDelete = course.Lectures.FirstOrDefault(l => l.Id == lectureid);
+
+            if(lectureToDelete.LectureMaterial is not null)
+                _context.Remove(lectureToDelete.LectureMaterial);
+            if (lectureToDelete.Image is not null)
+                _context.Remove(lectureToDelete.Image);
+             if (lectureToDelete.AdditionalFile is not null)
+                _context.Remove(lectureToDelete.AdditionalFile);
+            if (lectureToDelete.Video is not null)
+                _context.Remove(lectureToDelete.Video);
+
+            _context.RemoveRange(lectureToDelete.Progreses);
+
+            if(lectureToDelete.Test is not null)
+            {
+                foreach (var answer in lectureToDelete.Test.Questions)
+                    _context.Remove(answer);
+                
+                _context.RemoveRange(lectureToDelete.Test.Questions);
+
+                _context.Remove(lectureToDelete.Test);
+            }
+
+            _context.Remove(lectureToDelete);
+
+            await _context.SaveChangesAsync();
+
+            var firstLecture = course.Lectures.FirstOrDefault();
+
+            if(firstLecture is not null)
+                return RedirectToPage("/CourseConstructor", new { courseid = courseid, lectureid = firstLecture.Id });
+            
+            return RedirectToPage("/CourseConstructor", new { courseid = courseid});
+
+        }
+
         public async Task<IActionResult> OnPostEditLectureTitleAsync(int courseid, int lectureid, string title, string subtitle, string summary)
         {
             var lecture = await _context.Set<Lecture>()
