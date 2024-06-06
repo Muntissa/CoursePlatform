@@ -12,13 +12,17 @@
                 @foreach (var lecture in Model.CurrentCourse.Lectures.OrderBy(l => l.OrderInCourse))
                 {
                     var isActive = lecture.Id == Model.CurrentLecture?.Id ? "lecture-active" : "";
-                    <li class="lecture-item">
+                    <li class="lecture-item constructor-item">
                         <a href="/CourseConstructor?courseid=@Model.CurrentCourse.Id&lectureid=@lecture.Id" class="lecture-link @isActive">
                             <span>@lecture.OrderInCourse</span>
                             @lecture.Title
                         </a>
-                        <form method="post" asp-page-handler="DeleteLecture">
-                            <button type="submit">Удалить</button>
+                        <form class="lecture-delete" method="post" asp-page-handler="DeleteLecture">
+                            <button type="submit">
+                                <svg width="24" height="26" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4.5 26C3.675 26 2.969 25.7174 2.382 25.1521C1.795 24.5868 1.501 23.9065 1.5 23.1111V4.33333H0V1.44444H7.5V0H16.5V1.44444H24V4.33333H22.5V23.1111C22.5 23.9056 22.2065 24.5859 21.6195 25.1521C21.0325 25.7183 20.326 26.001 19.5 26H4.5ZM7.5 20.2222H10.5V7.22222H7.5V20.2222ZM13.5 20.2222H16.5V7.22222H13.5V20.2222Z"/>
+                                </svg>
+                            </button>
                             <input type="hidden" name="courseid" value="@Model.CurrentCourse.Id"/>
                             <input type="hidden" name="lectureid" value="@lecture.Id" />
                         </form>
@@ -47,8 +51,11 @@
                         <form method="post" asp-page-handler="EditLectureTitle">
                             <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id" />
                             <input type="hidden" name="courseid" value="@Model.CurrentCourse.Id" />
+                            <label for="" class="details-description-text lecture-label">Заголовок</label>
                             <input type="text" class="form-lecture--title form-input" name="title" value="@Model.CurrentLecture.Title" placeholder="Title">
+                            <label for="" class="details-description-text lecture-label">Подзаголовок</label>
                             <textarea class="form-lecture--desctription form-input" name="subtitle" placeholder="Subtitle">@Model.CurrentLecture.SubTitle</textarea>
+                            <label for="" class="details-description-text lecture-label">Описание лекции</label>
                             <textarea class="form-lecture--desctription form-input" name="summary" placeholder="Summary">@Model.CurrentLecture.Summary</textarea>
                             <button type="submit" class="lecture-save--btn">Сохранить</button>
                         </form>
@@ -57,51 +64,123 @@
                     @{
                         if (Model.CurrentLecture.LectureMaterial is not null)
                         {
-                            <span>Текущий вид лекции: Текст</span>
+                            <div class="demo">
+                                <span>Текущий вид лекции: Текст</span>
+                                <a class="demo-btn" href="/LectureDemo?lectureid=@Model.CurrentLecture.Id">Демо</a>
+                            </div>
+
                         }
                         else if (Model.CurrentLecture.Image is not null)
                         {
-                            <span>Текущий вид лекции: Избражение</span>
+                            <div class="demo">
+                                <span>Текущий вид лекции: Изображение</span>
+                                <a class="demo-btn" href="/LectureDemo?lectureid=@Model.CurrentLecture.Id">Демо</a>
+                            </div>
                         }
                         else if (Model.CurrentLecture.Video is not null)
                         {
-                            <span>Текущий вид лекции: Видео</span>
+                            <div class="demo">
+                                <span>Текущий вид лекции: Видео</span>
+                                <a class="demo-btn" href="/LectureDemo?lectureid=@Model.CurrentLecture.Id">Демо</a>
+                            </div>
                         }
                         else if (Model.CurrentLecture.Test is not null)
                         {
-                            <span>Текущий вид лекции: Тест</span>
+                            <div class="demo">
+                                <span>Текущий вид лекции: Тест</span>
+                                <a class="demo-btn" href="/LectureDemo?lectureid=@Model.CurrentLecture.Id">Демо</a>
+                            </div>
+
                         }
                         else if (Model.CurrentLecture.AdditionalFile is not null)
                         {
-                            <span>Текущий вид лекции: Файл для скачивания</span>
+                            <div class="demo">
+                                <span>Текущий вид лекции: Файл для скачивания</span>
+                                <a class="demo-btn" href="/LectureDemo?lectureid=@Model.CurrentLecture.Id">Демо</a>
+                            </div>
                         }
                     }
 
-
-
-                    <a href="/LectureDemo?lectureid=@Model.CurrentLecture.Id">Демо</a>
-
-
                     <div class="lecture-content--buttons">
-                        <button class="lecture-button" id="textButton">
-                            <span>Текст</span>
-                        </button>
-                        <button class="lecture-button" id="imageButton">
-                            <span>Изображение</span>
-                        </button>
-                        <button class="lecture-button" id="videoButton">
-                            <span>Видео</span>
-                        </button>
-                        <form asp-page="/TestCreate" method="post">
-                            <button class="lecture-button" id="testButton">
-                                <span>Тест</span>
-                            </button>
-                            <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id" />
-                        </form>
+                        <div class="buttons-wrapper">
+                            @if(Model.CurrentLecture.LectureMaterial is not null)
+                            {
+                                <button class="lecture-button lecture-button--active" id="textButton">
+                                    <span>Текст</span>
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="lecture-button" id="textButton">
+                                    <span>Текст</span>
+                                </button>
+                            }
 
-                        <button class="lecture-button" id="fileButton">
-                            <span>Файл</span>
-                        </button>
+                            @if (Model.CurrentLecture.Image is not null)
+                            {
+                                <button class="lecture-button lecture-button--active" id="imageButton">
+                                    <span>Изображение</span>
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="lecture-button" id="imageButton">
+                                    <span>Изображение</span>
+                                </button>
+                            }
+                            
+
+                            @if (Model.CurrentLecture.Video is not null)
+                            {
+                                <button class="lecture-button lecture-button--active" id="videoButton">
+                                    <span>Видео</span>
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="lecture-button" id="videoButton">
+                                    <span>Видео</span>
+                                </button>
+
+                            }
+
+                            @if (Model.CurrentLecture.AdditionalFile is not null)
+                            {
+                                <button class="lecture-button lecture-button--active" id="fileButton">
+                                    <span>Файл</span>
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="lecture-button" id="fileButton">
+                                    <span>Файл</span>
+                                </button>
+                            }
+
+                            
+
+
+                            @if (Model.CurrentLecture.Test is not null)
+                            {
+                                <form asp-page="/TestCreate" method="post">
+                                    <button class="lecture-button lecture-button--test lecture-button--active" id="testButton">
+                                        <span>Тест</span>
+                                    </button>
+                                    <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id" />
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-page="/TestCreate" method="post">
+                                    <button class="lecture-button lecture-button--test" id="testButton">
+                                        <span>Тест</span>
+                                    </button>
+                                    <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id" />
+                                </form>
+                            }
+
+                        </div>
+
                     </div>
                     <div class="lecture-content--block block">
                         <div class="block-item block-add--text add-text" id="textBlock">
@@ -139,10 +218,16 @@
                             </form>
                         </div>
 
+                        <div class="block-item block-add--test add-test" id="testBlock">
+                            <form method="post" asp-page-handler="AddTest" class="add-test--form" id="testForm">
+                                <!-- Вопросы будут добавляться динамически сюда -->
+                            </form>
+                        </div>
                         <button type="button" class="lecture-save--btn block-btn--save" id="saveContentButton">Сохранить содержимое</button>
                     </div>
                 </div>
             </div>
+
         }
     </div>
 </section>

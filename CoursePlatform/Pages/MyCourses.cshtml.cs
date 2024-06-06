@@ -23,7 +23,7 @@ namespace CoursePlatform.Pages
         public IList<Course> Courses { get; set; }
         public User CurrentUser { get; set; }
 
-        public async Task OnGet(string FilterType)
+        public async Task OnGet()
         {
             CurrentUser = await _userManager.GetUserAsync(User);
 
@@ -33,6 +33,76 @@ namespace CoursePlatform.Pages
                 .Include(c => c.CourseCategories)
                 .Where(c => c.Teacher == CurrentUser)
                 .ToListAsync();
+        }
+
+        public async Task<IActionResult> OnPostDeleteMyCourseAsync(int courseid)
+        {
+            var course = await _context.Set<Course>()
+                .Include(c => c.CourseEnrollments).ThenInclude(ce => ce.Progreses)
+                .Include(c => c.CourseEnrollments).ThenInclude(ce => ce.Certificate)
+                .Include(c => c.Lectures).ThenInclude(l => l.AdditionalFile)
+                .Include(c => c.Lectures).ThenInclude(l => l.Image)
+                .Include(c => c.Lectures).ThenInclude(l => l.LectureMaterial)
+                .Include(c => c.Lectures).ThenInclude(l => l.Video)
+                .Include(c => c.Lectures).ThenInclude(l => l.Test).ThenInclude(t => t.Questions).ThenInclude(q => q.Answers)
+                .FirstOrDefaultAsync(c => c.Id == courseid);
+
+            if(course.CourseEnrollments.Count() != 0)
+            {
+                foreach (var ce in course.CourseEnrollments)
+                {
+                    if (ce.Certificate is not null)
+                    {
+                        _context.Remove(ce.Certificate);
+                    }
+
+                    _context.RemoveRange(ce.Progreses);
+
+                    _context.Remove(ce);
+                }
+            }
+
+            if(course.Lectures.Count() != 0)
+            {
+                foreach(var lecture in course.Lectures)
+                {
+                    if(lecture.AdditionalFile is not null)
+                        _context.Remove(lecture.AdditionalFile);
+
+                    if (lecture.Image is not null)
+                        _context.Remove(lecture.Image);
+
+                    if (lecture.Video is not null)
+                        _context.Remove(lecture.Video);
+
+                    if (lecture.LectureMaterial is not null)
+                        _context.Remove(lecture.LectureMaterial);
+
+                    if(lecture.Test is not null)
+                    {
+                        foreach(var question in lecture.Test.Questions)
+                        {
+                            if(question.Answers.Count() != 0)
+                            {
+                                _context.RemoveRange(question.Answers);
+                            }
+                        }
+
+                        _context.RemoveRange(lecture.Test.Questions);
+
+                        _context.Remove(lecture.Test);
+                    }
+
+                }
+            }
+
+            _context.Remove(course);
+
+            await _context.SaveChangesAsync();
+
+
+            // Перенаправление на ту же страницу с параметром courseid
+            return RedirectToPage("/MyCourses");
         }
 
         public async Task<IActionResult> OnPostAsync(int courseid)

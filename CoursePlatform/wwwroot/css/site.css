@@ -727,6 +727,25 @@ h1, h2, h3, h4, h5, h6, p {
     padding: 0 0 0 0;
 }
 
+.lecture-item{
+    position: relative;
+}
+
+.lecture-delete{
+    position: absolute;
+    bottom: 25px;
+    right: 15px;
+    transition: all .3s ease;
+}
+
+.lecture-delete button svg{
+    fill: #000;
+}
+
+.lecture-delete:hover button svg{
+    fill: #706e6e;
+    transition: all .3s ease;
+}
 
 .lecture-link{
     text-transform: uppercase;
@@ -740,6 +759,7 @@ h1, h2, h3, h4, h5, h6, p {
     border-bottom: 1px solid #B5B5B5;
     transition: all .3s ease;
 }
+
 
 .lecture-link span{
     color: #fff;
@@ -811,6 +831,10 @@ h1, h2, h3, h4, h5, h6, p {
     margin-bottom: 50px;
 }
 
+.lecture-label{
+    margin-bottom: 0px;
+}
+
 
 /* тест */
 
@@ -845,6 +869,23 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .test-answer{
+}
+
+.btn-save{
+    background-color: #e85b81;
+    padding: 12px 50px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-size: 18px;
+    font-family: var(--RM);
+    border: none;
+    transition: all .3s ease;
+}
+
+.btn-save:hover{
+    background-color: #c12d54;
+    transform: scale(0.95);
+    transition: all .3s ease;
 }
 
 /* радиобатон */
@@ -983,7 +1024,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .test-answer--form .input:nth-of-type(2):checked ~ .worm .worm-segment {
-    transform: translateY(3em);
+    transform: translateY(1.5em);
 }
 
 .test-answer--form .input:nth-of-type(2):checked ~ .worm .worm-segment:before {
@@ -991,7 +1032,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .test-answer--form .input:nth-of-type(3):checked ~ .worm .worm-segment {
-    transform: translateY(6em);
+    transform: translateY(3em);
 }
 
 .test-answer--form .input:nth-of-type(3):checked ~ .worm .worm-segment:before {
@@ -999,7 +1040,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .test-answer--form .input:nth-of-type(4):checked ~ .worm .worm-segment {
-    transform: translateY(9em);
+    transform: translateY(6em);
 }
 
 .test-answer--form .input:nth-of-type(4):checked ~ .worm .worm-segment:before {
@@ -1016,132 +1057,6 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 /* радиобатон */
-
-/* чексбоксер */
-
-.test-checkbox{
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-
-
-.test-checkbox--answer{
-    font-size: 18px;
-    font-family: var(--RM);
-    color: #252525;
-}
-
-/* new */
-
-/* checkbox settings 👇 */
-
-.test-checkbox--ui {
-    --primary-color: #e85b81;
-    --secondary-color: #fff;
-    --primary-hover-color: #c12d54;
-    /* checkbox */
-    --checkbox-diameter: 25px;
-    --checkbox-border-radius: 5px;
-    --checkbox-border-color: #d9d9d9;
-    --checkbox-border-width: 1px;
-    --checkbox-border-style: solid;
-    /* checkmark */
-    --checkmark-size: 1.2;
-}
-
-.test-checkbox--ui, 
-  .test-checkbox--ui *, 
-  .test-checkbox--ui *::before, 
-  .test-checkbox--ui *::after {
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.test-checkbox--ui {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    width: var(--checkbox-diameter);
-    height: var(--checkbox-diameter);
-    border-radius: var(--checkbox-border-radius);
-    background: var(--secondary-color);
-    border: var(--checkbox-border-width) var(--checkbox-border-style) var(--checkbox-border-color);
-    -webkit-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-    cursor: pointer;
-    position: relative;
-}
-
-.test-checkbox--ui::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    -webkit-box-shadow: 0 0 0 calc(var(--checkbox-diameter) / 2.5) var(--primary-color);
-    box-shadow: 0 0 0 calc(var(--checkbox-diameter) / 2.5) var(--primary-color);
-    border-radius: inherit;
-    opacity: 0;
-    -webkit-transition: all 0.5s cubic-bezier(0.12, 0.4, 0.29, 1.46);
-    -o-transition: all 0.5s cubic-bezier(0.12, 0.4, 0.29, 1.46);
-    transition: all 0.5s cubic-bezier(0.12, 0.4, 0.29, 1.46);
-}
-
-.test-checkbox--ui::before {
-    top: 43%;
-    left: 54%;
-    content: "";
-    position: absolute;
-    width: 6px;
-    height: 11px;
-    border-right: 2px solid var(--secondary-color);
-    border-bottom: 2px solid var(--secondary-color);;
-    -webkit-transform: translate(-50%, -50%) rotate(45deg) scale(0);
-    -ms-transform: translate(-50%, -50%) rotate(45deg) scale(0);
-    transform: translate(-50%, -50%) rotate(45deg) scale(0);
-    opacity: 0;
-    -webkit-transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6),opacity 0.1s;
-    -o-transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6),opacity 0.1s;
-    transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6),opacity 0.1s;
-}
-
-/* actions */
-
-.test-checkbox--ui:hover {
-    border-color: var(--primary-color);
-}
-
-.test-checkbox--ui:checked {
-    background: var(--primary-color);
-    border-color: transparent;
-}
-
-.test-checkbox--ui:checked::before {
-    opacity: 1;
-    -webkit-transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
-    -ms-transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
-    transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
-    -webkit-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
-    -o-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
-    transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
-}
-
-.test-checkbox--ui:active:not(:checked)::after {
-    -webkit-transition: none;
-    -o-transition: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    transition: none;
-    opacity: 1;
-}
-
-
-/* чексбоксер */
 
 /* тест */
 
@@ -1279,6 +1194,13 @@ h1, h2, h3, h4, h5, h6, p {
     margin-bottom: 50px;
 }
 
+.lecture-content--top form{
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    width: 50%;
+}
+
 .lecture-add{
     margin: 15px 0 0 30px;
 }
@@ -1302,10 +1224,10 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .form-lecture--title{
-    font-size: 38px !important;
+    font-size: 24px !important;
     padding: 6px 20px;
     width: 600px;
-    height: 100px;
+    height: 80px;
 }
 
 .form-lecture--desctription{
@@ -1314,6 +1236,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .lecture-save--btn{
+    width: 200px;
     background-color: #e85b81;
     padding: 12px 60px;
     border-radius: 8px;
@@ -1333,20 +1256,71 @@ h1, h2, h3, h4, h5, h6, p {
 .lecture-content--buttons{
     display: flex;
     align-items: center;
+    justify-content: space-between;
+}
+
+.buttons-wrapper{
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
     gap: 25px;
 }
 
-.lecture-button{
+.demo{
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.demo span{
+    font-size: 20px;
+}
+
+.demo-btn{
+    text-align: center;
+    width: 200px;
+    border:2px solid #e85b81;
+    padding: 12px 60px;
+    border-radius: 8px;
+    transition: all .3s ease;
+    font-size: 16px;
+    font-family: var(--RM);
+    transition: all .3s ease;
+}
+
+.demo-btn:hover{
+    background-color: #e85b81;
+    color: #fff;
+    transition: all .3s ease;
+}
+
+.block-btn--save{
+    width: 385px;
+}
+
+.lecture-button {
     display: flex;
     align-items: center;
     gap: 10px;
     font-size: 16px;
     font-family: var(--RM);
     background-color: #e85b81;
+    background-color: none;
     padding: 15px 60px;
     color: #fff;
     border-radius: 8px;
     transition: all .3s ease;
+}
+
+.lecture-button--test {
+    margin-left: 200px; 
+}
+
+.lecture-button--active {
+    border: 2px solid #e85b81;
+    background-color: none;
+    color: #fff;
 }
 
 .lecture-button:hover{
@@ -1363,10 +1337,6 @@ h1, h2, h3, h4, h5, h6, p {
     padding: 24px 32px;
     border-radius: 16px;
     box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
-}
-
-.block-item:first-child{
-    margin-top: 100px;
 }
 
 .block-item:not(:last-child){
@@ -1902,3 +1872,144 @@ h1, h2, h3, h4, h5, h6, p {
 
 /* попап */
 
+/* создание курса */
+
+.create-course{
+    padding: 50px 0;
+}
+
+.create-course--title{
+    font-size: 38px;
+    font-family: var(--RM);
+    margin-bottom: 50px;
+}
+
+.create-form--group{
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.create-form--group label{
+    font-size: 22px;
+    color: #252525;
+}
+
+.create-form--group input{
+    font-size: 22px;
+    color: #252525;
+    background-color: transparent;
+}
+
+.create-form--group textarea{
+    font-size: 22px;
+    color: #252525;
+    background-color: transparent;
+}
+
+
+.create-form--group select{
+    background-color: transparent;
+    padding: 6px 12px;
+}
+
+.category-block{
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 16;
+    box-shadow: 0 0px 10px #00000010;
+    height: 210px;
+    overflow: auto;
+}
+
+.category-label{
+    font-size: 32px !important;
+    font-family: var(--RM);
+    margin-bottom: 20px;
+}
+
+.category-checkboxs{
+    display: grid;
+    grid-template-columns: repeat(4, 300px);
+    gap: 20px;
+}
+
+
+.create-form--checkbox{
+    font-size: 22px;
+    color: #252525;
+}
+
+.checkbox-label{
+    font-size: 22px;
+    color: #252525;
+}
+
+.checkbox-container {
+    display: inline-block;
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+    font-size: 16px;
+    user-select: none;
+  }
+  
+  .custom-checkbox {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 9px;
+    top: 7px;
+    width: 8px;
+    height: 22px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+  }
+  
+  .custom-checkbox:checked ~ .checkmark {
+    background-color: #E85B81;
+    box-shadow: 0 3px 7px rgba(33, 150, 243, 0.3);
+  }
+  
+  .custom-checkbox:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  @keyframes checkAnim {
+    0% {
+      height: 0;
+    }
+  
+    100% {
+      height: 10px;
+    }
+  }
+  
+  .custom-checkbox:checked ~ .checkmark:after {
+    animation: checkAnim 0.2s forwards;
+  }
+  
+
+/* создание курса */

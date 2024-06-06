@@ -21,8 +21,13 @@
                                 <span>@counter</span>
                                 вопрос
                             </a>
-                            <form method="post" asp-page-handler="DeleteQuestion">
-                                <button type="submit">Удалить</button>
+                            
+                            <form class="lecture-delete" method="post" asp-page-handler="DeleteQuestion">
+                                <button type="submit">
+                                    <svg width="24" height="26" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M4.5 26C3.675 26 2.969 25.7174 2.382 25.1521C1.795 24.5868 1.501 23.9065 1.5 23.1111V4.33333H0V1.44444H7.5V0H16.5V1.44444H24V4.33333H22.5V23.1111C22.5 23.9056 22.2065 24.5859 21.6195 25.1521C21.0325 25.7183 20.326 26.001 19.5 26H4.5ZM7.5 20.2222H10.5V7.22222H7.5V20.2222ZM13.5 20.2222H16.5V7.22222H13.5V20.2222Z"/>
+                                    </svg>
+                                </button>
                                 <input type="hidden" name="testid" value="@Model.CurrentTest.Id" />
                                 <input type="hidden" name="questionid" value="@question.Id" />
                             </form>
@@ -67,7 +72,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Сохранить</button>
+                            <button type="submit" class="btn btn-primary btn-save">Сохранить</button>
                         </form>
                     </div>
                 </div>

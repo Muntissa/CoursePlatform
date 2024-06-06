@@ -18,9 +18,6 @@
                         @if (Model.CurrentLecture.Test is not null)
                         {
                             <div class="block-test test">
-                                <form asp-page-handler="CheckProgress" method="post" id="testForm" class="test-answer--form">
-                                    <input type="hidden" name="courseid" value="@Model.Course.Id"></input>
-                                    <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id"></input>
                                     <ul class="test-list">
                                         @for (int i = 0; i < Model.CurrentLecture.Test.Questions.Count; i++)
                                         {
@@ -29,19 +26,24 @@
                                                 <div class="test-question">
                                                     <h2 class="test-question--title">@question.Content</h2>
                                                 </div>
-                                                <div class="test-answer">
+                                                <div class="test-answer--form">
                                                     @for (int j = 0; j < question.Answers.Count; j++)
                                                     {
                                                         var answer = question.Answers[j];
                                                         <input class="input" value="@answer.Id" name="Answers[@i].SelectedAnswerId" type="radio" id="answer_@answer.Id">
-                                                        <label class="label" for="answer_@answer.Id"><span></span>@answer.AnswerContent</label>
+                                                        <label class="label" for="answer_@answer.Id">
+                                                            <span></span>
+                                                            @answer.AnswerContent
+                                                            </label>
                                                         <input type="hidden" name="Answers[@i].QuestionId" value="@question.Id" />
                                                     }
+                                                    <div class="test-answer--worm worm">
+                                                        <div class="worm-segment"></div>
+                                                    </div>
                                                 </div>
                                             </li>
                                         }
                                     </ul>
-                                </form>
                             </div>
                         }
 
