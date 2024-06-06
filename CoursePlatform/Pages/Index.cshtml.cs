@@ -36,6 +36,7 @@ namespace CoursePlatform.Pages
                 Courses = await _context.Set<Course>()
                     .Include(c => c.Lectures)
                     .Include(c => c.CourseCategories)
+                    .Include(c => c.Teacher).ThenInclude(t => t.Profile)
                     .Include(c => c.Teacher).ToListAsync();
 
                 return;
@@ -48,7 +49,8 @@ namespace CoursePlatform.Pages
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                query = query.Where(c => c.CourseTitle.Contains(searchTerm) || c.CourseDecription.Contains(searchTerm));
+                var normilizeST = searchTerm.ToLower();
+                query = query.Where(c => c.CourseTitle.ToLower().Contains(normilizeST) || c.CourseDecription.ToLower().Contains(normilizeST));
             }
 
             if (string.IsNullOrEmpty(FilterType) || FilterType == "All")

@@ -28,10 +28,9 @@
                 </div>
                 <div class="create-form--checkbox">
                     <label class="category-label">Категории</label>
-                    <div class="category-block">
-                        
+                    <div class="category-block-add">
                         <div class="category-checkboxs checkbox">
-                            @foreach (var category in Model.Categories)
+                            @foreach (var category in Model.Categories.OrderBy(c => c.Name))
                             {
                                 <div class="checkbox-wrapper">
                                     <label class="checkbox-container">
@@ -51,3 +50,4 @@
         </div>
     </div>
 </section>
+

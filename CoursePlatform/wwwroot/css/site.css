@@ -1914,13 +1914,14 @@ h1, h2, h3, h4, h5, h6, p {
     padding: 6px 12px;
 }
 
-.category-block{
+.category-block-add{
     background-color: #fff;
     padding: 30px;
-    border-radius: 16;
+    border-radius: 16px;
     box-shadow: 0 0px 10px #00000010;
     height: 210px;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .category-label{

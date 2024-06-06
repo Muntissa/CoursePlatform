@@ -21,6 +21,9 @@ namespace CoursePlatform.Pages
         }
 
         [BindProperty]
+        public string CategoryName { get; set; }
+
+        [BindProperty]
         public string Name { get; set; }
         [BindProperty]
         public string Description { get; set; }
@@ -34,6 +37,18 @@ namespace CoursePlatform.Pages
         public async Task OnGetAsync()
         {
             Categories = await _context.Set<Category>().ToListAsync();
+        }
+
+        public async Task<IActionResult> OnPostAddNewCategoryAsync()
+        {
+            if (!string.IsNullOrWhiteSpace(CategoryName))
+            {
+                var newCategory = new Category { Name = CategoryName };
+                await _context.Set<Category>().AddAsync(newCategory);
+                await _context.SaveChangesAsync();
+            }
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()

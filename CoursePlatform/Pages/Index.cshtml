@@ -94,7 +94,7 @@
                             <h3 class="card-title">@course.CourseTitle</h3>
                             <p class="card-lessons">@course.Lectures.Count() лекций</p>
                             <div class="card-category category">
-                                @foreach (var category in course.CourseCategories)
+                                @foreach (var category in course.CourseCategories.OrderBy(c => c.Name).Take(6))
                                 {
                                     <div class="category-block category-block--prog">
                                         <p class="category-name category-name--prog">@category.Name</p>

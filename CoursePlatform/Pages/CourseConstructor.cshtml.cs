@@ -129,7 +129,7 @@ namespace CoursePlatform.Pages
             lecture.Summary = summary;
             await _context.SaveChangesAsync();
 
-            return RedirectToPage(new { lectureid = lecture.Id });
+            return RedirectToPage(new { courseid = courseid, lectureid = lecture.Id });
         }
 
         public async Task<IActionResult> OnPostAddVideoAsync(int courseid, int lectureid, string videourl)
