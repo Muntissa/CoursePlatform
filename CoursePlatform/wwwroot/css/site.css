@@ -783,6 +783,23 @@ h1, h2, h3, h4, h5, h6, p {
     position: relative;
 }
 
+.lecture-item--certificat{
+    display: block;
+    padding: 20px 30px;
+    border-bottom: 2px solid #e85b81;
+    font-size: 24px;
+    color: #252525;
+    font-family: var(--RM);
+    transition: all .3s ease;
+    text-align: center;
+}
+
+.lecture-item--certificat:hover{
+    background-color: #e85b81;
+    color: #fff;
+    transition: all .3s ease;
+}
+
 .lecture-delete{
     position: absolute;
     bottom: 22px;
@@ -1076,7 +1093,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .test-answer--form .input:nth-of-type(2):checked ~ .worm .worm-segment {
-    transform: translateY(1.5em);
+    transform: translateY(3em);
 }
 
 .test-answer--form .input:nth-of-type(2):checked ~ .worm .worm-segment:before {
@@ -1084,7 +1101,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .test-answer--form .input:nth-of-type(3):checked ~ .worm .worm-segment {
-    transform: translateY(3em);
+    transform: translateY(6em);
 }
 
 .test-answer--form .input:nth-of-type(3):checked ~ .worm .worm-segment:before {
@@ -1092,7 +1109,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .test-answer--form .input:nth-of-type(4):checked ~ .worm .worm-segment {
-    transform: translateY(6em);
+    transform: translateY(9em);
 }
 
 .test-answer--form .input:nth-of-type(4):checked ~ .worm .worm-segment:before {
@@ -1370,8 +1387,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .lecture-button--active {
-    border: 2px solid #e85b81;
-    background-color: none;
+    background-color: #B5B5B5;
     color: #fff;
 }
 
@@ -2067,3 +2083,18 @@ h1, h2, h3, h4, h5, h6, p {
 
 /* создание курса */
 
+.certificate-title{
+    position: relative;
+    font-size: 48px;
+    margin-bottom: 50px;
+}
+
+.certificate-title::after{
+    position: absolute;
+    content: '';
+    bottom: -20px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #e85b81;
+}

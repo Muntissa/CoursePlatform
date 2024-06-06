@@ -5,70 +5,76 @@
     ViewData["Title"] = "Course Details";
 }
 
-<h2>Course Details</h2>
+<section class="course-editor editor">
+    <div class="container">
+        <div class="editor-wrapper">
+            <h2>Course Details</h2>
 
-<h3>Edit Course Profile</h3>
-
-<form method="post" asp-page-handler="EditCourse" asp-route-courseId="@Model.CurrentCourse.Id">
-    <div class="form-group">
-        <label asp-for="Title" class="control-label">Course Title</label>
-        <input asp-for="Title" class="form-control" placeholder="@Model.CurrentCourse.CourseTitle" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Description" class="control-label">Course Description</label>
-        <textarea asp-for="Description" class="form-control" placeholder="@Model.CurrentCourse.CourseDecription"></textarea>
-    </div>
-    <div class="form-group">
-        <label asp-for="Complexity" class="control-label">Complexity</label>
-        <select asp-for="Complexity" class="form-control">
-            <option value="1">Light</option>
-            <option value="2">Medium</option>
-            <option value="3">Hard</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label class="control-label">Categories</label>
-        <div>
-            @foreach (var category in Model.AllCategories)
-            {
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="SelectedCategoryIds" value="@category.Id"
-                    @(Model.SelectedCategoryIds.Contains(category.Id) ? "checked" : "") />
-                    <label class="form-check-label">@category.Name</label>
+            <h3>Edit Course Profile</h3>
+            
+            <form method="post" asp-page-handler="EditCourse" asp-route-courseId="@Model.CurrentCourse.Id">
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label">Course Title</label>
+                    <input asp-for="Title" class="form-control" placeholder="@Model.CurrentCourse.CourseTitle" />
                 </div>
-            }
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label">Course Description</label>
+                    <textarea asp-for="Description" class="form-control" placeholder="@Model.CurrentCourse.CourseDecription"></textarea>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Complexity" class="control-label">Complexity</label>
+                    <select asp-for="Complexity" class="form-control">
+                        <option value="1">Light</option>
+                        <option value="2">Medium</option>
+                        <option value="3">Hard</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Categories</label>
+                    <div>
+                        @foreach (var category in Model.AllCategories)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="SelectedCategoryIds" value="@category.Id"
+                                @(Model.SelectedCategoryIds.Contains(category.Id) ? "checked" : "") />
+                                <label class="form-check-label">@category.Name</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+            
+            <a href="/CourseConstructor?courseid=@Model.CurrentCourse.Id">Конструктор</a>
+            
+            <h3>Enrollments</h3>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Enrollment Date</th>
+                        <th>Progress (%)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var enrollment in Model.CurrentCourse.CourseEnrollments)
+                    {
+                        <tr>
+                            <td>@enrollment.Student.Profile.Name @enrollment.Student.Profile.Surname</td>
+                            <td>@enrollment.EnrollmentDate.ToShortDateString()</td>
+                            <td>@enrollment.GetProgress()</td>
+                            <td>
+                                <form method="post" asp-page-handler="DeleteEnrollment" asp-route-enrollmentId="@enrollment.Id">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <input type="hidden" name="courseid" value="@Model.CurrentCourse.Id"/>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
-
-<a href="/CourseConstructor?courseid=@Model.CurrentCourse.Id">Конструктор</a>
-
-<h3>Enrollments</h3>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Enrollment Date</th>
-            <th>Progress (%)</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var enrollment in Model.CurrentCourse.CourseEnrollments)
-        {
-            <tr>
-                <td>@enrollment.Student.Profile.Name @enrollment.Student.Profile.Surname</td>
-                <td>@enrollment.EnrollmentDate.ToShortDateString()</td>
-                <td>@enrollment.GetProgress()</td>
-                <td>
-                    <form method="post" asp-page-handler="DeleteEnrollment" asp-route-enrollmentId="@enrollment.Id">
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                        <input type="hidden" name="courseid" value="@Model.CurrentCourse.Id"/>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+</section>

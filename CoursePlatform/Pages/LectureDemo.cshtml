@@ -34,8 +34,9 @@
                                                         <label class="label" for="answer_@answer.Id">
                                                             <span></span>
                                                             @answer.AnswerContent
+                                                            <input type="hidden" name="Answers[@i].QuestionId" value="@question.Id" />
                                                             </label>
-                                                        <input type="hidden" name="Answers[@i].QuestionId" value="@question.Id" />
+                                                        @* <input type="hidden" name="Answers[@i].QuestionId" value="@question.Id" /> *@
                                                     }
                                                     <div class="test-answer--worm worm">
                                                         <div class="worm-segment"></div>

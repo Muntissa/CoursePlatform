@@ -24,7 +24,7 @@
                 {
                     <li class="lecture-item">
                         <a href="/CourseLanding?courseid=@Model.Course.Id&Certificate=true">
-                            <span>Сертификат</span>
+                            <span class="lecture-item--certificat">Сертификат</span>
                         </a>
                     </li>
                 }
@@ -35,10 +35,11 @@
         {
             <div class="lecture-content">
                 <div class="lecture-content--wrapper">
-                    <div class="block-image">
-                        <div class="block-image--photo image-photo">
-                            <a download class="block-download--link" href="@Model.Certificate.Path">
-                                <img src="@Model.Certificate.Path" class="image-photo--item" />
+                    <div class="block-certificate">
+                        <h2 class="certificate-title">Сертификат за окончание курса!!!</h2>
+                        <div class="certificete-item">
+                            <a download class="certificete-item--link" href="@Model.Certificate.Path">
+                                <img src="@Model.Certificate.Path" />
                             </a>
                         </div>
                     </div>
@@ -90,8 +91,9 @@
                                                             <label class="label" for="answer_@answer.Id">
                                                                 <span></span>
                                                                 @answer.AnswerContent
+                                                                <input type="hidden" name="Answers[@i].QuestionId" value="@question.Id" />
                                                             </label>
-                                                            <input type="hidden" name="Answers[@i].QuestionId" value="@question.Id" />
+                                                            @* <input type="hidden" name="Answers[@i].QuestionId" value="@question.Id" /> *@
                                                         }
                                                         <div class="test-answer--worm worm">
                                                             <div class="worm-segment"></div>
