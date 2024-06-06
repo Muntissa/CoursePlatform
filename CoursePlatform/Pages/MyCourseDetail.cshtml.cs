@@ -35,23 +35,32 @@ namespace CoursePlatform.Pages
 
         public async Task<IActionResult> OnGetAsync(int? courseid)
         {
+            var user = await _userManager.GetUserAsync(User);
+
             if (courseid == null)
-            {
-                return NotFound("Course ID not provided.");
-            }
+                return NotFound("Course ID не предоставлен");
+
+            if (!User.Identity.IsAuthenticated)
+                return NotFound($"Вы не можете редактировать курс, не авторизировавшись");
+
+
+            if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
+                return NotFound("С ролью \"STUDENT\" вы не можете редактировать курс");
 
             CurrentCourse = await _context.Set<Course>()
                 .Include(c => c.Teacher).ThenInclude(t => t.Profile)
                 .Include(c => c.CourseEnrollments).ThenInclude(ce => ce.Student).ThenInclude(s => s.Profile)
                 .Include(c => c.Lectures).ThenInclude(l => l.Progreses)
                 .Include(c => c.CourseCategories)
+                .Include(c => c.Teacher)
                 .FirstOrDefaultAsync(c => c.Id == courseid);
 
             if (CurrentCourse == null)
-            {
-                return NotFound($"Course with ID {courseid} not found.");
-            }
-                
+                return NotFound($"Курс с ID {courseid} не найден.");
+
+            if (user.Id != CurrentCourse.Teacher.Id)
+                return NotFound($"Вы не можете редактировать не свой курс");
+
             AllCategories = await _context.Set<Category>().ToListAsync();
             
             Title = CurrentCourse.CourseTitle;

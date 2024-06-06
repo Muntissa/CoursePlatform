@@ -23,9 +23,15 @@ namespace CoursePlatform.Pages
         public IList<Course> Courses { get; set; }
         public User CurrentUser { get; set; }
 
-        public async Task OnGet(string searchTerm)
+        public async Task<IActionResult> OnGet(string searchTerm)
         {
             CurrentUser = await _userManager.GetUserAsync(User);
+
+            if (!User.Identity.IsAuthenticated)
+                return NotFound("Перед тем, как перейти на данную вкадку, авторизируйтесь.");
+
+            if (User.IsInRole("Student"))
+                return NotFound("Как студент вы не можете зайти на вкладку \"Мои курсы\".");
 
             IQueryable<Course> query = _context.Set<Course>()
                 .Include(c => c.Lectures)
@@ -40,6 +46,8 @@ namespace CoursePlatform.Pages
             }
 
             Courses = await query.ToListAsync();
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostDeleteMyCourseAsync(int courseid)

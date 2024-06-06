@@ -30,10 +30,10 @@ namespace CoursePlatform.Pages
         public CourseEnrollment CurrentCE { get; set; }
         public Certificate Certificate { get; set; }
 
-        public async Task OnGetAsync(int? courseid, int? lectureid)
+        public async Task<IActionResult> OnGetAsync(int? courseid, int? lectureid)
         {
-            if (courseid is null)
-                return;
+            if (courseid == null)
+                return NotFound("Course ID не предоставлен");
 
             Course = _context.Set<Course>()
                 .Include(c => c.Lectures).ThenInclude(l => l.LectureMaterial)
@@ -44,14 +44,14 @@ namespace CoursePlatform.Pages
                 .Include(c => c.Lectures).ThenInclude(l => l.AdditionalFile)
                 .FirstOrDefault(c => c.Id == courseid);
 
-            if (Course is null)
-                return;
-
             var user = await _userManager.GetUserAsync(User);
 
             var studentsCEs = _context.Set<CourseEnrollment>().Include(ce => ce.Certificate).Include(c => c.Progreses).Include(ce => ce.Course).Where(ce => ce.StudentId == user.Id).ToList();
 
             CurrentCE = studentsCEs.FirstOrDefault(ce => ce.Course.Id == courseid);
+
+            if (CurrentCE is null)
+                return NotFound("Вы не записаны на данный курс");
 
             CurrentLecture = Course.Lectures.Where(l => l.Id == lectureid).FirstOrDefault();
 
@@ -68,6 +68,8 @@ namespace CoursePlatform.Pages
 
                 Certificate = CurrentCE.Certificate;
             }
+
+            return Page();
         }
 
         private bool CheckCertificate(CourseEnrollment courseEnrollment)

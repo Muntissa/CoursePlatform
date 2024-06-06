@@ -22,10 +22,19 @@ namespace CoursePlatform.Pages
         public Course CurrentCourse { get; set; }
         public Lecture CurrentLecture { get; set; }
 
-        public void OnGet(int? courseid, int? lectureid)
+        public async Task<IActionResult> OnGet(int? courseid, int? lectureid)
         {
-            if (courseid is null)
-                return;
+            var user = await _userManager.GetUserAsync(User);
+
+            if (courseid == null)
+                return NotFound("Course ID не предоставлен");
+
+            if (!User.Identity.IsAuthenticated)
+                return NotFound($"Вы не можете конструировать курс, не авторизировавшись");
+
+
+            if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
+                return NotFound("С ролью \"STUDENT\" вы не можете редактировать курс");
 
             CurrentCourse = _context.Set<Course>()
                 .Include(c => c.Lectures).ThenInclude(l => l.Image)
@@ -33,12 +42,21 @@ namespace CoursePlatform.Pages
                 .Include(c => c.Lectures).ThenInclude(l => l.Test).ThenInclude(t => t.Questions).ThenInclude(q => q.Answers)
                 .Include(c => c.Lectures).ThenInclude(l => l.Video)
                 .Include(c => c.Lectures).ThenInclude(l => l.LectureMaterial)
+                .Include(c => c.Teacher)
                 .FirstOrDefault(c => c.Id == courseid);
+
+            if (CurrentCourse == null)
+                return NotFound($"Курс с ID {courseid} не найден.");
+
+            if (user.Id != CurrentCourse.Teacher.Id)
+                return NotFound($"Вы не можете конструировать не свой курс");
 
             if (lectureid is null)
                 CurrentLecture = CurrentCourse.Lectures.OrderBy(l => l.OrderInCourse).FirstOrDefault();
             else
                 CurrentLecture = CurrentCourse.Lectures.Where(l => l.Id == lectureid).FirstOrDefault();
+
+            return Page();
 
         }
 

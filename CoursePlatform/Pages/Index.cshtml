@@ -113,7 +113,7 @@
                         @if(Request.Query["FilterType"] == "InProgress")
                         {
                             <form method="post" asp-page-handler="Unsubcribe">
-                                <button class="card-botton--link">Отписаться</button>
+                                <button class="card-botton--link card-button--delete">Отписаться</button>
                                 <input type="hidden" name="courseid" value="@course.Id"/>
                             </form>
                         }

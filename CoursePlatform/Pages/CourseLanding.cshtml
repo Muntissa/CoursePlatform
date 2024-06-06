@@ -82,7 +82,7 @@
                                                     <div class="test-question">
                                                         <h2 class="test-question--title">@question.Content</h2>
                                                     </div>
-                                                    <div class="test-answer--form">
+                                                    <div class="test-answer--form ">
                                                         @for (int j = 0; j < question.Answers.Count; j++)
                                                         {
                                                             var answer = question.Answers[j];
@@ -90,7 +90,7 @@
                                                             <label class="label" for="answer_@answer.Id">
                                                                 <span></span>
                                                                 @answer.AnswerContent
-                                                                </label>
+                                                            </label>
                                                             <input type="hidden" name="Answers[@i].QuestionId" value="@question.Id" />
                                                         }
                                                         <div class="test-answer--worm worm">
@@ -100,7 +100,10 @@
                                                 </li>
                                             }
                                         </ul>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        @if(progressToLecture is not null)
+                                        {
+                                            <button class="lecture-btn--done lecture-btn--view" type="submit">Подтвердить</button>
+                                        }
                                     </form>
                                 </div>
                             }
@@ -167,15 +170,19 @@
                     @{
                         if (progressToLecture is null)
                         {
-                            <div class="lecture-btn">
-                                <div class="lecture-btn--done lecture-btn--view">
-                                    <form asp-page-handler="CheckProgress" method="post" id="testForm" class="test-answer--form">
-                                        <button id="progressButton">Подтвердить выполнение</button>
-                                        <input type="hidden" name="courseid" value="@Model.Course.Id"></input>
-                                        <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id"></input>
-                                    </form>
+                            if(Model.CurrentLecture.Test is null)
+                            {
+                                <div class="lecture-btn">
+                                    <div class="lecture-btn--done lecture-btn--view">
+                                        <form asp-page-handler="CheckProgress" method="post" id="testForm" class="test-answer--form">
+                                            <button id="progressButton">Подтвердить выполнение</button>
+                                            <input type="hidden" name="courseid" value="@Model.Course.Id"></input>
+                                            <input type="hidden" name="lectureid" value="@Model.CurrentLecture.Id"></input>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
+                            }
+
                         }
                     }
                 </div>

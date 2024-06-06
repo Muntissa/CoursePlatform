@@ -39,9 +39,9 @@
                 <input type="hidden" name="courseid" value="@Model.CurrentCourse.Id" />
             </form>
         </div>
-        @if(Model.CurrentLecture is null)
+        @if(Model.CurrentCourse.Lectures.Count() == 0)
         {
-            <span> Добавьте новую лекцию в меню справа </span>
+            <span class="details-description-text exeption-text"> Добавьте новую лекцию в меню слева</span>
         }
         else
         {

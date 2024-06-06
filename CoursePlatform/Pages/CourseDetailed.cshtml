@@ -54,7 +54,7 @@
                     @Model.Course.CourseDecription
                 </p>
 
-                @if(User.Identity.IsAuthenticated)
+                @if(User.Identity.IsAuthenticated && User.IsInRole("Student"))
                 {
                     <form asp-page="/CourseLanding" method="post">
                         <div class="details-btn">
@@ -62,27 +62,114 @@
                         </div>
                     </form>
                 }
+                else if (User.Identity.IsAuthenticated && User.IsInRole("Teacher"))
+                { 
+                    <div class="details-subscribe--block">
+                        <span>Как учитель вы не можете записаться на курс</span>
+                    </div>
+                    
+                }
                 else
                 {
-                    <span>Сначала авторизируйтесь, перед тем как записаться на курс</span>
+                    <div class="details-subscribe--block">
+                        <span>Авторизируйтесь как студент, перед тем как записаться на курс</span>
+                    </div>
                 }
             </div>
             <div class="details-lesson lesson">
                 @foreach(var stage in Model.Course.Lectures.OrderBy(l => l.OrderInCourse))
                 {
-                    <div class="lesson-item">
-                        <div class="lesson-top">
-                            <p class="lesson-number">Урок @stage.OrderInCourse</p>
-                            @* <p class="lesson-status lesson-passed">Пройден</p> *@
+                    @if(stage.LectureMaterial is not null)
+                    {
+                        <div class="lesson-item">
+                            <div class="lesson-top">
+                                <p class="lesson-number">Урок @stage.OrderInCourse</p>
+                            </div>
+                            <div class="lesson-middle">
+                                <h3 class="lesson-name">@stage.Title</h3>
+                                <p class="lesson-time">Лекция</p>
+                            </div>
+                            <p class="lesson-description details-grey">
+                                @stage.SubTitle
+                            </p>
                         </div>
-                        <div class="lesson-middle">
-                            <h3 class="lesson-name">@stage.Title</h3>
-                            <p class="lesson-time">2 часа</p>
+                    }
+                    else if (stage.Image is not null)
+                    {
+                        <div class="lesson-item">
+                            <div class="lesson-top">
+                                <p class="lesson-number">Урок @stage.OrderInCourse</p>
+                            </div>
+                            <div class="lesson-middle">
+                                <h3 class="lesson-name">@stage.Title</h3>
+                                <p class="lesson-time">Изображение</p>
+                            </div>
+                            <p class="lesson-description details-grey">
+                                @stage.SubTitle
+                            </p>
                         </div>
-                        <p class="lesson-description details-grey">
-                            @stage.Summary
-                        </p>
-                    </div>
+                    }
+                    else if (stage.Video is not null)
+                    {
+                        <div class="lesson-item">
+                            <div class="lesson-top">
+                                <p class="lesson-number">Урок @stage.OrderInCourse</p>
+                            </div>
+                            <div class="lesson-middle">
+                                <h3 class="lesson-name">@stage.Title</h3>
+                                <p class="lesson-time">Видео</p>
+                            </div>
+                            <p class="lesson-description details-grey">
+                                @stage.SubTitle
+                            </p>
+                        </div>
+                    }
+                    else if (stage.AdditionalFile is not null)
+                    {
+                        <div class="lesson-item">
+                            <div class="lesson-top">
+                                <p class="lesson-number">Урок @stage.OrderInCourse</p>
+                            </div>
+                            <div class="lesson-middle">
+                                <h3 class="lesson-name">@stage.Title</h3>
+                                <p class="lesson-time">Видео</p>
+                            </div>
+                            <p class="lesson-description details-grey">
+                                @stage.SubTitle
+                            </p>
+                        </div>
+                    }
+                    else if (stage.Test is not null)
+                    {
+                        <div class="lesson-item">
+                            <div class="lesson-top">
+                                <p class="lesson-number">Урок @stage.OrderInCourse</p>
+                            </div>
+                            <div class="lesson-middle">
+                                <h3 class="lesson-name">@stage.Title</h3>
+                                <p class="lesson-time">Тест</p>
+                            </div>
+                            <p class="lesson-description details-grey">
+                                @stage.SubTitle
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="lesson-item">
+                            <div class="lesson-top">
+                                <p class="lesson-number">Урок @stage.OrderInCourse</p>
+                            </div>
+                            <div class="lesson-middle">
+                                <h3 class="lesson-name">@stage.Title</h3>
+                                <p class="lesson-time">Без блока</p>
+                            </div>
+                            <p class="lesson-description details-grey">
+                                @stage.SubTitle
+                            </p>
+                        </div>
+                    }
+
                 }
             </div>
         </div>

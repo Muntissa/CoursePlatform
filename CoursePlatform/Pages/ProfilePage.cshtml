@@ -6,71 +6,85 @@
 }
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<div class="container">
-    <h2 class="profile-title title">Аккаунт</h2>
-</div>
-<section class="profile">
+@if(!User.Identity.IsAuthenticated)
+{
     <div class="container">
-    <div class="profile-wrapper">
-            <div class="profile-top">
-                <div class="profile-user user">
-                    <div class="user-top">
-                        <p class="user-name">@Model.CurrentUser.Profile.GetFullName()</p>
-                        <div class="user-type">
-                            <p class="user-type--text">@Model.Role</p>
+        <h2 class="profile-title title">Авторизируйтесь, чтобы войти в свой профиль</h2>
+    </div>
+}
+else
+{
+    <div class="container">
+        <h2 class="profile-title title">Аккаунт</h2>
+    </div>
+    <section class="profile">
+        <div class="container">
+            <div class="profile-wrapper">
+                <div class="profile-top">
+                    <div class="profile-user user">
+                        <div class="user-top">
+                            <p class="user-name">@Model.CurrentUser.Profile.GetFullName()</p>
+                            <div class="user-type">
+                                <p class="user-type--text">@Model.Role</p>
+                            </div>
                         </div>
+                        @if (User.IsInRole("Student"))
+                        {
+                            <div class="user-bottom">
+                                <p class="user-finish user-course">
+                                    <span>@Model.CourseCompleted</span>
+                                    курсов пройдено
+                                </p>
+                                <p class="user-process user-course">
+                                    <span>@Model.CourseInProgress</span>
+                                    курсов в процессе
+                                </p>
+                            </div>
+                        }
                     </div>
-                    <div class="user-bottom">
-                        <p class="user-finish user-course">
-                            <span>8</span>
-                            курсов пройдено
-                        </p>
-                        <p class="user-process user-course">
-                            <span>8</span>
-                            курсов в процессе
-                        </p>
+                    <div class="profile-btn">
+                        <button id="editButton" class="profile-btn--edit btn-save--close">Редактировать</button>
+                        <button id="saveButton" class="profile-btn--save btn-save--close">Сохранить</button>
                     </div>
-                </div>
-                <div class="profile-btn">
-                    <button id="editButton" class="profile-btn--edit btn-save--close">Редактировать</button>
-                    <button id="saveButton" class="profile-btn--save btn-save--close">Сохранить</button>
-                </div>
-            </div>
-
-            <div class="profile-info info">
-                <div class="info-wrapper data">
-                    <h3 class="data-title info-title">Личные данные</h3>
-                    <form id="dataForm" asp-page="/Authentication" asp-page-handler="EditProfile" class="form-info">
-                        <div class="form-wrapper">
-                            <label class="info-label form-label">Фамииля</label>
-                            <input name="surname" type="text" placeholder="@Model.CurrentUser.Profile.Surname" class="info-input form-input">
-                            <label class="info-label form-label">Имя</label>
-                            <input name="name" type="text" placeholder="@Model.CurrentUser.Profile.Name" class="info-input form-input">
-                            <label class="info-label form-label">Отчество</label>
-                            <input name="lastname" type="text" placeholder="@Model.CurrentUser.Profile.LastName" class="info-input form-input">
-                            <label class="info-label form-label">Дата</label>
-                            <input type="date" class="info-input form-input">
-                            <input name="currentusername" value="@Model.CurrentUser.UserName" type="hidden">
-                        </div>
-                    </form>
                 </div>
 
-                <div class="info-wrapper account">
-                    <h3 class="account-title info-title">Логин и пароль</h3>
-                    <form id="accountForm" asp-page="/Authentication" asp-page-handler="EditAccount" class="form-info">
-                        <div class="form-wrapper">
-                            <label class="info-label form-label">Никнейм</label>
-                            <input placeholder="@Model.CurrentUser.UserName" name="newusername" type="text" class="info-input form-input">
-                            <label class="info-label form-label">Пароль</label>
-                            <input name="newpassword" type="password" class="info-input form-input">
-                            <input name="currentusername" value="@Model.CurrentUser.UserName" type="hidden">
-                        </div>
-                    </form>
+                <div class="profile-info info">
+                    <div class="info-wrapper data">
+                        <h3 class="data-title info-title">Личные данные</h3>
+                        <form id="dataForm" asp-page="/Authentication" asp-page-handler="EditProfile" class="form-info">
+                            <div class="form-wrapper">
+                                <label class="info-label form-label">Фамииля</label>
+                                <input name="surname" type="text" placeholder="@Model.CurrentUser.Profile.Surname" class="info-input form-input">
+                                <label class="info-label form-label">Имя</label>
+                                <input name="name" type="text" placeholder="@Model.CurrentUser.Profile.Name" class="info-input form-input">
+                                <label class="info-label form-label">Отчество</label>
+                                <input name="lastname" type="text" placeholder="@Model.CurrentUser.Profile.LastName" class="info-input form-input">
+                                <label class="info-label form-label">Дата</label>
+                                <input type="date" class="info-input form-input">
+                                <input name="currentusername" value="@Model.CurrentUser.UserName" type="hidden">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="info-wrapper account">
+                        <h3 class="account-title info-title">Логин и пароль</h3>
+                        <form id="accountForm" asp-page="/Authentication" asp-page-handler="EditAccount" class="form-info">
+                            <div class="form-wrapper">
+                                <label class="info-label form-label">Никнейм</label>
+                                <input placeholder="@Model.CurrentUser.UserName" name="newusername" type="text" class="info-input form-input">
+                                <label class="info-label form-label">Пароль</label>
+                                <input name="newpassword" type="password" class="info-input form-input">
+                                <input name="currentusername" value="@Model.CurrentUser.UserName" type="hidden">
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-</div>
-</section>
+    </section>
+}
+
+
 
 <script>
     $('#editButton').click(function() {

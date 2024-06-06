@@ -21,16 +21,22 @@ namespace CoursePlatform.Pages
 
         public Course Course { get; set; }
 
-        public void OnGet(int? courseid)
+        public async Task<IActionResult> OnGet(int? courseid)
         {
-            if (courseid is null)
-                return;
-
-            Course = _context.Set<Course>().Where(c => c.Id == courseid)
-                .Include(c => c.Lectures)
+            Course = _context.Set<Course>()
+                .Include(c => c.Lectures).ThenInclude(l => l.LectureMaterial)
+                .Include(c => c.Lectures).ThenInclude(l => l.Image)
+                .Include(c => c.Lectures).ThenInclude(l => l.Video)
+                .Include(c => c.Lectures).ThenInclude(l => l.AdditionalFile)
+                .Include(c => c.Lectures).ThenInclude(l => l.Test)
                 .Include(c => c.Teacher)
                 .ThenInclude(t => t.Profile)
-                .FirstOrDefault();
+                .FirstOrDefault(c => c.Id == courseid);
+
+            if (Course is null)
+                return NotFound("Данный курс не найден");
+
+            return Page();
         }
 
         [HttpPost]

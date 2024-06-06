@@ -27,7 +27,10 @@ ul,li,ol{
     list-style: none;
 }
 
-
+.exeption-text {
+    padding-top: 60px;
+    padding-left: 60px;
+}
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
@@ -359,9 +362,15 @@ h1, h2, h3, h4, h5, h6, p {
 .category-name--ruby {
 }
 
+.card-bottom{
+    display: flex;
+    gap: 10px;
+    align-items: center
+}
+
 .card-button--link {
     display: inline-block;
-    padding: 15px 60px;
+    padding: 12px 30px;
     background-color: #E85B81;
     border-radius: 8px;
     color: #fff;
@@ -370,12 +379,49 @@ h1, h2, h3, h4, h5, h6, p {
     transition: all .7s ease;
 }
 
-    .card-button--link:hover {
-        color: white;
-        background-color: #c12d54;
-        transform: scale(0.95);
-        transition: all .7s ease;
-    }
+.card-button--link:hover {
+    color: white;
+    background-color: #c12d54;
+    transform: scale(0.95);
+    transition: all .7s ease;
+}
+
+.card-button--delete {
+    display: inline-block;
+    padding: 12px 20px;
+    border: 2px solid #E85B81;
+    border-radius: 8px;
+    color: #252525;
+    font-size: 16px;
+    font-family: var(--RM);
+    transition: all .7s ease;
+}
+
+.card-button--delete:hover {
+    color: white;
+    background-color: #E85B81;
+    transform: scale(0.95);
+    transition: all .7s ease;
+}
+
+.card-bottom--delete{
+    display: inline-block;
+    padding: 12px 20px;
+    border: 2px solid #E85B81;
+    border-radius: 8px;
+    color: #252525;
+    font-size: 16px;
+    font-family: var(--RM);
+    transition: all .7s ease;
+}
+
+.card-bottom--delete:hover{
+    color: white;
+    background-color: #E85B81;
+    transform: scale(0.95);
+    transition: all .7s ease;
+}
+
 
 
 @media(max-width:480px) {
@@ -440,6 +486,12 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 /* Кнопка назад */
+
+.details-subscribe--block span {
+    font-size: 30px;
+    color: #E85B81;
+    border-color: #fff;
+}
 
 .details-grey {
     font-size: 16px;
@@ -733,7 +785,7 @@ h1, h2, h3, h4, h5, h6, p {
 
 .lecture-delete{
     position: absolute;
-    bottom: 25px;
+    bottom: 22px;
     right: 15px;
     transition: all .3s ease;
 }
@@ -2014,3 +2066,4 @@ h1, h2, h3, h4, h5, h6, p {
   
 
 /* создание курса */
+

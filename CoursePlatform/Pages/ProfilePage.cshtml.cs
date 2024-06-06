@@ -1,5 +1,6 @@
 ﻿using CoursePlatform.Common;
 using CoursePlatform.Common.Entities;
+using CoursePlatform.Common.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,8 @@ namespace CoursePlatform.Pages
 
         public User CurrentUser { get; set; }
         public string Role { get; set; }
+        public int CourseInProgress { get; set; }
+        public int CourseCompleted { get; set; }
 
         public async Task OnGet()
         {
@@ -34,6 +37,24 @@ namespace CoursePlatform.Pages
                 var role = _userManager.GetRolesAsync(currentUser).Result.FirstOrDefault();
 
                 Role = _roleManager.FindByNameAsync(role).Result.NormalizedName;
+
+                CourseInProgress = _context.Set<CourseEnrollment>()
+                    .Include(ce => ce.Course).ThenInclude(c => c.Lectures)
+                    .Include(ce => ce.Course).ThenInclude(c => c.CourseCategories)
+                    .Include(ce => ce.Course).ThenInclude(c => c.Teacher).ThenInclude(t => t.Profile)
+                    .Where(ce => ce.StudentId == CurrentUser.Id && ce.Progreses.Count(p => p.CompletionStatus == Status.Success) < ce.Course.Lectures.Count)
+                    .Select(ce => ce.Course)
+                    .Distinct()
+                    .Count();
+
+                CourseCompleted = _context.Set<CourseEnrollment>()
+                    .Include(ce => ce.Course).ThenInclude(c => c.Lectures)
+                    .Include(ce => ce.Course).ThenInclude(c => c.CourseCategories)
+                    .Include(ce => ce.Course).ThenInclude(c => c.Teacher).ThenInclude(t => t.Profile)
+                    .Where(ce => ce.StudentId == CurrentUser.Id && ce.Progreses.Count(p => p.CompletionStatus == Status.Success) == ce.Course.Lectures.Count)
+                    .Select(ce => ce.Course)
+                    .Distinct()
+                    .Count();
             }
             else
             {
