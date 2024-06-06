@@ -50,7 +50,10 @@ namespace CoursePlatform.Pages
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 var normilizeST = searchTerm.ToLower();
-                query = query.Where(c => c.CourseTitle.ToLower().Contains(normilizeST) || c.CourseDecription.ToLower().Contains(normilizeST));
+                query = query
+                    .Where(c => c.CourseTitle.ToLower().Contains(normilizeST) 
+                    || c.CourseDecription.ToLower().Contains(normilizeST)
+                    || c.Teacher.Profile.Surname.ToLower().Contains(normilizeST));
             }
 
             if (string.IsNullOrEmpty(FilterType) || FilterType == "All")
@@ -101,6 +104,19 @@ namespace CoursePlatform.Pages
                 }
 
                 Courses = courses;
+            }
+            else
+            {
+                var enrolledCourseIds = await _context.Set<CourseEnrollment>()
+                    .Include(ce => ce.Student)
+                    .Where(ce => ce.Student.Id == CurrentUser.Id)
+                    .Select(ce => ce.CourseId)
+                    .Distinct()
+                    .ToListAsync();
+
+                Courses = await query
+                    .Where(c => !enrolledCourseIds.Contains(c.Id))
+                    .ToListAsync();
             }
         }
 

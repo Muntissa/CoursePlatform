@@ -5,87 +5,98 @@
     ViewData["Title"] = "Home page";
 }
 
-<section class="platform">
+@if(User.Identity.IsAuthenticated && User.IsInRole("Student"))
+{
     <div class="container">
         <div class="platform-wrrapper">
-            <h2 class="platform-title">Мои курсы</h2>
-
+            <h2 class="platform-title">Вы не можете иметь курсы под ролью студент</h2>
         </div>
     </div>
-</section>
+}
+else
+{
+    <section class="platform">
+        <div class="container">
+            <div class="platform-wrrapper">
+                <h2 class="platform-title">Мои курсы</h2>
+            </div>
+        </div>
+    </section>
 
-<section class="course">
-    <div class="container">
-        <div class="couser-search search">
-            <form action="#" class="search-form">
-                <div class="search-input--wrapper">
-                    <input type="text" class="search-input form-input " placeholder="Введите текст">
-                    <button type="submit">
-                        <img src="/image/search.svg" alt="" class="search-icon">
-                    </button>
-                </div>
-            </form>
-        </div>
-        <div class="course-wrapper">
-            @foreach (var course in Model.Courses)
-            {
-                <div class="course-card card">
-                    <div class="card-wrapper">
-                        <div class="card-top">
-                            <h3 class="card-teacher">
-                                @if (course.Teacher is not null && !String.IsNullOrEmpty(course.Teacher.Profile.Name))
-                                {
-                                    @course.Teacher.Profile.GetShoryName()
-                                    
-                                }
-                                else
-                                {
-                                    <span>Неизвестный преподаватель</span>
-                                }
-                            </h3>
-                            <div class="card-star">
-                                @if (course.Complexity == Common.Enums.Complexity.Light)
-                                {
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
-                                }
-                                else if (course.Complexity == Common.Enums.Complexity.Medium)
-                                {
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/emptystar.svg" alt="" class="card-star--icon">
-                                }
-                                else
-                                {
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                    <img src="/image/fullstar.svg" alt="" class="card-star--icon">
-                                }
+    <section class="course">
+        <div class="container">
+            <div class="couser-search search">
+                <form method="get" class="search-form">
+                    <div class="search-input--wrapper">
+                        <input type="text" name="searchTerm" class="search-input form-input " placeholder="Введите текст">
+                        <button type="submit">
+                            <img src="/image/search.svg" alt="" class="search-icon">
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="course-wrapper">
+                @foreach (var course in Model.Courses)
+                {
+                    <div class="course-card card">
+                        <div class="card-wrapper">
+                            <div class="card-top">
+                                <h3 class="card-teacher">
+                                    @if (course.Teacher is not null && !String.IsNullOrEmpty(course.Teacher.Profile.Name))
+                                    {
+                                        @course.Teacher.Profile.GetShoryName()
+
+                                    }
+                                    else
+                                    {
+                                        <span>Неизвестный преподаватель</span>
+                                    }
+                                </h3>
+                                <div class="card-star">
+                                    @if (course.Complexity == Common.Enums.Complexity.Light)
+                                    {
+                                        <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                        <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                                        <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                                    }
+                                    else if (course.Complexity == Common.Enums.Complexity.Medium)
+                                    {
+                                        <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                        <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                        <img src="/image/emptystar.svg" alt="" class="card-star--icon">
+                                    }
+                                    else
+                                    {
+                                        <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                        <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                        <img src="/image/fullstar.svg" alt="" class="card-star--icon">
+                                    }
+                                </div>
+                            </div>
+                            <div class="card-middle">
+                                <h3 class="card-title">@course.CourseTitle</h3>
+                                <p class="card-lessons">@course.Lectures.Count() лекций</p>
+                                <div class="card-category category">
+                                    @foreach (var category in course.CourseCategories.OrderBy(c => c.Name).Take(6))
+                                    {
+                                        <div class="category-block category-block--prog">
+                                            <p class="category-name category-name--prog">@category.Name</p>
+                                        </div>
+                                    }
+                                </div>
                             </div>
                         </div>
-                        <div class="card-middle">
-                            <h3 class="card-title">@course.CourseTitle</h3>
-                            <p class="card-lessons">@course.Lectures.Count() лекций</p>
-                            <div class="card-category category">
-                                @foreach (var category in course.CourseCategories.OrderBy(c => c.Name).Take(6))
-                                {
-                                    <div class="category-block category-block--prog">
-                                        <p class="category-name category-name--prog">@category.Name</p>
-                                    </div>
-                                }
-                            </div>
+                        <div class="card-bottom">
+                            <a href="/MyCourseDetail?courseid=@course.Id" class="card-button--link">Подробнее</a>
+                            <form method="post" asp-page-handler="DeleteMyCourse">
+                                <button type="submit">Удалить</button>
+                                <input type="hidden" name="courseid" value="@course.Id"></input>
+                            </form>
                         </div>
                     </div>
-                    <div class="card-bottom">
-                        <a href="/MyCourseDetail?courseid=@course.Id" class="card-button--link">Подробнее</a>
-                        <form method="post" asp-page-handler="DeleteMyCourse">
-                            <button type="submit">Удалить</button>
-                            <input type="hidden" name="courseid" value="@course.Id"></input>
-                        </form>
-                    </div>
-                </div>
-            }
+                }
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+}
+

@@ -23,16 +23,23 @@ namespace CoursePlatform.Pages
         public IList<Course> Courses { get; set; }
         public User CurrentUser { get; set; }
 
-        public async Task OnGet()
+        public async Task OnGet(string searchTerm)
         {
             CurrentUser = await _userManager.GetUserAsync(User);
 
-            Courses = await _context.Set<Course>()
+            IQueryable<Course> query = _context.Set<Course>()
                 .Include(c => c.Lectures)
                 .Include(c => c.Teacher).ThenInclude(t => t.Profile)
                 .Include(c => c.CourseCategories)
-                .Where(c => c.Teacher == CurrentUser)
-                .ToListAsync();
+                .Where(c => c.Teacher == CurrentUser);
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                var normilizeST = searchTerm.ToLower();
+                query = query.Where(c => c.CourseTitle.ToLower().Contains(normilizeST) || c.CourseDecription.ToLower().Contains(normilizeST));
+            }
+
+            Courses = await query.ToListAsync();
         }
 
         public async Task<IActionResult> OnPostDeleteMyCourseAsync(int courseid)
