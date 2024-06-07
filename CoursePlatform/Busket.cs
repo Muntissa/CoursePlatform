@@ -1,75 +1,43 @@
 ﻿using CoursePlatform.Common;
 using CoursePlatform.Common.Entities;
 using CoursePlatform.Common.Enums;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoursePlatform.WebApi
 {
     public static class Busket
     {
-        public static void FillDataBase(IServiceProvider provider)
+        public static async Task FillDataBase(UserManager<User> _userManager, RoleManager<Role> _roleManager)
         {
-            using (var context = new CoursePlatformContext(provider))
+            var adminOne = await _userManager.FindByNameAsync("FirstAdmin");
+            if (adminOne == null)
             {
-                var course = context.Set<Course>()
-                    .Include(c => c.Lectures).ThenInclude(l => l.LectureMaterial)
-                    .Include(c => c.Lectures).ThenInclude(l => l.Test).ThenInclude(t => t.Questions).ThenInclude(q => q.Answers)
-                    .Include(c => c.Lectures).ThenInclude(l => l.Image)
-                    .Include(c => c.Lectures).ThenInclude(l => l.Video)
-                    .Include(c => c.Lectures).ThenInclude(l => l.AdditionalFile)
-                    .FirstOrDefault(c => c.Id == 24);
+                adminOne = new User { UserName = "FirstAdmin" };
+                var resultOne = await _userManager.CreateAsync(adminOne, "FirstAdmin1!");
+                if (resultOne.Succeeded)
+                {
+                    if (!await _roleManager.RoleExistsAsync("Admin"))
+                        await _roleManager.CreateAsync(new Role { Name = "Admin" });
 
-                course.Lectures.FirstOrDefault().LectureMaterial = new LectureMaterial() { Content = "Метод Url.Page используется для создания URL на основе имени страницы и параметров. Это позволяет избежать ошибок в написании URL вручную.Метод Url.Page используется для создания URL на основе имени страницы и параметров. Это позволяет избежать ошибок в написании URL вручную.Метод Url.Page используется для создания URL на основе имени страницы и параметров. Это позволяет избежать ошибок в написании URL вручную." };
+                    await _userManager.AddToRoleAsync(adminOne, "Admin");
+                }
+            }
 
-                course.Lectures.FirstOrDefault().Test = new Test();
+            var adminTwo = await _userManager.FindByNameAsync("SecondAdmin");
+            if (adminTwo == null)
+            {
+                adminTwo = new User { UserName = "SecondAdmin" };
+                var resultTwo = await _userManager.CreateAsync(adminTwo, "SecondAdmin1!");
+                if (resultTwo.Succeeded)
+                {
+                    if (!await _roleManager.RoleExistsAsync("Admin"))
+                        await _roleManager.CreateAsync(new Role { Name = "Admin" });
 
-                var test = course.Lectures.FirstOrDefault().Test;
-
-                test
-                    .Questions.Add(new()
-                    {
-                        Content = "Тестовый вопрос?",
-                        Answers = new()
-                            {
-                                new()
-                                {
-                                    AnswerContent = "1 ответ",
-                                    AnswerType = AnswerType.Correct,
-                                },
-                                new()
-                                {
-                                    AnswerContent = "2 ответ",
-                                    AnswerType = AnswerType.Incorrect,
-                                },
-                                new()
-                                {
-                                    AnswerContent = "3 ответ",
-                                    AnswerType = AnswerType.Incorrect,
-                                },
-                                new()
-                                {
-                                    AnswerContent = "4 ответ",
-                                    AnswerType = AnswerType.Incorrect,
-                                },
-                        }
-                    });
-
-                course.Lectures.FirstOrDefault().Image = new Image();
-
-                course.Lectures.FirstOrDefault().Image.ImagePath = "/image/lesson2.jpg";
-
-                course.Lectures.FirstOrDefault().AdditionalFile = new AdditionalFile();
-
-                course.Lectures.FirstOrDefault().AdditionalFile.FileType = FileType.Word;
-                course.Lectures.FirstOrDefault().AdditionalFile.FilePath= "/files/LB2.docx";
-
-
-
-                context.SaveChanges();
-
-
+                    await _userManager.AddToRoleAsync(adminTwo, "Admin");
+                }
             }
         }
-
     }
 }

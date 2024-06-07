@@ -8,54 +8,66 @@
 <section class="course-editor editor">
     <div class="container">
         <div class="editor-wrapper">
-            <h2>Course Details</h2>
+            @* <h2>Крутой курс</h2>
 
-            <h3>Edit Course Profile</h3>
+            <h3>Edit Course Profile</h3> *@
             
             <form method="post" asp-page-handler="EditCourse" asp-route-courseId="@Model.CurrentCourse.Id">
-                <div class="form-group">
-                    <label asp-for="Title" class="control-label">Course Title</label>
-                    <input asp-for="Title" class="form-control" placeholder="@Model.CurrentCourse.CourseTitle" />
+                <div class="editor-group">
+                    <label asp-for="Title" class="editor-label">Название курса</label>
+                    <input asp-for="Title" class="editor-control form-input" placeholder="@Model.CurrentCourse.CourseTitle" />
                 </div>
-                <div class="form-group">
-                    <label asp-for="Description" class="control-label">Course Description</label>
-                    <textarea asp-for="Description" class="form-control" placeholder="@Model.CurrentCourse.CourseDecription"></textarea>
+                <div class="editor-group">
+                    <label asp-for="Description" class="editor-label">Описание</label>
+                    <textarea asp-for="Description" class="editor-control form-input" placeholder="@Model.CurrentCourse.CourseDecription"></textarea>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Complexity" class="control-label">Complexity</label>
-                    <select asp-for="Complexity" class="form-control">
-                        <option value="1">Light</option>
-                        <option value="2">Medium</option>
-                        <option value="3">Hard</option>
+                <div class="editor-group">
+                    <label asp-for="Complexity" class="editor-label">Сложность</label>
+                    <select asp-for="Complexity" class="editor-control form-input">
+                        <option value="1">Легкий</option>
+                        <option value="2">Средний</option>
+                        <option value="3">Тяжелый</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label class="control-label">Categories</label>
-                    <div>
-                        @foreach (var category in Model.AllCategories)
-                        {
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="SelectedCategoryIds" value="@category.Id"
-                                @(Model.SelectedCategoryIds.Contains(category.Id) ? "checked" : "") />
-                                <label class="form-check-label">@category.Name</label>
-                            </div>
-                        }
+                <div class="editor-group create-form--checkbox">
+                    <label class="editor-label">Категории</label>
+                    <div class="category-block-add">
+                        <div class="category-checkboxs checkbox">
+                            @foreach (var category in Model.AllCategories)
+                            {
+                                <div class="checkbox-wrapper">
+                                    <label class="checkbox-container">
+                                        <input class="custom-checkbox" type="checkbox" name="CategoriesIds" value="@category.Id"
+                                        @(Model.SelectedCategoryIds.Contains(category.Id) ? "checked" : "") />
+                                        <span class="checkmark"></span>
+                                        <label class="checkbox-label">@category.Name</label>
+                                    </label>
+                                </div>
+
+                                @* <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="SelectedCategoryIds" value="@category.Id"
+                                    @(Model.SelectedCategoryIds.Contains(category.Id) ? "checked" : "") />
+                                    <label class="form-check-label">@category.Name</label>
+                                </div> *@
+                            }
+                        </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary btn-save editor-btn-save">Сохранить</button>
             </form>
             
-            <a href="/CourseConstructor?courseid=@Model.CurrentCourse.Id">Конструктор</a>
+            <a class="constructor-btn" href="/CourseConstructor?courseid=@Model.CurrentCourse.Id">Конструктор</a>
             
-            <h3>Enrollments</h3>
+            <h3 class="editor-records">Записи на курс</h3>
             
-            <table class="table">
+            <div class="table-container">
+                <table class="table">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Enrollment Date</th>
-                        <th>Progress (%)</th>
-                        <th>Action</th>
+                        <th>Участник</th>
+                        <th>Дата записи</th>
+                        <th>Прогресс (%)</th>
+                        <th>Действия</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,7 +79,7 @@
                             <td>@enrollment.GetProgress()</td>
                             <td>
                                 <form method="post" asp-page-handler="DeleteEnrollment" asp-route-enrollmentId="@enrollment.Id">
-                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="submit" class="btn btn-table-delete">Удалить</button>
                                     <input type="hidden" name="courseid" value="@Model.CurrentCourse.Id"/>
                                 </form>
                             </td>
@@ -75,6 +87,9 @@
                     }
                 </tbody>
             </table>
+            </div>
+
+            
         </div>
     </div>
 </section>

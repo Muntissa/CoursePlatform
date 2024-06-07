@@ -1,3 +1,4 @@
+// Program.cs
 using CoursePlatform.Common;
 using CoursePlatform.Common.Additional;
 using CoursePlatform.Common.Entities;
@@ -23,15 +24,10 @@ namespace CoursePlatform
 
             builder.Services.AddDbContext<CoursePlatformContext>();
 
-/*            builder.Services
-                .AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<CoursePlatformContext>();*/
-
             builder.Services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<CoursePlatformContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
-
 
             var app = builder.Build();
 
@@ -49,10 +45,23 @@ namespace CoursePlatform
             app.UseAuthentication();
             app.UseAuthorization();
 
-
             app.MapRazorPages();
 
-            
+            using (var scope = app.Services.CreateScope())
+            {
+                var provider = scope.ServiceProvider;
+                var userManager = provider.GetRequiredService<UserManager<User>>();
+                var roleManager = provider.GetRequiredService<RoleManager<Role>>();
+
+                using (var context = new CoursePlatformContext(provider))
+                {
+                    if (context.Database.GetPendingMigrations().Any())
+                        context.Database.Migrate();
+
+                    // Ensure the database is populated
+                    Task.Run(() => Busket.FillDataBase(userManager, roleManager)).GetAwaiter().GetResult();
+                }
+            }
 
             app.Run();
         }
