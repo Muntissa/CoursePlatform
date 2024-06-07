@@ -5,11 +5,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CoursePlatform.WebApi.Pages
 {
     public class AuthenticationModel : PageModel
-    {   
+    {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<Role> _roleManager;
@@ -23,10 +25,10 @@ namespace CoursePlatform.WebApi.Pages
             _context = context;
         }
 
-        public async void OnGet()
+        public void OnGet()
         {
         }
-        
+
         public async Task<IActionResult> OnPostRegistrationAsync(string username, string password, string btn)
         {
             var param = new { FilterType = "All" };
@@ -46,19 +48,10 @@ namespace CoursePlatform.WebApi.Pages
                         }
 
                         await _userManager.AddToRoleAsync(user, "Student");
-
-                        await _signInManager.SignInAsync(user, isPersistent: false); 
+                        await _signInManager.SignInAsync(user, isPersistent: false);
                         return RedirectToPage("/ProfilePage");
                     }
-
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-
-                    return RedirectToPage("/Index", param);
                 }
-
                 else
                 {
                     if (result.Succeeded)
@@ -69,28 +62,25 @@ namespace CoursePlatform.WebApi.Pages
                         }
 
                         await _userManager.AddToRoleAsync(user, "Teacher");
-
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return RedirectToPage("/ProfilePage");
                     }
+                }
 
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-
-                    return RedirectToPage("/Index");
-                } 
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
             }
-                    return RedirectToPage("/Index");
+
+            var errorList = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            return NotFound($"Список ошибок: {string.Join(", ", errorList)}");
         }
 
         public async Task<IActionResult> OnPostLogoutAsync()
         {
             await _signInManager.SignOutAsync();
-
             var param = new { FilterType = "All" };
-
             return RedirectToPage("/Index", param);
         }
 
@@ -121,7 +111,6 @@ namespace CoursePlatform.WebApi.Pages
                         }
                         else
                         {
-                            // Redirect to a default page if no specific role is matched
                             return RedirectToPage("/Index");
                         }
                     }
@@ -136,8 +125,8 @@ namespace CoursePlatform.WebApi.Pages
                 }
             }
 
-            // If we got this far, something failed, redisplay form
-            return RedirectToPage("/Index");
+            var errorList = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            return NotFound($"Список ошибок: {string.Join(", ", errorList)}");
         }
 
         public async Task<IActionResult> OnPostEditAccountAsync(string currentusername, string newusername, string newpassword)
@@ -147,69 +136,80 @@ namespace CoursePlatform.WebApi.Pages
                 var user = await _userManager.FindByNameAsync(currentusername);
                 if (user != null)
                 {
-                    if(!String.IsNullOrEmpty(newusername))
+                    if (!string.IsNullOrEmpty(newusername))
+                    {
                         user.UserName = newusername;
+                    }
 
                     var result = await _userManager.UpdateAsync(user);
-                    
+
                     if (result.Succeeded)
                     {
                         if (!string.IsNullOrEmpty(newpassword))
                         {
                             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                             var passwordChangeResult = await _userManager.ResetPasswordAsync(user, token, newpassword);
-                            
+
                             if (!passwordChangeResult.Succeeded)
                             {
                                 foreach (var error in passwordChangeResult.Errors)
+                                {
                                     ModelState.AddModelError(string.Empty, error.Description);
-                                
-                                return RedirectToPage("/ProfilePage");
+                                }
+
+                                return NotFound($"Список ошибок: {string.Join(", ", (List<string>?)ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList())}");
                             }
                         }
 
                         return RedirectToPage("/ProfilePage");
                     }
+
                     foreach (var error in result.Errors)
+                    {
                         ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
                 else
+                {
                     ModelState.AddModelError(string.Empty, "User not found.");
+                }
             }
 
-            var param = new { FilterType = "All" };
-
-            return RedirectToPage("/Index", param);
+            var errorList = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            return NotFound($"Список ошибок: {string.Join(", ", errorList)}");
         }
 
         public async Task<IActionResult> OnPostEditProfileAsync(string currentusername, string surname, string name, string lastname)
         {
             var user = await _context.Set<User>().Include(u => u.Profile).FirstOrDefaultAsync(u => u.UserName == currentusername);
 
-            if (ModelState.IsValid)
+            if(!String.IsNullOrEmpty(surname))
+                user.Profile.Surname = surname.RemoveSpecAndNum();
+
+            if (!String.IsNullOrEmpty(name))
+                user.Profile.Name = name.RemoveSpecAndNum();
+
+            if (!String.IsNullOrEmpty(lastname))
+                user.Profile.LastName = lastname.RemoveSpecAndNum();
+
+            _context.Attach(user.Profile).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
             {
-                if (!String.IsNullOrEmpty(surname) && !String.IsNullOrEmpty(name) && !String.IsNullOrEmpty(lastname))
+                foreach (var error in result.Errors)
                 {
-                    var profile = _context.Set<Profile>().FirstOrDefault(p => p.User == user);
-
-                    user.Profile.Surname = surname.RemoveSpecAndNum();
-                    user.Profile.Name = name.RemoveSpecAndNum();
-                    user.Profile.LastName = lastname.RemoveSpecAndNum();
-
-                    _context.Attach(profile).State = EntityState.Modified;
-                    _context.Attach(profile).State = EntityState.Modified;
-
-                    await _context.SaveChangesAsync();
-
-                    var result = await _userManager.UpdateAsync(user);
-
-                    var userToTest = _context.Set<User>().Where(u => u.UserName == currentusername).Include(u => u.Profile).FirstOrDefault();
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
+
+                var errorList = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return NotFound($"Список ошибок: {string.Join(", ", errorList)}");
             }
 
             return RedirectToPage("/ProfilePage");
         }
-
     }
-
 }

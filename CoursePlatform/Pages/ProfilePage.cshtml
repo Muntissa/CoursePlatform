@@ -59,8 +59,8 @@ else
                                 <input name="name" type="text" placeholder="@Model.CurrentUser.Profile.Name" class="info-input form-input">
                                 <label class="info-label form-label">Отчество</label>
                                 <input name="lastname" type="text" placeholder="@Model.CurrentUser.Profile.LastName" class="info-input form-input">
-                                <label class="info-label form-label">Дата</label>
-                                <input type="date" class="info-input form-input">
+@*                                 <label class="info-label form-label">Дата</label>
+                                <input type="date" class="info-input form-input"> *@
                                 <input name="currentusername" value="@Model.CurrentUser.UserName" type="hidden">
                             </div>
                         </form>
@@ -123,7 +123,7 @@ else
 <script>
     $(document).ready(function () {
         function toggleButtonClass() {
-            var username = $('input[name="surname"]').val();
+            var username = $('input[name="newusername"]').val();
             var password = $('input[name="newpassword"]').val();
 
             if (username.length > 0 || password.length > 0) {

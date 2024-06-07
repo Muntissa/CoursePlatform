@@ -21,31 +21,43 @@ namespace CoursePlatform.Pages
             _context = context;
             _roleManager = roleManager;
         }
-
+        [BindProperty]
+        public string CategoryName { get; set; }
         public List<Category> Categories { get; set; }
         public List<Course> Courses { get; set; }
         public List<User> Users { get; set; }
 
         public string? CurrentFilterType { get; set; }
 
-        public async Task<IActionResult> OnGet(string FilterType)
+        public async Task<IActionResult> OnGet(string FilterType, string searchTerm)
         {
             if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
-                return NotFound("Авторизируйтесь как администиратор, чтобы получить доступ к данной странице");
+                return NotFound("Авторизируйтесь как администратор, чтобы получить доступ к данной странице");
 
             CurrentFilterType = FilterType;
 
             if (String.IsNullOrEmpty(FilterType) || FilterType == "Courses")
-                Courses = await _context.Set<Course>()
-                .Include(c => c.CourseEnrollments).ThenInclude(ce => ce.Progreses)
-                .Include(c => c.CourseEnrollments).ThenInclude(ce => ce.Certificate)
-                .Include(c => c.Lectures).ThenInclude(l => l.AdditionalFile)
-                .Include(c => c.Lectures).ThenInclude(l => l.Image)
-                .Include(c => c.Lectures).ThenInclude(l => l.LectureMaterial)
-                .Include(c => c.Lectures).ThenInclude(l => l.Video)
-                .Include(c => c.Lectures).ThenInclude(l => l.Test).ThenInclude(t => t.Questions).ThenInclude(q => q.Answers)
-                .Include(c => c.Teacher).ThenInclude(t => t.Profile)
-                .ToListAsync();
+            {
+                var query = _context.Set<Course>()
+                    .Include(c => c.CourseEnrollments).ThenInclude(ce => ce.Progreses)
+                    .Include(c => c.CourseEnrollments).ThenInclude(ce => ce.Certificate)
+                    .Include(c => c.Lectures).ThenInclude(l => l.AdditionalFile)
+                    .Include(c => c.Lectures).ThenInclude(l => l.Image)
+                    .Include(c => c.Lectures).ThenInclude(l => l.LectureMaterial)
+                    .Include(c => c.Lectures).ThenInclude(l => l.Video)
+                    .Include(c => c.Lectures).ThenInclude(l => l.Test).ThenInclude(t => t.Questions).ThenInclude(q => q.Answers)
+                    .Include(c => c.Teacher).ThenInclude(t => t.Profile)
+                    .AsQueryable();
+
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    query = query.Where(c => c.CourseTitle.ToLower().Contains(searchTerm.ToLower()) ||
+                                             c.Teacher.Profile.Name.ToLower().Contains(searchTerm.ToLower()) ||
+                                             c.Teacher.Profile.Surname.ToLower().Contains(searchTerm.ToLower()));
+                }
+
+                Courses = await query.ToListAsync();
+            }
 
             if (FilterType == "Users")
             {
@@ -55,21 +67,38 @@ namespace CoursePlatform.Pages
                                                    .Select(ur => ur.UserId)
                                                    .ToListAsync();
 
-                Users = await _context.Set<User>()
+                var query = _context.Set<User>()
                     .Include(u => u.Profile)
                     .Include(u => u.CourseEnrollments)
                     .Include(u => u.Courses)
                     .Where(u => !adminUsersIds.Contains(u.Id))
-                    .ToListAsync();
+                    .AsQueryable();
+
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    query = query.Where(u => u.UserName.ToLower().Contains(searchTerm.ToLower()) ||
+                                             u.Profile.Name.ToLower().Contains(searchTerm.ToLower()) ||
+                                             u.Profile.Surname.ToLower().Contains(searchTerm.ToLower()));
+                }
+
+                Users = await query.ToListAsync();
             }
 
             if (FilterType == "Categories")
-                Categories = await _context.Set<Category>().ToListAsync();
+            {
+                var query = _context.Set<Category>().AsQueryable();
 
-            
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    query = query.Where(c => c.Name.ToLower().Contains(searchTerm.ToLower()));
+                }
+
+                Categories = await query.ToListAsync();
+            }
 
             return Page();
         }
+
 
         public async Task<IActionResult> OnPostDeleteUserAsync(int? userid)
         {
@@ -249,6 +278,27 @@ namespace CoursePlatform.Pages
             return RedirectToPage("/AdminDashboard", new { FilterType = "Courses" });
         }
 
+        public async Task<IActionResult> OnPostAddCategoryAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            if (CategoryName is null)
+                CategoryName = "Новая категория";
+
+            var category = new Category
+            {
+                Name = CategoryName
+            };
+
+            _context.Set<Category>().Add(category);
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("/AdminDashboard", new { FilterType = "Categories" });
+        }
+
         public async Task<IActionResult> OnPostDeleteCategoryAsync(int? categoryid)
         {
             var category = await _context.Set<Category>().FirstOrDefaultAsync(c => c.Id == categoryid);
@@ -259,7 +309,7 @@ namespace CoursePlatform.Pages
 
             Categories = await _context.Set<Category>().ToListAsync();
 
-            return RedirectToPage("/AdminDashboard", new { FilterType = "Category" }); 
+            return RedirectToPage("/AdminDashboard", new { FilterType = "Categories" }); 
         }
     }
 

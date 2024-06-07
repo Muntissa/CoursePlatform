@@ -55,6 +55,8 @@ namespace CoursePlatform
 
                 using (var context = new CoursePlatformContext(provider))
                 {
+                    context.Database.EnsureCreated();
+
                     if (context.Database.GetPendingMigrations().Any())
                         context.Database.Migrate();
 

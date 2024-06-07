@@ -102,10 +102,12 @@
                                                 </li>
                                             }
                                         </ul>
-                                        @if(progressToLecture is not null)
+                                        @if (progressToLecture is null || progressToLecture.CompletionStatus != Common.Enums.Status.Success)
                                         {
                                             <button class="lecture-btn--done lecture-btn--view" type="submit">Подтвердить</button>
                                         }
+                                        
+                                        
                                     </form>
                                 </div>
                             }

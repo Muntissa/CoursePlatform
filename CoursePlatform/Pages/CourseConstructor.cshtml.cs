@@ -138,9 +138,16 @@ namespace CoursePlatform.Pages
                 .FirstOrDefaultAsync(l => l.Id == lectureid);
 
             if (lecture == null)
-            {
-                return NotFound();
-            }
+                return NotFound($"Лекция с ID {lectureid} не найдена");
+
+            if (title is null)
+                title = "Название лекции";
+
+            if (subtitle is null)
+                subtitle = "Описание лекции для карточки курса в Detail";
+
+            if (summary is null)
+                summary = "Описание лекции";
 
             lecture.Title = title;
             lecture.SubTitle = subtitle;
@@ -153,6 +160,9 @@ namespace CoursePlatform.Pages
         public async Task<IActionResult> OnPostAddVideoAsync(int courseid, int lectureid, string videourl)
         {
             DeleteAnother("Video", lectureid);
+
+            if (videourl == null || videourl.Length == 0)
+                return BadRequest("Ссылка на видео не распознана");
 
             var lecture = await _context.Set<Lecture>()
                 .Include(l => l.Video)
@@ -172,6 +182,9 @@ namespace CoursePlatform.Pages
         public async Task<IActionResult> OnPostAddLectureMaterialAsync(int courseid, int lectureid, string content)
         {
             DeleteAnother("Text", lectureid);
+
+            if (content == null || content.Length == 0)
+                return BadRequest("Текст пуст");
 
             var lecture = await _context.Set<Lecture>()
                 .Include(l => l.LectureMaterial)
@@ -241,7 +254,7 @@ namespace CoursePlatform.Pages
             DeleteAnother("AdditionalFile", lectureid);
 
             if (additionalFile == null || additionalFile.Length == 0)
-                return BadRequest("File is not selected");
+                return BadRequest("Загрузочный файл не выбран");
 
             var lecture = await _context.Set<Lecture>()
                 .Include(l => l.AdditionalFile)

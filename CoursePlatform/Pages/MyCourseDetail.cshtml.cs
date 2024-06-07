@@ -38,7 +38,7 @@ namespace CoursePlatform.Pages
             var user = await _userManager.GetUserAsync(User);
 
             if (courseid == null)
-                return NotFound("Course ID не предоставлен");
+                return NotFound("Course ID не предоставлен  ");
 
             if (!User.Identity.IsAuthenticated)
                 return NotFound($"Вы не можете редактировать курс, не авторизировавшись");
@@ -103,15 +103,23 @@ namespace CoursePlatform.Pages
 
             if (course != null)
             {
+                if (String.IsNullOrEmpty(Title))
+                    Title = "Название курса";
+
+                if (String.IsNullOrEmpty(Description))
+                    Description = "Описание курса";
+
                 course.CourseTitle = Title;
                 course.CourseDecription = Description;
                 course.Complexity = Complexity;
 
-                // Update categories
+                
                 course.CourseCategories.Clear();
+
                 var selectedCategories = await _context.Set<Category>()
                     .Where(c => SelectedCategoryIds.Contains(c.Id))
                     .ToListAsync();
+
                 course.CourseCategories.AddRange(selectedCategories);
 
                 await _context.SaveChangesAsync();

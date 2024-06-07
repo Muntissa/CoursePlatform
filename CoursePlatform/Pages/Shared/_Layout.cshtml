@@ -21,6 +21,13 @@
                             <h5 class="nav_logotext">COURSES</h5>
                         </a>
                     }
+                    else if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <a asp-page="/AdminDashboard">
+                            <img class="nav_rectangle" src="/image/nav_rectangle.svg" alt="Logo" />
+                            <h5 class="nav_logotext">COURSES</h5>
+                        </a>
+                    }
                     else
                     {
                         <a asp-page="/Index">
@@ -37,6 +44,10 @@
                             <a class="layout-menu--link" asp-page="/MyCourses">Мои курсы</a>
                             <a class="layout-menu--link" asp-page="/NewCourse">Создать свой курс</a>
                         }
+                        else if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <a class="layout-menu--link" asp-page="/AdminDashboard">Admin Dashboard</a>
+                        }
                         else
                         {
                             <a class="layout-menu--link" asp-page="/Index">Все курсы</a>
@@ -51,11 +62,17 @@
 							<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
 								<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Аккаунт</a>
 								<div class="dropdown-menu">
-                                    @if(User.Identity.IsAuthenticated)
+                                    @if(User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                                    {
+                                        <form method="post" asp-page="/Authentication" asp-page-handler="Logout">
+                                            <button class="dropdown-item" type="submit">Выйти</button>
+                                        </form>
+                                    }
+                                    else if (User.Identity.IsAuthenticated)
                                     {
                                         <a class="dropdown-item" asp-page="/ProfilePage">Профиль</a>
                                         <form method="post" asp-page="/Authentication" asp-page-handler="Logout">
-                                            <button class="dropdown-item" type ="submit">Выйти</button>
+                                            <button class="dropdown-item" type="submit">Выйти</button>
                                         </form>
                                     }
                                     else

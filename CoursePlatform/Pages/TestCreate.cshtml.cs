@@ -113,12 +113,12 @@ namespace CoursePlatform.Pages
                 },
                 new()
                 {
-                    AnswerContent = "Вариант А",
+                    AnswerContent = "Вариант C",
                     AnswerType = AnswerType.Incorrect
                 },
                 new()
                 {
-                    AnswerContent = "Вариант А",
+                    AnswerContent = "Вариант D",
                     AnswerType = AnswerType.Incorrect
                 },
             };
@@ -141,9 +141,15 @@ namespace CoursePlatform.Pages
                 return NotFound();
             }
 
+            if (questionContent is null)
+                questionContent = "Новый вопрос?";
+
             question.Content = questionContent;
             for (int i = 0; i < question.Answers.Count; i++)
             {
+                if (answers[i] is null)
+                    answers[i] = "Вариант ответа";
+
                 question.Answers[i].AnswerContent = answers[i];
                 question.Answers[i].AnswerType = (i == correctAnswerIndex) ? AnswerType.Correct : AnswerType.Incorrect;
             }

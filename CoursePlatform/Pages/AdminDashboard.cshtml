@@ -37,9 +37,9 @@
         <div class="editor-wrapper">
             <div class="couser-search search adminsearch">
                 <form class="search-form" method="get">
-                    @* <input type="hidden" name="FilterType" value="@Model.CurrentFilterType" /> *@
+                    <input type="hidden" name="FilterType" value="@Model.CurrentFilterType" />
                     <div class="search-input--wrapper">
-                        <input type="text" name="searchTerm" class="search-input form-input " placeholder="Введите текст">
+                        <input type="text" name="searchTerm" class="search-input form-input" placeholder="Введите текст" value="@Request.Query["searchTerm"]">
                         <button type="submit">
                             <img src="/image/search.svg" alt="" class="search-icon">
                         </button>
@@ -126,6 +126,12 @@
 
             else if(Model.CurrentFilterType == "Categories")
             {
+                <form id="addCategoryForm" asp-page-handler="AddCategory" method="post" class="form-category">
+                    <div class="form-wrapper">
+                        <input name="categoryname" placeholder="Название категории" type="text" class="category-input form-input" />
+                    </div>
+                    <button type="submit" class="btn btn-save">Добавить категорию</button>
+                </form>
                 <div class="table-container">
                     <table class="table">
                         <thead>

@@ -63,6 +63,12 @@ namespace CoursePlatform.Pages
         {
             var userTeacher = await _userManager.GetUserAsync(User);
 
+            if (Name is null)
+                Name = "Название курса";
+
+            if (Description is null)
+                Description = "Описание курса";
+
             var newCourse = new Course()
             {
                 CourseTitle = Name,
