@@ -12,7 +12,7 @@
             <div class="platform-menu">
                 <nav class="platform-menu--wrapper">
                     <ul class="platform-menu--list">
-                        @if(User.Identity.IsAuthenticated)
+                        @if(User.Identity.IsAuthenticated && User.IsInRole("Student"))
                         {
                             <li class="platform-menu--item">
                                 <a href="?FilterType=All" class="platform-menu--link @if(Request.Query["FilterType"] == "All") { <text>platform-menu--active</text> }">Все курсы</a>

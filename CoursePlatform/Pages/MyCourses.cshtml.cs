@@ -28,10 +28,10 @@ namespace CoursePlatform.Pages
             CurrentUser = await _userManager.GetUserAsync(User);
 
             if (!User.Identity.IsAuthenticated)
-                return NotFound("Перед тем, как перейти на данную вкадку, авторизируйтесь.");
+                return NotFound("Перед тем, как перейти на данную вкадку, авторизируйтесь под ролью \"TEACHER\".");
 
-            if (User.IsInRole("Student"))
-                return NotFound("Как студент вы не можете зайти на вкладку \"Мои курсы\".");
+            if (!User.IsInRole("Teacher"))
+                return NotFound("Только роль \"TEACHER\" позволяет зайти на вкладку \"Мои курсы\".");
 
             IQueryable<Course> query = _context.Set<Course>()
                 .Include(c => c.Lectures)

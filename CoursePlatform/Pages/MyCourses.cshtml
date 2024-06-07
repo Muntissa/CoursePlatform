@@ -5,11 +5,11 @@
     ViewData["Title"] = "Home page";
 }
 
-@if(User.Identity.IsAuthenticated && User.IsInRole("Student"))
+@if(User.Identity.IsAuthenticated && !User.IsInRole("Teacher"))
 {
     <div class="container">
         <div class="platform-wrrapper">
-            <h2 class="platform-title">Вы не можете иметь курсы под ролью студент</h2>
+            <h2 class="platform-title">Только роль "Teacher" позволяет иметь свои курсы</h2>
         </div>
     </div>
 }

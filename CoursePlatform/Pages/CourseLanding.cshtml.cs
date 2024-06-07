@@ -35,6 +35,7 @@ namespace CoursePlatform.Pages
             if (courseid == null)
                 return NotFound("Course ID не предоставлен");
 
+
             Course = _context.Set<Course>()
                 .Include(c => c.Lectures).ThenInclude(l => l.LectureMaterial)
                 .Include(c => c.CourseEnrollments)

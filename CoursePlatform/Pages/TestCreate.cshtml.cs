@@ -28,12 +28,18 @@ namespace CoursePlatform.Pages
         public Test CurrentTest { get; set; }
         public Question CurrentQuestion { get; set; }
 
-        public async Task OnGetAsync(int? testid, int? questionid)
+        public async Task<IActionResult> OnGetAsync(int? testid, int? questionid)
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Teacher"))
+                return NotFound("Авторизируйтесь как \"TEACHER\", чтобы создавать тесты");
+
             var test = await _context.Set<Test>()
                 .Include(t => t.Lecture)
                 .Include(t => t.Questions).ThenInclude(q => q.Answers)
                 .FirstOrDefaultAsync(l => l.Id == testid);
+
+            if (testid is null)
+                return NotFound($"Тест с ID {testid} не найден");
 
             CurrentTest = test;
 
@@ -41,6 +47,8 @@ namespace CoursePlatform.Pages
                 CurrentQuestion = test.Questions.FirstOrDefault();
             else
                 CurrentQuestion = test.Questions.FirstOrDefault(q => q.Id == questionid);
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPost(int lectureid)

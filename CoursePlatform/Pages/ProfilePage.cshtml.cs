@@ -2,6 +2,7 @@
 using CoursePlatform.Common.Entities;
 using CoursePlatform.Common.Enums;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
@@ -26,10 +27,13 @@ namespace CoursePlatform.Pages
         public int CourseInProgress { get; set; }
         public int CourseCompleted { get; set; }
 
-        public async Task OnGet()
+        public async Task<IActionResult> OnGet()
         {
             if(User.Identity.IsAuthenticated)
             {
+                if(User.IsInRole("Admin"))
+                    return NotFound("Как администратор, вы не можете зайти на ProfilePage");
+
                 var currentUser = await _userManager.GetUserAsync(User);
 
                 CurrentUser = await _context.Set<User>().Include(u => u.Profile).FirstOrDefaultAsync(u => u.UserName == currentUser.UserName);
@@ -61,7 +65,9 @@ namespace CoursePlatform.Pages
                 var param = new { FilterType = "All" };
 
                 RedirectToPage("/Index", param);
-            }   
+            }
+
+            return Page();
         }
     }
 }

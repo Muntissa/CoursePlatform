@@ -33,8 +33,8 @@ namespace CoursePlatform.Pages
                 return NotFound($"Вы не можете конструировать курс, не авторизировавшись");
 
 
-            if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
-                return NotFound("С ролью \"STUDENT\" вы не можете редактировать курс");
+            if (User.Identity.IsAuthenticated && !User.IsInRole("Teacher"))
+                return NotFound("Только с ролью \"Teacher\" вы можете редактировать курс");
 
             CurrentCourse = _context.Set<Course>()
                 .Include(c => c.Lectures).ThenInclude(l => l.Image)

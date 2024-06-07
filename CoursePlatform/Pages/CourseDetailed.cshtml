@@ -62,10 +62,10 @@
                         </div>
                     </form>
                 }
-                else if (User.Identity.IsAuthenticated && User.IsInRole("Teacher"))
+                else if (User.Identity.IsAuthenticated && !User.IsInRole("Student"))
                 { 
                     <div class="details-subscribe--block">
-                        <span>Как учитель вы не можете записаться на курс</span>
+                        <span>Только студент может записаться на курс</span>
                     </div>
                     
                 }

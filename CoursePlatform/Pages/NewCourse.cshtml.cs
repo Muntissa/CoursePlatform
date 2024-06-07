@@ -34,9 +34,17 @@ namespace CoursePlatform.Pages
 
         public List<Category> Categories { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            if (!User.Identity.IsAuthenticated)
+                return NotFound("Авторизируйтесь как \"TEACHER\", прежде чем создавать свой курс");
+
+            if (User.Identity.IsAuthenticated && !User.IsInRole("Teacher"))
+                return NotFound("Только \"TEACHER\" может создавать свой курс");
+
             Categories = await _context.Set<Category>().ToListAsync();
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAddNewCategoryAsync()
