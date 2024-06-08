@@ -28,6 +28,9 @@ namespace CoursePlatform.Pages
         public Test CurrentTest { get; set; }
         public Question CurrentQuestion { get; set; }
 
+        [BindProperty]
+        public string QuestionName { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? testid, int? questionid)
         {
             if (!User.Identity.IsAuthenticated || !User.IsInRole("Teacher"))
@@ -47,6 +50,9 @@ namespace CoursePlatform.Pages
                 CurrentQuestion = test.Questions.FirstOrDefault();
             else
                 CurrentQuestion = test.Questions.FirstOrDefault(q => q.Id == questionid);
+
+            if(CurrentQuestion is not null)
+                QuestionName = CurrentQuestion.Content;
 
             return Page();
         }
@@ -141,10 +147,10 @@ namespace CoursePlatform.Pages
                 return NotFound();
             }
 
-            if (questionContent is null)
-                questionContent = "Новый вопрос?";
+            if (QuestionName is null)
+                QuestionName = "Новый вопрос?";
 
-            question.Content = questionContent;
+            question.Content = QuestionName;
             for (int i = 0; i < question.Answers.Count; i++)
             {
                 if (answers[i] is null)

@@ -54,7 +54,7 @@
                     <div class="block-item block-add--test add-test">
                         <form method="post" asp-page-handler="SaveQuestion" class="add-test--form">
                             <input type="hidden" name="questionid" value="@Model.CurrentQuestion.Id" />
-                            <input type="text" name="questionContent" class="add-test--input form-input input-add--lecture" placeholder="Вопрос" value="@Model.CurrentQuestion.Content">
+                            <textarea asp-for="QuestionName" type="text" class="add-test--input form-input input-add--lecture" placeholder="Вопрос" value="@Model.CurrentQuestion.Content"></textarea>
                             <div class="test-answer">
                                 <div class="test-answer--form add-test-answer">
                                     @for (int i = 0; i < Model.CurrentQuestion.Answers.Count; i++)

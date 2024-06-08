@@ -1,7 +1,4 @@
-﻿
-using CoursePlatform.Common.Entities;
-using CoursePlatform.Common.Migrations;
-using Microsoft.AspNetCore.Identity;
+﻿using CoursePlatform.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
@@ -9,7 +6,6 @@ using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.Processing;
-using System.Security.Claims;
 
 namespace CoursePlatform.Common.Additional
 {

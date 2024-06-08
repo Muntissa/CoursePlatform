@@ -1,6 +1,4 @@
-﻿using CoursePlatform.Common.Additional;
-
-namespace CoursePlatform.Common.Entities
+﻿namespace CoursePlatform.Common.Entities
 {
     public class CourseEnrollment : BaseEntity
     {

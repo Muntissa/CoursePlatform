@@ -1,10 +1,4 @@
-﻿using CoursePlatform.Common.Additional;
-using CoursePlatform.Common.Enums;
-using CoursePlatform.Common.Interfaces;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Runtime.CompilerServices;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace CoursePlatform.Common.Entities
 {

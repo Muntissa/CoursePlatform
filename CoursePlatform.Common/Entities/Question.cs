@@ -1,6 +1,4 @@
-﻿using CoursePlatform.Common.Enums;
-
-namespace CoursePlatform.Common.Entities
+﻿namespace CoursePlatform.Common.Entities
 {
     public class Question : BaseEntity
     {

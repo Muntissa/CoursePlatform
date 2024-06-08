@@ -9,7 +9,6 @@ namespace CoursePlatform.Common.Entities
         
         public long? UserId { get; set; }
         public User? Teacher { get; set; }
-        public Test? FinalTest { get; set; }
         public Complexity Complexity { get; set; }
 
         public List<Category>? CourseCategories { get; set; } = new();
