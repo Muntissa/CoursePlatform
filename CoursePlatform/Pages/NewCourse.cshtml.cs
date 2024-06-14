@@ -47,18 +47,6 @@ namespace CoursePlatform.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAddNewCategoryAsync()
-        {
-            if (!string.IsNullOrWhiteSpace(CategoryName))
-            {
-                var newCategory = new Category { Name = CategoryName };
-                await _context.Set<Category>().AddAsync(newCategory);
-                await _context.SaveChangesAsync();
-            }
-
-            return Page();
-        }
-
         public async Task<IActionResult> OnPostAsync()
         {
             var userTeacher = await _userManager.GetUserAsync(User);

@@ -416,6 +416,5 @@ namespace CoursePlatform.Pages
 
             _context.SaveChanges();
         }
-
     }
 }

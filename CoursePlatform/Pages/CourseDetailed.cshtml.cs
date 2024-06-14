@@ -1,5 +1,4 @@
 ﻿using CoursePlatform.Common;
-using CoursePlatform.Common.Additional;
 using CoursePlatform.Common.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

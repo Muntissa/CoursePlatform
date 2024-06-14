@@ -26,7 +26,7 @@ namespace CoursePlatform.WebApi.Pages
         public void OnGet()
         {
         }
-
+        
         public async Task<IActionResult> OnPostRegistrationAsync(string username, string password, string btn)
         {
             var param = new { FilterType = "All" };

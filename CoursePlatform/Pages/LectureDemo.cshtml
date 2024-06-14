@@ -24,7 +24,7 @@
                                             var question = Model.CurrentLecture.Test.Questions[i];
                                             <li class="test-item">
                                                 <div class="test-question">
-                                                    <h2 class="test-question--title">@question.Content</h2>
+                                                    <textarea id="autoResizeTextarea" readonly class="test-question--title">@question.Content</textarea>
                                                 </div>
                                                 <div class="test-answer--form">
                                                     @for (int j = 0; j < question.Answers.Count; j++)

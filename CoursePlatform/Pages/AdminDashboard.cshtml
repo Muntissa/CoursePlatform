@@ -127,10 +127,11 @@
             else if(Model.CurrentFilterType == "Categories")
             {
                 <form id="addCategoryForm" asp-page-handler="AddCategory" method="post" class="form-category">
-                    <div class="form-wrapper">
-                        <input name="categoryname" placeholder="Название категории" type="text" class="category-input form-input" />
+                    <div class="form-wrapper admin-form-wrapper">
+                        <input name="categoryname" placeholder="Название категории" type="text" class="category-input form-input admin-form-input" />
+                        <button type="submit" class="btn btn-save admin-btn-add">Добавить категорию</button>
                     </div>
-                    <button type="submit" class="btn btn-save">Добавить категорию</button>
+                    
                 </form>
                 <div class="table-container">
                     <table class="table">

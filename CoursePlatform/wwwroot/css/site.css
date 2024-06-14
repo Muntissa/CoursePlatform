@@ -746,6 +746,27 @@ h1, h2, h3, h4, h5, h6, p {
     flex-direction: column;
 }
 
+.admin-form-wrapper{
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+}
+
+.admin-form-input{
+    display: block;
+    width: 80% !important; 
+    padding: 8px 16px;
+    margin: 0 !important;
+}
+
+.admin-btn-add{
+    margin: 0 !important;
+    display: block;
+    padding: 8px 30px !important;
+    font-size: 16px;
+    color: #fff;
+}
+
 
 /* профиль аккаунта */
 
@@ -911,8 +932,30 @@ h1, h2, h3, h4, h5, h6, p {
 
 /* тест */
 
+.block-wrapper{
+    display: flex;
+    justify-content: space-between;
+}
+
 .block-test{
+    width: 48%;
     margin-bottom: 100px; 
+}
+
+.block-wrong{
+    width: 48%;
+}
+
+.block-wrong--title{
+    font-size: 26px;
+    font-family: var(--RM);
+    margin: 5px 0 20px 0;
+    color: #e85b81;
+}
+
+.block-wrong--text{
+    font-size: 18px;
+    font-family: var(--RM);
 }
 
 .test-list{
@@ -939,6 +982,17 @@ h1, h2, h3, h4, h5, h6, p {
     font-family: var(--RM);
     color: #252525;
     margin-bottom: 50px;
+}
+
+.test-question--title{
+    font-size: 22px;
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    overflow: hidden;
+    resize: none;
+    /* min-height: 250px; */
 }
 
 .test-answer{

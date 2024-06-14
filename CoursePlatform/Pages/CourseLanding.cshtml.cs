@@ -29,13 +29,16 @@ namespace CoursePlatform.Pages
         public Lecture CurrentLecture { get; set; }
         public CourseEnrollment CurrentCE { get; set; }
         public Certificate Certificate { get; set; }
+        public List<Question> WrongQuestions { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync(int? courseid, int? lectureid)
         {
             if (courseid == null)
                 return NotFound("Course ID не предоставлен");
 
-
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Student"))
+                return NotFound("Авторизируйтесь как \"Студент\", чтобы зайти на данную страницу");
+            
             Course = _context.Set<Course>()
                 .Include(c => c.Lectures).ThenInclude(l => l.LectureMaterial)
                 .Include(c => c.CourseEnrollments)
@@ -83,8 +86,6 @@ namespace CoursePlatform.Pages
             return false;
         }
 
-
-
         public async Task<IActionResult> OnPost(int courseid)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -126,7 +127,7 @@ namespace CoursePlatform.Pages
             if (Answers.Count() != 0)
             {
                 var counter = 0;
-
+                var wrongQuestionsList = new List<Question>();
                 // Логика проверки правильности ответов
                 foreach (var answer in Answers)
                 {
@@ -142,14 +143,14 @@ namespace CoursePlatform.Pages
                         counter++;
                         continue;
                     }
-
                     else
-                        return Page();
+                        WrongQuestions.Add(question);
 
                 }
 
-                var lecture = CurrentLecture;
 
+                var lecture = CurrentLecture;
+                //Валидация
                 if (counter == lecture.Test.Questions.Count())
                 {
                     var user = await _userManager.GetUserAsync(User);
@@ -162,6 +163,14 @@ namespace CoursePlatform.Pages
 
                     _context.SaveChanges();
                 }
+                else
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    var studentsCEs = _context.Set<CourseEnrollment>().Include(c => c.Progreses).Include(ce => ce.Course).Where(ce => ce.StudentId == user.Id).ToList();
+                    CurrentCE = studentsCEs.FirstOrDefault(ce => ce.Course.Id == courseid);
+                    return Page();
+                }
+                    
             }
             else
             {

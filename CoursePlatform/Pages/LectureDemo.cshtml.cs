@@ -29,49 +29,26 @@ namespace CoursePlatform.Pages
         public Lecture CurrentLecture { get; set; }
         public CourseEnrollment CurrentCE { get; set; }
 
-        public async Task OnGetAsync(int? courseid, int? lectureid)
+        public async Task<IActionResult> OnGetAsync(int? courseid, int? lectureid)
         {
+            if (!User.Identity.IsAuthenticated)
+                return NotFound("Авторизируйтесь как \"Teacher\", чтобы просматривать данную страницу");
+
             CurrentLecture = _context.Set<Lecture>()
                 .Include(l => l.LectureMaterial)
                 .Include(l => l.Test).ThenInclude(t => t.Questions).ThenInclude(q => q.Answers)
                 .Include(l => l.Image)
                 .Include(l => l.Video)
                 .Include(l => l.AdditionalFile)
-                .FirstOrDefault(c => c.Id == lectureid); ;
-        }
+                .Include(l => l.Course).ThenInclude(c => c.Teacher)
+                .FirstOrDefault(c => c.Id == lectureid);
 
-        public async Task<IActionResult> OnPostCheckProgress(int? courseid, int? lectureid)
-        {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            CurrentLecture =  _context.Set<Lecture>()
-                .Include(l => l.LectureMaterial)
-                .Include(l => l.Test).ThenInclude(t => t.Questions).ThenInclude(q => q.Answers)
-                .Include(l => l.Image)
-                .Include(l => l.Video)
-                .Include(l => l.AdditionalFile)
-                .FirstOrDefault(c => c.Id == lectureid); ;
-
-
-            // Перенаправление или отображение результата
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPost(int courseid)
-        {
             var user = await _userManager.GetUserAsync(User);
 
-            _context.Set<Course>()
-                .Include(c => c.CourseEnrollments)
-                .FirstOrDefault(c => c.Id == courseid)
-                .CourseEnrollments.Add(new CourseEnrollment() { EnrollmentDate = DateTime.Now, Student = user, Course = _context.Set<Course>().FirstOrDefault(c => c.Id == courseid) });
+            if (user.Id != CurrentLecture.Course.Teacher.Id)
+                return NotFound("Мы не можете просматривать ДЕМО страницу не своей лекции");
 
-            _context.SaveChanges();
-
-            return RedirectToPage(new { courseid });
+            return Page();
         }
     }
 }

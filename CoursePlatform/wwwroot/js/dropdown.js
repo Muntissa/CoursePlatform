@@ -48,4 +48,29 @@
 		}
 	});  
 	
-  })(jQuery); 
+})(jQuery); 
+
+// Автоматический размер textarea
+function autoResizeTextarea(textarea) {
+	// Сбрасываем высоту
+	textarea.style.height = 'auto';
+	// Устанавливаем высоту по содержимому
+	textarea.style.height = textarea.scrollHeight + 'px';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+	const textarea = document.getElementById('autoResizeTextarea');
+
+	// Изначально изменяем высоту
+	autoResizeTextarea(textarea);
+
+	// Изменяем высоту при вводе
+	textarea.addEventListener('input', function() {
+		autoResizeTextarea(textarea);
+	});
+
+	// Изменяем высоту при загрузке содержимого, если есть предварительное значение
+	textarea.addEventListener('change', function() {
+		autoResizeTextarea(textarea);
+	});
+});
